@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+:root {
+    --color-bg: #EBECF2;
+    --color-surface: #FFFFFF;
+    --color-border: #9A9EB2;
+    --color-text-primary: #000;
+    --color-text-secondary: #3F435D;
+    --color-tooltip-bg: #2A2E33;
+    --color-tooltip-text: #fff;
+    --shadow-border: rgba(0, 0, 0, 0.1);
+    --user-bg-color: #FAFAFC;
+}
+/* Body */
+body {
+    width: 100%;
+    height: 100vh;
+    background-color: var(--color-bg);
+}
+/*
+body {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--color-bg);
+}
+*/
+
+.sidebar{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 15rem;
+    height: 100%;
+    padding: 0 1rem 0 1rem;
+    background-color: var(--color-surface);
+    box-shadow: 1px 0px 10px var(--shadow-border);
+    transition: width 0.5s ease;
+}
+.sidebar.minimize{
+    width: 4.94rem;
+}
+/*header*/
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2rem;     /* espacio desde arriba */
+}
+
+/*Boton Menu*/
+.menu-btn{
+    
+    position: absolute;
+    top: 3.5%;
+    right: -0.87rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background-color: #fff;
+    color: #757575;
+    box-shadow: 2px 2px 5px var(--shadow-border);
+    cursor: pointer;
+    transition: right 0.3s ease;
+}
+
+.menu-btn i{
+    font-size: 1.5rem;
+}
+
+.menu-container{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+/*Menu*/
+.menu{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem  
+}
+
+.menu .menu-item{
+    position: relative;
+    list-style: none;
+    overflow: hidden;
+}
+.menu .menu-link{
+    display: flex;
+    padding: 0.55rem 0;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: 0.3rem;
+}
+.menu-item:hover .menu-link, .sub.menu .sub-menu-link:hover, .menu-item.active .menu-link{ 
+    color: var(--color-text-primary);
+    background-color: var(--color-bg);
+}
+.menu-link i{
+    font-size:1.35rem;
+    padding: 0 0.8rem;
+}
+.menu-link i:last-child{
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+.sidebar.minimize .menu-link i:last-child{
+    display: none;
+}
+.menu-item.sub-menu-toggle .menu-link i:last-child{
+    transform: rotate(180deg);
+}
+.menu-link span{
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+.sidebar.minimize .menu-item:hover, .sidebar.minimize .menu-item.sub-menu-toggle { 
+    overflow: visible;
+}
+.sidebar.minimize .menu-item:hover span, .sidebar.minimize .menu-item.sub-menu-toggle span{
+    position: absolute;
+    left: 4.2rem;
+    pad: 0.5rem;
+    background-color: var(--color-tooltip-bg);
+    color: var(--color-tooltip-text);
+    transition: all 0.3s ease;
+}
+
+/*sub menu*/
+.sub-menu{
+    height: 0;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    left: 0;
+}
+
+.sidebar.minimize .sub-menu{
+    position: absolute;
+    left: 4.2rem;
+    top: 3rem;
+    background-color: var(--color-surface);
+    border-radius: 0.2rem;
+}
+
+.sub-menu .sub-menu-link{
+    display: flex;
+    margin-left: 2.5rem;
+    padding: 0.55rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: 0.3rem;
+}
+
+.sub-menu::before{
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 0.07rem;
+    margin-left: 1.4rem;
+    background-color: var(--color-border);
+}
+.sidebar.minimize .sub-menu::before{
+    width: 0
+}
+.sidebar.minimize .sub-menu a{
+    margin: 0 0.5rem;
+}
+
+.footer {
+    width: 100%;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    flex-grow: 0;
+    margin-top: auto; /* <-- empuja hacia abajo */
+}
+.sidebar.minimize .menu-btn{
+    right: -2.2rem;
+}
+.sidebar.minimize .menu-btn i{
+    transform: rotate(180deg);
+}
+.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.brand img {
+    width: 2rem;
+}
+
+.brand span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+
+.user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem; 
+}
+
+.user-img img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+}
+
+.user-date {
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.user-date .name {
+    display: block;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+}
+
+.user-date .email {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+.home-item {
+    display: none;
+}
+.user-home {
+    margin-top: 0.25rem; 
+    text-align: center;
+}
+.user-home .menu-link {
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+    padding: 0.2rem 0;
+}
+.user-home .menu-link i {
+    font-size: 1rem;
+}
+.user-home .menu-link:hover {
+    color: var(--color-text-primary);
+}
+
+.sidebar.minimize .user {
+    position: relative;
+    }    
+
+/* Agrupar tooltip del usuario cuando sidebar está minimizada */
+.sidebar.minimize .user {
+    position: relative;
+}
+
+.sidebar.minimize .user-tooltip {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 4.2rem;
+    background-color: var(--color-surface);
+    color: var(--color-tooltip-text);
+    padding: 0.6rem;
+    border-radius: 0.4rem;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+  /* Mostrar tooltip al hacer hover sobre la imagen */
+.sidebar.minimize .user:hover .user-tooltip {
+    display: block;
+}
+
+.sidebar.minimize .user-tooltip .name {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.2rem;
+}
+.sidebar.minimize .user-tooltip .email {
+    font-size: 0.75rem;
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.sidebar.minimize .user-tooltip .menu-link {
+    font-size: 0.75rem;
+    color: var(--color-text-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    text-decoration: none;
+}
+
+.sidebar.minimize .user-tooltip .menu-link:hover {
+    text-decoration: underline;
+}
+
+#main-content {
+    margin-left: 15rem; /* Igual al ancho del sidebar */
+    width: calc(100% - 15rem); /* Resta el ancho del sidebar */
+    height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar.minimize ~ #main-content {
+    margin-left: 4.94rem; /* Igual al ancho del sidebar minimizado */
+    width: calc(100% - 4.94rem);
+}

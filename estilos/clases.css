@@ -1,0 +1,122 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0; /* Eliminamos el padding para que ocupe toda la pantalla */
+    background-color: #f5f5f5;
+    color: #333;
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    display: flex; /* Usamos flex para que el contenedor se expanda */
+}
+
+.container {
+    width: 100%; /* Ocupa todo el ancho disponible */
+    margin: 0; /* Eliminamos el margen automático */
+    padding: 20px;
+    background: white;
+    border-radius: 0; /* Eliminamos el borde redondeado */
+    box-shadow: none; /* Eliminamos la sombra */
+    overflow-y: auto; /* Añadimos scroll si el contenido es muy largo */
+    
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative; /* Asegura que el z-index funcione */
+    z-index: 1; /* Mantiene el header sobre otros elementos */
+    overflow: hidden;
+}
+
+
+
+
+.subtext {
+    color: #888;
+    font-style: italic;
+}
+
+.welcome h2 {
+    color: #b40074;
+}
+
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0; /* Modificado para consistencia */
+}
+
+.info-table th, .info-table td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /* Añadido para mejor manejo del ancho */
+}
+
+/* Estilos específicos para el anuncio */
+.anuncio {
+    background-color: #ff0000; /* Rojo */
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    text-align: center;
+    position: relative;
+    z-index: 1; /* Asegura que esté sobre otros elementos */
+}
+
+.anuncio strong {
+    font-weight: bold;
+}
+
+/* Estilos para la sección de apuntes */
+.apuntes {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.apuntes h3 {
+    margin-top: 0;
+    color: #b40074;
+}
+
+/* Elimina cualquier posición relativa/absoluta que pueda limitar el espacio */
+header, .anuncio {
+    position: static;
+    z-index: auto;
+}
+
+header {
+    position: relative;
+}
+
+.header-icon {
+    position: absolute; 
+    top: 151px; 
+    left: 50%;
+    transform: translateX(-580%); 
+    width: 100px; 
+    height: 100px; 
+    border-radius: 50%;
+    border: 3px solid white;
+    object-fit: cover;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    z-index: 2;
+}
+
+.header-icon2 {
+    width: 1255px; /* Ajusta según necesites */
+    height: 200px; /* Ajusta según necesites */
+    object-fit: cover; /* Cubre el espacio manteniendo proporciones */
+    display: block; /* Elimina espacios no deseados */
+    filter: brightness(0.7); /* Opcional: oscurece la imagen para mejor contraste */
+}
