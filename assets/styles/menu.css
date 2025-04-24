@@ -256,6 +256,7 @@ body {
 .user-home {
     margin-top: 0.25rem; 
     text-align: center;
+    color: #000;
 }
 .user-home .menu-link {
     font-size: 0.75rem;
@@ -264,6 +265,7 @@ body {
     gap: 0.4rem;
     text-decoration: none;
     padding: 0.2rem 0;
+    color: #000;
 }
 .user-home .menu-link i {
     font-size: 1rem;
@@ -303,6 +305,7 @@ body {
     font-weight: 600;
     display: block;
     margin-bottom: 0.2rem;
+    
 }
 .sidebar.minimize .user-tooltip .email {
     font-size: 0.75rem;
