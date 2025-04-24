@@ -1,34 +1,39 @@
 <?php
-// Include database connection
-include_once '../config/db.php';
+// Incluir la conexión a la base de datos
+include_once 'conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form data
+    // Obtener los datos del formulario
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
+    $estado = 'Activo'; // Estado predeterminado para la cuenta
 
-    // Validate inputs
+    // Validar los datos
     if (empty($username) || empty($email) || empty($password)) {
         die('Todos los campos son obligatorios.');
     }
 
-    // Hash the password
+    // Hashear la contraseña
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     try {
-        // Prepare SQL query
-        $sql = "INSERT INTO users (username, email, password) VALUES (:username, :email, :password)";
+        // Preparar la consulta SQL
+        $sql = "INSERT INTO Cuenta (userName, correo, contrasenia, estado) 
+                VALUES (:username, :email, :password, :estado)";
         $stmt = $pdo->prepare($sql);
 
-        // Bind parameters
+        // Vincular los parámetros
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $hashedPassword);
+        $stmt->bindParam(':estado', $estado);
 
-        // Execute query
+        // Ejecutar la consulta
         if ($stmt->execute()) {
-            echo 'Usuario registrado exitosamente.';
+            // Si la inserción fue exitosa, redirigir a la página de inicio de sesión
+            header('Location: ../index.php?registro=exito');
+            exit();
         } else {
             echo 'Error al registrar el usuario.';
         }

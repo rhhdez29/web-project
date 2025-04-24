@@ -102,7 +102,7 @@
         <!-- El contenido del centro se cambiará dinámicamente aquí -->
     </div>
 
-    <script src="/scripts/menu.js"></script>
+    <script src="../scripts/menu.js"></script>
     <script>
         // 1) Recupera los valores (o pone valores por defecto)
         const storedName  = sessionStorage.getItem("username") || "Invitado";
@@ -119,10 +119,10 @@
             // Aquí puedes cargar diferentes contenidos dependiendo de la página seleccionada
             if (page === 'planificador') {
                                         
-                content.innerHTML = '<<iframe src="planificador.html" width="100%" height="100%" style="border: none;"></iframe>';
+                content.innerHTML = '<<iframe src="planificador.php" width="100%" height="100%" style="border: none;"></iframe>';
             } 
             if (page === 'mis_cursos') {
-                content.innerHTML = '<iframe src="clases.html" width="100%" height="100%" style="border: none;"></iframe>';
+                content.innerHTML = '<iframe src="clases.php" width="100%" height="100%" style="border: none;"></iframe>';
             }
         }
 

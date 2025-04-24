@@ -32,7 +32,7 @@
         </div>
 
         <div class="container-form">
-            <form class="sing-up">
+            <form class="sing-up " action="../includes/registrar.php" method="POST">
                 <h2>Registrase</h2>
                 <div class="social-networks">
                     <ion-icon name="logo-google"></ion-icon>
@@ -43,15 +43,15 @@
                 <spam>Use su correo electronico para registraser</spam>
                 <div class="container-input">
                     <ion-icon name="person-add-outline"></ion-icon>
-                    <input type="text" placeholder="Nombre">
+                    <input type="text" name="username" placeholder="Nombre" required>
                 </div>
                 <div class="container-input">
                     <ion-icon name="mail-outline"></ion-icon>
-                    <input type="text" placeholder="Email">
+                    <input type="email" name="email" placeholder="Email" required>
                 </div>
                 <div class="container-input">
                     <ion-icon name="lock-closed-outline"></ion-icon>
-                    <input type="password" placeholder="Password">
+                    <input type="password" name="password" placeholder="Password" required>
                 </div>
                 <button class="button">Registrate</button>
             </form>
@@ -89,7 +89,7 @@
         </div>
     </div>
 
-    <script src="/scripts/script.js"></script>
+    <script src="../scripts/script.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
