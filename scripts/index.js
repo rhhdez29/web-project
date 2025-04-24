@@ -224,6 +224,6 @@ eval("\n\n/* istanbul ignore next  */\nfunction styleTagTransform(css, styleElem
 
 document.getElementById("login-button").addEventListener("click", (e) => {
 
-  window.location.href = "/pages/login.html";
+  window.location.href = "./pages/login.php";
 
 })
