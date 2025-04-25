@@ -40,5 +40,5 @@ document.getElementById("login-button").addEventListener("click", (e) => {
   sessionStorage.setItem("username", name);
 
   // 4) Redirige al menú principal
-  window.location.href = "menu.php";
+  window.location.href = "menu.html";
 });

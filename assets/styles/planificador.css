@@ -1,0 +1,569 @@
+/* Base styles and variables */
+:root {
+    --primary-color: #4a6bff;
+    --primary-light: #eef1ff;
+    --primary-dark: #3451d1;
+    --task-color: #ff8a3d;
+    --task-light: #fff1e6;
+    --appointment-color: #3d9eff;
+    --appointment-light: #e6f4ff;
+    --goal-color: #4caf50;
+    --goal-light: #e8f5e9;
+    --important-color: #dc3545;
+    --important-light: #fff5f5;
+    --grey-100: #f8f9fa;
+    --grey-200: #e9ecef;
+    --grey-300: #dee2e6;
+    --grey-400: #ced4da;
+    --grey-500: #adb5bd;
+    --grey-600: #6c757d;
+    --grey-700: #495057;
+    --grey-800: #343a40;
+    --grey-900: #212529;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --transition: all 0.2s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--grey-100);
+    color: var(--grey-800);
+}
+
+/* Container for the entire planner */
+.planificador-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 100vh;
+}
+
+/* Header styles */
+.planificador-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--grey-200);
+}
+
+.planificador-header h1 {
+    color: var(--primary-dark);
+    font-size: 1.75rem;
+}
+
+.add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 8px 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.add-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Main content layout */
+.planificador-content {
+    display: flex;
+    gap: 24px;
+    flex: 1;
+}
+
+/* Left sidebar styles */
+.left-sidebar {
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Calendar styles */
+.calendar-container {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.calendar-header h2 {
+    font-size: 1.2rem;
+    color: var(--grey-800);
+}
+
+.calendar-nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--grey-600);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.calendar-nav-btn:hover {
+    background-color: var(--grey-200);
+    color: var(--grey-800);
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: 500;
+    color: var(--grey-700);
+    margin-bottom: 8px;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.calendar-day {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    font-size: 0.9rem;
+}
+
+.calendar-day:hover:not(.inactive) {
+    background-color: var(--grey-200);
+}
+
+.calendar-day.today {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+}
+
+.calendar-day.selected {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 500;
+}
+
+.calendar-day.inactive {
+    color: var(--grey-400);
+}
+
+.calendar-day.has-items::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    width: 4px;
+    height: 4px;
+    background-color: var(--task-color);
+    border-radius: 50%;
+}
+
+/* Important reminders section */
+.important-reminders {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+}
+
+.important-reminders h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--important-color);
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+}
+
+.reminders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.reminder-item {
+    padding: 12px;
+    background-color: var(--important-light);
+    border-radius: var(--border-radius);
+    border-left: 3px solid var(--important-color);
+}
+
+.reminder-item .title {
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.reminder-item .date {
+    font-size: 0.9rem;
+    color: var(--grey-600);
+}
+
+/* Weekly container styles */
+.weekly-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Weekly goal section */
+.weekly-goal-section {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+}
+
+.weekly-goal-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--goal-color);
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+.weekly-goal {
+    padding: 16px;
+    background-color: var(--goal-light);
+    border-radius: var(--border-radius);
+    border-left: 3px solid var(--goal-color);
+}
+
+/* Weekly items grid */
+.weekly-items {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+    flex: 1;
+}
+
+.weekly-items h2 {
+    margin-bottom: 16px;
+    color: var(--grey-800);
+    font-size: 1.2rem;
+}
+
+.weekly-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.day-card {
+    border: 1px solid var(--grey-200);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    transition: var(--transition);
+}
+
+.day-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.day-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--grey-200);
+}
+
+.day-card-header h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.day-card-content {
+    display: flex;
+    gap: 24px;
+}
+
+.tasks-section,
+.appointments-section {
+    flex: 1;
+}
+
+.section-title {
+    font-size: 0.9rem;
+    color: var(--grey-600);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tasks-list,
+.appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px;
+    background-color: var(--task-light);
+    border-radius: var(--border-radius);
+}
+
+.task-content {
+    flex: 1;
+    cursor: pointer;
+}
+
+.task-title {
+    font-weight: 500;
+}
+
+.task-description {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: var(--grey-600);
+    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: var(--border-radius);
+}
+
+.task-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--task-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.task-checkbox:hover {
+    background-color: var(--task-color);
+    opacity: 0.2;
+}
+
+.appointment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background-color: var(--appointment-light);
+    border-radius: var(--border-radius);
+}
+
+.appointment-time {
+    font-size: 0.9rem;
+    color: var(--appointment-color);
+    font-weight: 500;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid var(--grey-200);
+}
+
+.modal-header h2 {
+    color: var(--primary-dark);
+    font-size: 1.2rem;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: var(--grey-600);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.close-btn:hover {
+    color: var(--grey-800);
+}
+
+/* Form styles */
+form {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: var(--grey-700);
+    font-size: 0.9rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.form-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.form-group input:not([type="checkbox"]),
+.form-group select,
+.form-group textarea {
+    padding: 8px 12px;
+    border: 1px solid var(--grey-300);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.cancel-btn {
+    padding: 8px 16px;
+    background-color: var(--grey-200);
+    color: var(--grey-700);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.cancel-btn:hover {
+    background-color: var(--grey-300);
+}
+
+.submit-btn {
+    padding: 8px 16px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.submit-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .planificador-content {
+        flex-direction: column;
+    }
+    
+    .left-sidebar {
+        flex: none;
+        width: 100%;
+    }
+    
+    .day-card-content {
+        flex-direction: column;
+    }
+}
