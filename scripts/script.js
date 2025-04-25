@@ -11,6 +11,16 @@ btnSignUp.addEventListener("click", () => {
   container.classList.add("toggle");
 });
 
+document.getElementById('next-step').addEventListener('click', function () {
+  document.getElementById('step-1').hidden = true;
+  document.getElementById('step-2').hidden = false;
+});
+
+document.getElementById('prev-step').addEventListener('click', function () {
+  document.getElementById('step-2').hidden = true;
+  document.getElementById('step-1').hidden = false;
+});
+
 // Manejo del botón de Iniciar sesión
 document.getElementById("login-button").addEventListener("click", (e) => {
   e.preventDefault(); // evita que el formulario recargue la página
