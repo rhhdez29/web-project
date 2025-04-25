@@ -7,15 +7,15 @@
     font-family: "Poppins", sans-serif;
 }
 :root {
-    --color-bg: #EBECF2;
+    --color-bg: #F5F9FF;
     --color-surface: #FFFFFF;
-    --color-border: #9A9EB2;
-    --color-text-primary: #000;
-    --color-text-secondary: #3F435D;
-    --color-tooltip-bg: #2A2E33;
-    --color-tooltip-text: #fff;
-    --shadow-border: rgba(0, 0, 0, 0.1);
-    --user-bg-color: #FAFAFC;
+    --color-border: #D0D8E8;
+    --color-text-primary: #1F2D3D;
+    --color-text-secondary: #5C6B77;
+    --color-tooltip-bg: #4A5A6A;
+    --color-tooltip-text: #FFFFFF;
+    --shadow-border: rgba(0, 0, 0, 0.05);
+    --user-bg-color: #F9FAFB;
 }
 /* Body */
 body {
@@ -23,16 +23,8 @@ body {
     height: 100vh;
     background-color: var(--color-bg);
 }
-/*
-body {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    background-color: var(--color-bg);
-}
-*/
 
-.sidebar{
+.sidebar {
     position: fixed;
     display: flex;
     flex-direction: column;
@@ -40,25 +32,25 @@ body {
     justify-content: space-around;
     width: 15rem;
     height: 100%;
-    padding: 0 1rem 0 1rem;
+    padding: 0 1rem;
     background-color: var(--color-surface);
     box-shadow: 1px 0px 10px var(--shadow-border);
     transition: width 0.5s ease;
 }
-.sidebar.minimize{
+.sidebar.minimize {
     width: 4.94rem;
 }
-/*header*/
+
+/* Header */
 .header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 2rem;     /* espacio desde arriba */
+    padding-top: 2rem;
 }
 
-/*Boton Menu*/
-.menu-btn{
-    
+/* Botón Menú */
+.menu-btn {
     position: absolute;
     top: 3.5%;
     right: -0.87rem;
@@ -69,94 +61,97 @@ body {
     height: 1.75rem;
     border-radius: 50%;
     background-color: #fff;
-    color: #757575;
+    color: #6C757D;
     box-shadow: 2px 2px 5px var(--shadow-border);
     cursor: pointer;
     transition: right 0.3s ease;
 }
-
-.menu-btn i{
+.menu-btn i {
     font-size: 1.5rem;
 }
 
-.menu-container{
+.menu-container {
     display: flex;
     width: 100%;
     height: 100%;
     flex-direction: column;
     align-items: center;
 }
-/*Menu*/
-.menu{
+
+/* Menú */
+.menu {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem  
+    gap: 0.5rem;
 }
-
-.menu .menu-item{
+.menu .menu-item {
     position: relative;
     list-style: none;
     overflow: hidden;
 }
-.menu .menu-link{
+.menu .menu-link {
     display: flex;
     padding: 0.55rem 0;
     color: var(--color-text-secondary);
     text-decoration: none;
     border-radius: 0.3rem;
+    transition: background-color 0.3s, color 0.3s;
 }
-.menu-item:hover .menu-link, .sub.menu .sub-menu-link:hover, .menu-item.active .menu-link{ 
+.menu-item:hover .menu-link,
+.sub.menu .sub-menu-link:hover,
+.menu-item.active .menu-link {
     color: var(--color-text-primary);
-    background-color: var(--color-bg);
+    background-color: #E6F0FF;
 }
-.menu-link i{
-    font-size:1.35rem;
+.menu-link i {
+    font-size: 1.35rem;
     padding: 0 0.8rem;
 }
-.menu-link i:last-child{
+.menu-link i:last-child {
     margin-left: auto;
     transition: transform 0.3s ease;
 }
-.sidebar.minimize .menu-link i:last-child{
+.sidebar.minimize .menu-link i:last-child {
     display: none;
 }
-.menu-item.sub-menu-toggle .menu-link i:last-child{
+.menu-item.sub-menu-toggle .menu-link i:last-child {
     transform: rotate(180deg);
 }
-.menu-link span{
+.menu-link span {
     font-size: 0.8rem;
     font-weight: 500;
 }
-.sidebar.minimize .menu-item:hover, .sidebar.minimize .menu-item.sub-menu-toggle { 
+.sidebar.minimize .menu-item:hover,
+.sidebar.minimize .menu-item.sub-menu-toggle {
     overflow: visible;
 }
-.sidebar.minimize .menu-item:hover span, .sidebar.minimize .menu-item.sub-menu-toggle span{
+.sidebar.minimize .menu-item:hover span,
+.sidebar.minimize .menu-item.sub-menu-toggle span {
     position: absolute;
     left: 4.2rem;
-    pad: 0.5rem;
+    padding: 0.5rem;
     background-color: var(--color-tooltip-bg);
     color: var(--color-tooltip-text);
+    border-radius: 0.25rem;
     transition: all 0.3s ease;
 }
 
-/*sub menu*/
-.sub-menu{
+/* Submenú */
+.sub-menu {
     height: 0;
     transition: all 0.3s ease;
     overflow: hidden;
     left: 0;
 }
-
-.sidebar.minimize .sub-menu{
+.sidebar.minimize .sub-menu {
     position: absolute;
     left: 4.2rem;
     top: 3rem;
     background-color: var(--color-surface);
     border-radius: 0.2rem;
 }
-
-.sub-menu .sub-menu-link{
+.sub-menu .sub-menu-link {
     display: flex;
     margin-left: 2.5rem;
     padding: 0.55rem 0.5rem;
@@ -166,8 +161,7 @@ body {
     text-decoration: none;
     border-radius: 0.3rem;
 }
-
-.sub-menu::before{
+.sub-menu::before {
     content: "";
     position: absolute;
     height: 100%;
@@ -175,13 +169,14 @@ body {
     margin-left: 1.4rem;
     background-color: var(--color-border);
 }
-.sidebar.minimize .sub-menu::before{
-    width: 0
+.sidebar.minimize .sub-menu::before {
+    width: 0;
 }
-.sidebar.minimize .sub-menu a{
+.sidebar.minimize .sub-menu a {
     margin: 0 0.5rem;
 }
 
+/* Footer */
 .footer {
     width: 100%;
     padding: 1rem 0;
@@ -191,14 +186,16 @@ body {
     justify-content: flex-end;
     gap: 1rem;
     flex-grow: 0;
-    margin-top: auto; /* <-- empuja hacia abajo */
+    margin-top: auto;
 }
-.sidebar.minimize .menu-btn{
+.sidebar.minimize .menu-btn {
     right: -2.2rem;
 }
-.sidebar.minimize .menu-btn i{
+.sidebar.minimize .menu-btn i {
     transform: rotate(180deg);
 }
+
+/* Marca */
 .brand {
     display: flex;
     flex-direction: column;
@@ -206,57 +203,53 @@ body {
     justify-content: center;
     gap: 0.4rem;
 }
-
 .brand img {
     width: 2rem;
 }
-
 .brand span {
     font-size: 1rem;
     font-weight: 600;
     color: var(--color-text-primary);
 }
 
-
+/* Usuario */
 .user {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 1.5rem; 
+    margin-bottom: 1.5rem;
 }
-
 .user-img img {
     width: 70px;
     height: 70px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #ccc;
+    border: 2px solid #CED4DA;
 }
-
 .user-date {
     text-align: center;
     margin-top: 0.5rem;
 }
-
 .user-date .name {
     display: block;
     font-weight: 600;
     font-size: 1rem;
     color: var(--color-text-primary);
 }
-
 .user-date .email {
     display: block;
     font-size: 0.75rem;
     color: var(--color-text-secondary);
 }
+
+/* Enlace a página de inicio del usuario */
 .home-item {
     display: none;
 }
 .user-home {
-    margin-top: 0.25rem; 
+    margin-top: 0.25rem;
     text-align: center;
-    color: #000;
+    color: var(--color-text-primary);
 }
 .user-home .menu-link {
     font-size: 0.75rem;
@@ -265,24 +258,19 @@ body {
     gap: 0.4rem;
     text-decoration: none;
     padding: 0.2rem 0;
-    color: #000;
+    color: var(--color-text-primary);
 }
 .user-home .menu-link i {
     font-size: 1rem;
 }
 .user-home .menu-link:hover {
-    color: var(--color-text-primary);
+    color: #007BFF;
 }
 
-.sidebar.minimize .user {
-    position: relative;
-    }    
-
-/* Agrupar tooltip del usuario cuando sidebar está minimizada */
+/* Tooltip para usuario */
 .sidebar.minimize .user {
     position: relative;
 }
-
 .sidebar.minimize .user-tooltip {
     display: none;
     position: absolute;
@@ -295,24 +283,19 @@ body {
     white-space: nowrap;
     z-index: 10;
 }
-
-  /* Mostrar tooltip al hacer hover sobre la imagen */
 .sidebar.minimize .user:hover .user-tooltip {
     display: block;
 }
-
 .sidebar.minimize .user-tooltip .name {
     font-weight: 600;
     display: block;
     margin-bottom: 0.2rem;
-    
 }
 .sidebar.minimize .user-tooltip .email {
     font-size: 0.75rem;
     display: block;
     margin-bottom: 0.4rem;
 }
-
 .sidebar.minimize .user-tooltip .menu-link {
     font-size: 0.75rem;
     color: var(--color-text-primary);
@@ -321,19 +304,18 @@ body {
     gap: 0.3rem;
     text-decoration: none;
 }
-
 .sidebar.minimize .user-tooltip .menu-link:hover {
     text-decoration: underline;
 }
 
+/* Contenido principal */
 #main-content {
-    margin-left: 15rem; /* Igual al ancho del sidebar */
-    width: calc(100% - 15rem); /* Resta el ancho del sidebar */
+    margin-left: 15rem;
+    width: calc(100% - 15rem);
     height: 100vh;
     overflow: hidden;
 }
-
 .sidebar.minimize ~ #main-content {
-    margin-left: 4.94rem; /* Igual al ancho del sidebar minimizado */
+    margin-left: 4.94rem;
     width: calc(100% - 4.94rem);
 }
