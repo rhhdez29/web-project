@@ -2,7 +2,7 @@
 $host = "localhost"; // Cambia si tu servidor no es local
 $user = "root"; // Usuario de la base de datos
 $password = "1234"; // Contraseña del usuario
-$dbname = "epadb"; // Cambia por el nombre de tu base de datos
+$dbname = "epadbp"; // Cambia por el nombre de tu base de datos
 
 // Crear conexión
 $conn = new mysqli($host, $user, $password, $dbname);
