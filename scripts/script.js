@@ -42,3 +42,10 @@ document.getElementById("login-button").addEventListener("click", (e) => {
   // 4) Redirige al menú principal
   window.location.href = "menu.html";
 });
+
+//Muestra directamente el formulario de registro si se presiona el boton "probar" o "crear cuenta"
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.hash === "#registro") {
+      document.querySelector('.container').classList.add('toggle');
+  }
+});
