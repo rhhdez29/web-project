@@ -1,0 +1,409 @@
+/* Estilos base */
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.imagen-wrapper {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+  
+  .imagen-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+    display: block;
+  }
+  
+  .imagen-texto {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 6px 10px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .imagen-wrapper:hover img {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+  
+  .imagen-wrapper:hover .imagen-texto {
+    opacity: 1;
+  }
+  
+  /* 🔥 Si quieres que sea redonda, agregamos esta clase extra */
+  .redonda {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-top: -50px;
+    margin-left: 50px;
+  }
+
+  .portada-wrapper {
+    width: 100%;
+    height: 108px;
+    margin-top: 20px;
+    overflow: hidden;
+    position: relative;
+    background-color: #7e7e7e;
+    margin-bottom: -4px;
+  }
+  
+  .portada-wrapper img {
+    width: 100%;
+    height: 108px;
+    object-fit: cover;
+  }
+  
+  
+
+.contenedor-principal {
+    display: flex;
+    flex-direction: column; /* Para que primero esté el contenedor-centrado y luego el layout */
+    width: 100%;
+    min-height: 100vh;
+  }
+  
+  .contenedor-centrado {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #e8e8e8;
+  }
+  
+  
+  .contenedor-centrado h1 {
+    font-size: 40px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-left: 60px;
+  }
+
+  .editable-h1 {
+    position: relative;
+    outline: none;
+    background-color: transparent;
+  }
+
+  .editable-h1:hover{
+    cursor: pointer;
+    opacity: 0.8;
+  }
+  
+  .editable-h1:empty::before {
+    content: "[Escribe tu título aquí]";
+    color: #080808;
+    position: absolute;
+    pointer-events: none; /* El texto de placeholder no bloquea el clic */
+    left: 0;
+    top: 0;
+    font-size: 40px;
+    width: 426px;
+    height: 59px;
+    background-color: #d7eaff;
+  }
+  
+  /* Cuando tiene focus */
+  .editable-h1:focus {
+    background-color: #f0f8ff;
+  }
+  
+  
+  
+  .layout {
+    display: flex;
+    width: 100%;
+  }
+  
+  /* Barra de herramientas */
+  #toolbar {
+    width: 100px;
+    background: #f8f9fa;
+    border-right: 1px solid #e0e0e0;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 100vh;
+  }
+  
+  .tool {
+    width: 80px;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+    cursor: grab; /* Opcional: muestra la mano para arrastrar */
+  }
+  
+  .tool img {
+    max-width: 100%;
+    max-height: 60%;
+    object-fit: contain;
+  }
+  
+  .tool p {
+    margin: 0;
+    font-size: 12px; /* Ajustamos el tamaño del texto */
+    line-height: 1;
+  }
+  
+  .tool:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+  }
+  
+  #workspace {
+    flex-grow: 1;
+    width: 100%;
+    min-height: 100vh; /* 👈 Esto hace que siempre mida al menos el alto de la ventana */
+    position: relative;
+    overflow: auto;
+    margin-top: -10px;
+  }
+  
+
+/* ------------------------------------ */
+/* Header */
+/* ------------------------------------ */
+header {
+    width: 100%;
+    text-align: center;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+header nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 0 0 20px;
+}
+
+header nav .D {
+    margin-top: 5px;
+}
+
+/* ------------------------------------ */
+/* Switch */
+/* ------------------------------------ */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 70px;
+    height: 30px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 30px;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 30px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px; /* Ajustado */
+    width: 22px; /* Ajustado */
+    left: 4px;
+    top: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+.slider .icon {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%); /* <-- modifica esto */
+    font-size: 14px;
+    transition: opacity 0.4s;
+}
+
+.slider .icon:first-child {
+    left: 15px;
+    opacity: 1;
+}
+
+.slider .icon:last-child {
+    right: -5px;
+    opacity: 0;
+}
+
+input:checked + .slider {
+    background-color: #7e7e7e;
+}
+
+input:checked + .slider:before {
+    transform: translateX(40px); /* Ajustado para 70px de ancho */
+}
+
+input:checked + .slider .icon:first-child {
+    opacity: 0;
+}
+
+input:checked + .slider .icon:last-child {
+    opacity: 1;
+}
+
+
+    
+
+    /* Bloques de contenido */
+    .block {
+      padding: 16px;
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      min-height: 40px;
+      cursor: text;
+      position: relative;
+      transition: all 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      margin-left: 20px;
+      text-align: justify;
+      width: calc(100% - 70px);
+    }
+
+    .block:hover {
+      border-color: #c0c0c0;
+    }
+
+    .block:empty::before {
+        content: attr(data-placeholder);
+        color: #aaa;
+        pointer-events: none;
+        display: block;
+      }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    /* Elementos arrastrables */
+    .draggable {
+      position: absolute;
+      cursor: move;
+      border-radius: 8px;
+    }
+
+    /* Menú contextual */
+    #context-menu {
+      position: absolute;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 12px;
+      display: none;
+      z-index: 1000;
+      flex-direction: column;
+      gap: 8px;
+      width: 240px;
+    }
+
+    #context-menu input, 
+    #context-menu select, 
+    #context-menu button {
+      font-size: 14px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    /* Estado seleccionado */
+    .selected {
+      outline: 2px solid #4a90e2;
+      box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
+    }
+
+    /* Botones de menú */
+    .menu-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      color: #666;
+      background: #f0f0f0;
+      border-radius: 4px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.2s;
+    }
+    .block:hover .menu-button {
+      opacity: 1;
+    }
+    .menu-button:hover {
+      background: #e0e0e0;
+    }
+
+    /* Manejador de bloques */
+    .block-handle {
+      position: absolute;
+      left: -36px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.2s;
+    }
+    .block-container:hover .block-handle {
+      opacity: 1;
+    }
+    .block-handle:hover {
+      background: #e0e0e0;
+    }
+
+    /* Contenedor de bloques */
+    .block-container {
+      position: relative;
+      padding-left: 40px;
+      margin: 15px 0;
+    }
