@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,8 +20,12 @@
                 <div class=" user-img">
                     <img src="../assets/imagenes/perfil.png" alt="user">
                     <div class="user-tooltip user-date">
-                        <span class="name" id="username">Invitado</span>
-                        <span class="email" id="email"></span>
+                        <span class="name" id="username">
+                            <?php echo isset($_SESSION['userName']) ? htmlspecialchars($_SESSION['userName']) : 'Invitado'; ?>
+                        </span>
+                        <span class="rol" id="rol">
+                            <?php echo isset($_SESSION['rol']) ? htmlspecialchars($_SESSION['rol']) : 'Uknown'; ?>
+                        </span>
                     </div>
                 </div>
                 <div class="user-tooltip">
@@ -104,13 +111,6 @@
 
     <script src="../scripts/menu.js"></script>
     <script>
-        // 1) Recupera los valores (o pone valores por defecto)
-        const storedName  = sessionStorage.getItem("username") || "Invitado";
-        const storedEmail = sessionStorage.getItem("email")    || "";
-
-        // 2) Inserta en los spans de usuario
-        document.getElementById("username").textContent = storedName;
-        document.getElementById("email").textContent = storedEmail;
 
         // Función para cargar contenido dinámicamente en el centro
         function loadContent(page) {

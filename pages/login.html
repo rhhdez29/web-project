@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <div class="container-form">
-            <form class="sing-in">
+            <form class="sing-in" action="../includes/iniciar_sesion.php" method="POST">
                 <h2>Iniciar sesión</h2>
                 <div class="social-networks">
                     <ion-icon name="logo-google"></ion-icon>
@@ -20,14 +20,14 @@
                 <spam>Use su correo y contraseña</spam>
                 <div class="container-input">
                     <ion-icon name="mail-outline"></ion-icon>
-                    <input type="text" placeholder="Email">
+                    <input type="text" name="mail" placeholder="Email">
                 </div>
                 <div class="container-input">
                     <ion-icon name="lock-closed-outline"></ion-icon>
-                    <input type="password" placeholder="Password">
+                    <input type="password" name="password" placeholder="Password">
                 </div>
                 <a href="#">¿Olvidaste tu contraseña?</a>
-                <button class="button" id="login-button">Iniciar sesión</button>
+                <button class="button" id="login-button" type="submit">Iniciar sesión</button>
             </form>
         </div>
 
