@@ -3,66 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <title>Apuntes</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="../assets/styles/apuntes.css">
 </head>
 <body>
   <div class="contenedor-principal">
-    <div class="layout">
-      <!-- Barra de herramientas -->
-      <div id="toolbar">
-        <div class="tool" draggable="true" data-type="heading" style="text-align: center;">
-          <img src="../assets/imagenes/elemento.svg" alt="icono de texto" style="width: 56px; height: 56px; margin-bottom: 1px;">
-          <p>Subtítulo</p>
-        </div>
-        <div class="tool" draggable="true" data-type="text" style="text-align: center;">
-          <img src="../assets/imagenes/elemento.svg" alt="icono de texto" style="width: 56px; height: 56px; margin-bottom: 1px;">
-          <p>Texto</p>
-        </div>
-        <div class="tool" draggable="true" data-type="image" style="text-align: center;">
-          <img src="../assets/imagenes/elemento.svg" alt="icono de texto" style="width: 56px; height: 56px; margin-bottom: 1px;">
-          <p>Imagen</p>
-        </div>  
-        <div class="tool" draggable="true" data-type="lista" style="text-align: center;">
-          <img src="../assets/imagenes/elemento.svg" alt="icono de texto" style="width: 56px; height: 56px; margin-bottom: 1px;">
-          <p>Lista</p>
-        </div>
+    <nav>
+      <div class="D">
+        <label class="switch">
+          <input type="checkbox" id="toggle-mode">
+          <span class="slider">
+            <span class="icon">☀️</span>
+            <span class="icon">🌙</span>
+          </span>
+        </label>
       </div>
-
-      <header>
-        <nav>
-          <div class="D">
-            <label class="switch">
-                <input type="checkbox" id="toggle-mode">
-                <span class="slider">
-                    <span class="icon">☀️</span>
-                    <span class="icon">🌙</span>
-                </span>
-            </label>
+    </nav>
+    <!-- Barra lateral -->
+    <div id="toolbar">
+      <div class="tool" draggable="true" data-type="heading">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Subtítulo</p>
+      </div>
+      <div class="tool" draggable="true" data-type="text">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Texto</p>
+      </div>
+      <div class="tool" draggable="true" data-type="bullet">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Lista</p>
+      </div>
+      <div class="tool" draggable="true" data-type="list">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Lista numerada</p>
+      </div>
+      <div class="tool" draggable="true" data-type="table">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Tabla</p>
+      </div>
+      <div class="tool" draggable="true" data-type="text">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Fórmulas</p>
+      </div>
+      <div class="tool" draggable="true" data-type="hyperText">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Hipervínculo</p>
+      </div>
+      <div class="tool" draggable="true" data-type="text">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Nota</p>
+      </div>
+      <div class="tool" draggable="true" data-type="text">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Archivo</p>
+      </div>
+      <div class="tool" draggable="true" data-type="text">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Audio</p>
+      </div>
+      <div class="tool" draggable="true" data-type="text">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Gráfico</p>
+      </div>
+      <div class="tool" draggable="true" data-type="text">
+        <img src="../assets/imagenes/elemento.svg" alt="icono de texto">
+        <p>Video</p>
+      </div>
+  
+      <!-- Botones extra -->
+      <button id="add-image-btn" class="pdf-tool">
+        <img src="../assets/imagenes/elemento.svg" alt="Imagen">
+        <p>Imagen</p>
+      </button>
+      <button onclick="exportarContenido()" class="pdf-tool">
+        <img src="../assets/imagenes/elemento.svg" alt="PDF">
+        <p>Exportar PDF</p>
+      </button>
+    </div>
+  
+    <!-- Contenido principal -->
+    <div id="Contenido">
+      <div class="imagen-wrapper portada-wrapper">
+        <img class="portada" src="../assets/imagenes/fondo2.jpg" alt="Fondo">
+        <div class="imagen-texto">Cambiar imagen</div>
+      </div>
+  
+      <div class="contenedor-centrado">
+        <div class="imagen-wrapper redonda">
+          <img class="icono" src="../assets/imagenes/perfil.png" alt="Perfil">
+          <div class="imagen-texto">Cambiar foto</div>
         </div>
-        </nav>
-        <div class="imagen-wrapper portada-wrapper">
-          <img class="portada" src="../assets/imagenes/fondo2.jpg" alt="Icono de Clases">
-          <div class="imagen-texto">Cambiar imagen</div>
-        </div>
-        <div class="contenedor-centrado">
-          <div class="imagen-wrapper redonda">
-            <img class="icono" src="../assets/imagenes/perfil.png" alt="Icono de Clases">
-            <div class="imagen-texto">Cambiar foto</div>
-          </div>
-          <h1 id="editable-title" contenteditable="true" class="editable-h1">[Escribe tu título aquí]</h1>
-          <!-- Área de trabajo principal -->
-          <div id="workspace" ondragover="event.preventDefault()"></div>
-        </div>
-      </header>
+        <h1 id="editable-title" contenteditable="true" class="editable-h1"></h1>
+  
+        <!-- Área de trabajo -->
+        <div id="workspace" ondragover="event.preventDefault()"></div>
+      </div>
     </div>
   </div>
   
+  
   <!-- Menú contextual -->
   <div id="context-menu">
-    <div style="display: flex; align-items: center; margin-bottom: 12px; gap: 8px;">
-      <span id="icon-preview" style="font-size: 24px;"></span>
-      <button id="open-emoji-picker" style="flex-grow: 1; padding: 8px;">Seleccionar emoji</button>
-    </div>
     <select id="font-select">
       <option value="Arial">Arial</option>
       <option value="Segoe UI">Segoe UI</option>
@@ -83,7 +125,7 @@
     <button id="delete-block" style="background: #ff4d4d; color: white; border: none; margin-top: 8px;">🗑️ Eliminar bloque</button>
   </div>
 
-  <!-- 🔥 Ventana flotante para elegir imagen -->
+  <!-- Ventana flotante para elegir imagen -->
 <div id="image-picker-modal" style="display: none; position: fixed; top: 50%; left: 50%; 
 transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; 
 box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000;">
@@ -94,12 +136,67 @@ box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000;">
   <button id="close-image-picker" style="margin-top: 15px;">Cancelar</button>
 </div>
 
-<!-- 🔥 Fondo oscuro detrás del modal -->
-<div id="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; 
-height: 100%; background: rgba(0,0,0,0.5); z-index: 900;"></div>
 
 
 <script src="../scripts/apuntes.js"></script>
-</body>
+<script>
+  async function exportarContenido() {
+  const { jsPDF } = window.jspdf;
+  const contenido = document.getElementById("Contenido");
+  const rawTitle = document.getElementById("editable-title").innerText.trim() || "Archivo";
+  const titulo = rawTitle.replace(/[^a-z0-9áéíóúñü \-_]/gi, '').substring(0, 50);
 
+  try {
+    // 1. Aplicar estilos de impresión antes de capturar
+    document.getElementById('Contenido').classList.add('printing-pdf');
+    
+    // 2. Forzar cálculo de estilos (reflow)
+    void document.getElementById('Contenido').offsetHeight;
+    
+    // 3. Configurar html2canvas con las dimensiones reales del contenido
+    const canvas = await html2canvas(contenido, {
+      scale: 2,
+      logging: true,
+      useCORS: true,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: contenido.scrollWidth,
+      windowHeight: contenido.scrollHeight,
+      backgroundColor: '#FFFFFF'
+    });
+
+    // 4. Remover estilos de impresión después de capturar
+    document.getElementById('Contenido').classList.remove('printing-pdf');
+    
+    const imgData = canvas.toDataURL("image/png", 1.0);
+
+    // 5. Crear PDF con tamaño adecuado (A4 en mm)
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4"
+    });
+
+    // 6. Calcular dimensiones para ajustar al PDF manteniendo relación de aspecto
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth() - 20; // Margen 10mm cada lado
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    
+    // 7. Centrar la imagen en el PDF con márgenes
+    const xPos = 10; // Margen izquierdo 10mm
+    const yPos = 10; // Margen superior 10mm
+    
+    pdf.addImage(imgData, 'PNG', xPos, yPos, pdfWidth, pdfHeight);
+    
+    // 8. Guardar el PDF
+    pdf.save(titulo + ".pdf");
+
+  } catch (err) {
+    document.getElementById('Contenido').classList.remove('printing-pdf')
+    console.error("Error al generar el PDF:", err);
+    alert("Ocurrió un error al generar el PDF. Revisa la consola.");
+  }
+}
+</script>
+</body>
 </html>
