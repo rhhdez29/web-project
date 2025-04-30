@@ -127,6 +127,9 @@ session_start();
             if (page === 'mis_apuntes') {
                 content.innerHTML = '<iframe src="apuntes.html" width="100%" height="100%" style="border: none;"></iframe>';
             }
+            if (page === 'home') {
+                content.innerHTML = '<iframe src="home.html" width="100%" height="100%" style="border: none;"></iframe>';
+            }
         }
 
         // Al cargar la página, puedes definir un contenido por defecto
