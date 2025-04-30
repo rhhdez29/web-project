@@ -1,6 +1,8 @@
   // Elementos principales
   const workspace = document.getElementById("workspace");
   const contextMenu = document.getElementById("context-menu");
+  const addImageBtn = document.getElementById('add-image-btn');
+  const contenedorPrincipal = document.getElementById("contenedor-bloques");
 
   // Variables de estado
   let selectedBlock = null;
@@ -24,267 +26,654 @@
     });
   }
 
-  // Crear nuevo bloque según el tipo
-  function createNewBlock(type, clientX, clientY) {
-    const x = clientX - workspace.getBoundingClientRect().left + workspace.scrollLeft;
-    const y = clientY - workspace.getBoundingClientRect().top + workspace.scrollTop;
-
+  function createNewBlock(type) {
     let element;
-
+  
     switch (type) {
       case "text":
         element = createTextBlock();
         break;
-      case "checklist":
-        element = createChecklistBlock();
+      case "list":
+        element = createListBlock();
         break;
-      case "image":
-        element = createImageBlock(x, y);
+      case "bullet":
+        element = createBulletListBlock();
         break;
       case "heading":
         element = createHeadingBlock();
         break;
+      case "hyperText":
+        element = createHyperText();
+        break;
+      case "table":
+        element = createTableBlock();
+        break;
       default:
         return;
     }
-
+  
     if (element) {
-      element.style.position = type === "image" ? "absolute" : "relative";
-      
       if (type !== "image") {
-        element.innerHTML = '<span class="menu-button">⋮</span>' + element.innerHTML;
+        const menu = document.createElement("span");
+        menu.className = "menu-button";
+        menu.textContent = "⋮";
+        element.insertBefore(menu, element.firstChild);
       }
-      
+  
+      // Estilo normal, sin posición absoluta
+      element.style.position = "relative";
+  
+      // Insertar al final (flujo vertical)
       workspace.appendChild(element);
     }
   }
+  
+  
 
-  function createTextBlock() {
+// Función de inicialización
+function initImage() {
+  // Configurar event listeners
+  function setupEventListeners() {
+      addImageBtn.addEventListener('click', addNewImage);
+  }
+  
+  // Añadir nueva imagen centrada
+  function addNewImage() {
+      const workspaceRect = workspace.getBoundingClientRect();
+      const centerX = workspace.scrollLeft + workspaceRect.width / 2 - 150;
+      const centerY = workspace.scrollTop + workspaceRect.height / 2 - 100;
+      
+      createResizableImage(centerX, centerY, workspace);
+  }
+  
+  // Inicializar
+  setupEventListeners();
+}
+
+function createResizableImage(x, y, container) {
+  const imageContainer = document.createElement('div');
+  imageContainer.className = 'resizable-image-container';
+  imageContainer.style.left = `${x}px`;
+  imageContainer.style.top = `${y}px`;
+  imageContainer.style.width = '300px';
+  imageContainer.style.height = '200px';
+  
+  // Crear elemento de imagen
+  const img = document.createElement('img');
+  img.className = 'resizable-image';
+  img.src = '../assets/imagenes/elemento.svg'; // Imagen de ejemplo
+  img.draggable = false;
+  
+  // Crear handles de redimensionamiento
+  const handles = ['nw', 'ne', 'sw', 'se'].map(pos => {
+      const handle = document.createElement('div');
+      handle.className = `resize-handle handle-${pos}`;
+      handle.dataset.position = pos;
+      return handle;
+  });
+  
+  // Añadir elementos al contenedor
+  imageContainer.appendChild(img);
+  handles.forEach(handle => imageContainer.appendChild(handle));
+  container.appendChild(imageContainer);
+  
+  // Variables de estado
+  let isDragging = false;
+  let isResizing = false;
+  let activeHandle = null;
+  let startX, startY, startWidth, startHeight, startLeft, startTop;
+  
+  // Evento para comenzar interacción
+  imageContainer.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('resize-handle')) {
+          // Redimensionamiento
+          isResizing = true;
+          activeHandle = e.target;
+          imageContainer.style.cursor = e.target.style.cursor;
+      } else {
+          // Arrastre
+          isDragging = true;
+          imageContainer.classList.add('dragging');
+          imageContainer.style.cursor = 'grabbing';
+      }
+      
+      // Guardar estado inicial
+      startX = e.clientX;
+      startY = e.clientY;
+      startWidth = parseInt(imageContainer.style.width);
+      startHeight = parseInt(imageContainer.style.height);
+      startLeft = parseInt(imageContainer.style.left);
+      startTop = parseInt(imageContainer.style.top);
+      
+      e.preventDefault();
+  });
+  
+  // Evento para mover
+  document.addEventListener('mousemove', (e) => {
+      if (!isDragging && !isResizing) return;
+      
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      
+      if (isResizing && activeHandle) {
+          // Lógica de redimensionamiento
+          const position = activeHandle.dataset.position;
+          const newWidth = startWidth + (position.includes('e') ? dx : -dx);
+          const newHeight = startHeight + (position.includes('s') ? dy : -dy);
+          
+          // Aplicar límites mínimos
+          imageContainer.style.width = `${Math.max(100, newWidth)}px`;
+          imageContainer.style.height = `${Math.max(100, newHeight)}px`;
+          
+          // Ajustar posición para handles noroeste y suroeste
+          if (position.includes('w')) {
+              imageContainer.style.left = `${startLeft + dx}px`;
+          }
+          
+          // Ajustar posición para handles noroeste y noreste
+          if (position.includes('n')) {
+              imageContainer.style.top = `${startTop + dy}px`;
+          }
+      } else if (isDragging) {
+          // Lógica de arrastre
+          imageContainer.style.left = `${startLeft + dx}px`;
+          imageContainer.style.top = `${startTop + dy}px`;
+      }
+  });
+  
+  // Evento para finalizar interacción
+  document.addEventListener('mouseup', () => {
+      if (isDragging || isResizing) {
+          isDragging = false;
+          isResizing = false;
+          activeHandle = null;
+          imageContainer.classList.remove('dragging');
+          imageContainer.style.cursor = 'grab';
+      }
+  });
+  
+  return imageContainer;
+}
+
+workspace.addEventListener('focusin', (e) => {
+  const block = e.target;
+  if (block.classList.contains('block') && block.isContentEditable) {
+    if (block.innerText.trim() === 'Escribe aquí...') {
+      block.innerHTML = ''; // Borra el placeholder al enfocarlo si todavía estaba
+    }
+  }
+});
+
+workspace.addEventListener('input', (e) => {
+  const block = e.target;
+  if (block.classList.contains('block') && block.isContentEditable) {
+  // Si se borra todo y quedan <br>, limpiar para que ::before funcione
+  if (block.innerHTML.trim() === '<br>' || block.innerHTML.trim() === '') {
+    block.innerHTML = '';
+  }
+}
+});
+
+// Crear bloque de texto
+function createTextBlock() {
     const container = document.createElement("div");
     container.className = "block-container";
-  
+    
+    const block = document.createElement("div");
+    block.className = "content-block text-block";
+    block.contentEditable = true;
+    block.setAttribute('data-placeholder', 'Escribe aquí...');
+    
     const handle = document.createElement("div");
     handle.className = "block-handle";
     handle.innerHTML = "⋮";
     handle.addEventListener("click", (e) => {
       e.stopPropagation();
-      showContextMenu(container.querySelector(".block"));
+      showContextMenu(block);
     });
-  
-    const block = document.createElement("div");
-    block.className = "block";
-    block.contentEditable = true;
-    block.setAttribute('data-placeholder', 'Escribe aquí...'); // Placeholder visible cuando vacío
-    block.innerHTML = ''; // Empieza vacío para que se vea el placeholder
-  
-  
-    container.appendChild(handle);
+    
+    // Cambiar orden en el DOM (primero el bloque, luego el handle)
     container.appendChild(block);
-  
+    container.appendChild(handle);
+    
     return container;
-  }
+}
 
-  
-  workspace.addEventListener('focusin', (e) => {
-    const block = e.target;
-    if (block.classList.contains('block') && block.isContentEditable) {
-      if (block.innerText.trim() === 'Escribe aquí...') {
-        block.innerHTML = ''; // 🔥 Borra el placeholder al enfocarlo si todavía estaba
-      }
-    }
-  });
-  
-  workspace.addEventListener('input', (e) => {
-    const block = e.target;
-    if (block.classList.contains('block') && block.isContentEditable) {
-    // Si se borra todo y quedan <br>, limpiar para que ::before funcione
-    if (block.innerHTML.trim() === '<br>' || block.innerHTML.trim() === '') {
-      block.innerHTML = '';
-    }
-  }
-  });
-  
-  
-  
-
-  // Crear bloque de checklist
-  function createChecklistBlock() {
-    const element = document.createElement("div");
-    element.className = "block";
+// Crear bloque de subtítulo
+function createHeadingBlock() {
+  const container = document.createElement("div");
+  container.className = "block-container";
     
-    for (let i = 0; i < 3; i++) {
-      const item = document.createElement("div");
-      item.className = "checklist-item";
-      
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      
-      const label = document.createElement("span");
-      label.textContent = "Tarea " + (i + 1);
-      label.contentEditable = true;
-      
-      item.appendChild(checkbox);
-      item.appendChild(label);
-      element.appendChild(item);
-    }
+  const block = document.createElement("div");
+  block.className = "content-block heading-block";
+  block.contentEditable = true;
+  block.setAttribute('data-placeholder', 'Escribe tu título aquí...');
     
-    return element;
-  }
+  const handle = document.createElement("div");
+  handle.className = "block-handle";
+  handle.innerHTML = "⋮";
+  handle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showContextMenu(block);
+  });
+    
+  container.appendChild(block);
+  container.appendChild(handle);
+    
+  return container;
+}
 
-  // Crear bloque de imagen
-  function createImageBlock(x, y) {
-    const element = document.createElement("img");
-    element.src = "../assets/imagenes/elemento.svg";
-    element.className = "draggable";
-    element.style.left = x + "px";
-    element.style.top = y + "px";
-    element.style.width = "300px";
-    element.style.height = "auto";
-    element.draggable = false;
-    element.style.borderRadius = "8px";
+function createListBlock() {
+  const container = document.createElement("div");
+  container.className = "block-container list-container";
 
-    // Hacer la imagen arrastrable
-    let offsetX, offsetY;
-    element.addEventListener("mousedown", e => {
-      e.preventDefault();
-      offsetX = e.offsetX;
-      offsetY = e.offsetY;
-      
-      const onMouseMove = ev => {
-        element.style.left = (ev.pageX - workspace.getBoundingClientRect().left - offsetX + workspace.scrollLeft) + "px";
-        element.style.top = (ev.pageY - workspace.getBoundingClientRect().top - offsetY + workspace.scrollTop) + "px";
-      };
-      
-      document.addEventListener("mousemove", onMouseMove);
-      
-      document.addEventListener("mouseup", () => {
-        document.removeEventListener("mousemove", onMouseMove);
-      }, { once: true });
+  const handle = document.createElement("div");
+  handle.className = "block-handle";
+  handle.innerHTML = "⋮";
+  handle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showContextMenu(container);
+  });
+
+  const listItemsWrapper = document.createElement("div");
+  listItemsWrapper.className = "list-items-wrapper";
+
+  function actualizarNumeracionInterna() {
+    const items = listItemsWrapper.querySelectorAll(".list-item");
+    items.forEach((item, index) => {
+      const label = item.querySelector(".block-number");
+      if (label) label.textContent = `${index + 1}.`;
     });
-
-    return element;
   }
 
-  // Crear bloque de título
-  function createHeadingBlock() {
-    const element = document.createElement("div");
-    element.className = "block";
-    element.contentEditable = true;
-    element.style.fontSize = "24px";
-    element.style.fontWeight = "bold";
-    element.textContent = "Título";
-    return element;
+  function createListItem(isFirst = false) {
+    const itemWrapper = document.createElement("div");
+    itemWrapper.className = "content-block text-block-wrapper list-item";
+
+    const bullet = document.createElement("span");
+    bullet.className = "block-number";
+
+    const block = document.createElement("div");
+    block.className = "content-block listBlock";
+    block.contentEditable = true;
+    block.setAttribute("data-placeholder", "Escribe aquí...");
+
+    const buttons = document.createElement("div");
+    buttons.className = "block-buttons";
+
+    const addButton = document.createElement("button");
+    addButton.textContent = "+";
+    addButton.onclick = () => {
+      const newItem = createListItem();
+      listItemsWrapper.insertBefore(newItem, itemWrapper.nextSibling);
+      actualizarNumeracionInterna();
+    };
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "×";
+    deleteButton.onclick = () => {
+      const items = listItemsWrapper.querySelectorAll(".list-item");
+      if (items.length > 1 && itemWrapper !== items[0]) {
+        itemWrapper.remove();
+        actualizarNumeracionInterna();
+      }
+    };
+
+    if (isFirst) {
+      deleteButton.disabled = true;
+      deleteButton.style.opacity = 0.3;
+      deleteButton.style.cursor = "not-allowed";
+    }
+
+    buttons.appendChild(addButton);
+    buttons.appendChild(deleteButton);
+
+    itemWrapper.appendChild(bullet);
+    itemWrapper.appendChild(block);
+    itemWrapper.appendChild(buttons);
+
+    return itemWrapper;
   }
 
-  // Mostrar menú contextual
-  function showContextMenu(block, clientX, clientY) {
-    if (selectedBlock) selectedBlock.classList.remove("selected");
+  // Agrega el primer ítem
+  listItemsWrapper.appendChild(createListItem(true));
+  actualizarNumeracionInterna(); // Numeración inicial
 
-    selectedBlock = block;
-    selectedBlock.classList.add("selected");
+  container.appendChild(handle);
+  container.appendChild(listItemsWrapper);
 
-    const rect = selectedBlock.getBoundingClientRect();
-    const workspaceRect = workspace.getBoundingClientRect();
+  return container;
+}
 
-    // Posicionar el menú contextual
-    if (clientX && clientY) {
-      contextMenu.style.left = (clientX - workspaceRect.left) + "px";
-      contextMenu.style.top = (clientY - workspaceRect.top) + "px";
+
+function createBulletListBlock() {
+  const container = document.createElement("div");
+  container.className = "block-container list-container";
+
+  const handle = document.createElement("div");
+  handle.className = "block-handle";
+  handle.innerHTML = "⋮";
+  handle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showContextMenu(container);
+  });
+
+  const listItemsWrapper = document.createElement("div");
+  listItemsWrapper.className = "list-items-wrapper";
+
+  // Función para crear un ítem de lista individual
+  function createListItem(isFirst=false) {
+    const itemWrapper = document.createElement("div");
+    itemWrapper.className = "content-block text-block-wrapper list-item";
+
+    const bullet = document.createElement("span");
+    bullet.className = "block-bullet";
+    bullet.textContent = "•";
+
+    const content = document.createElement("div");
+    content.className = "content-block listBlock";
+    content.contentEditable = true;
+    content.setAttribute("data-placeholder", "Escribe aquí...");
+
+    const buttons = document.createElement("div");
+    buttons.className = "block-buttons";
+
+    const addButton = document.createElement("button");
+    addButton.textContent = "+";
+    addButton.onclick = () => {
+      const newItem = createListItem();
+      listItemsWrapper.insertBefore(newItem, itemWrapper.nextSibling);
+    };
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "×";
+    deleteButton.onclick = () => {
+      const items = listItemsWrapper.querySelectorAll(".list-item");
+      if (items.length > 1 && itemWrapper !== items[0]) {
+        itemWrapper.remove();
+      }
+    };
+
+    if (isFirst) {
+      deleteButton.disabled = true;
+      deleteButton.style.opacity = 0.3;
+      deleteButton.style.cursor = "not-allowed";
+    }
+
+    buttons.appendChild(addButton);
+    buttons.appendChild(deleteButton);
+
+    itemWrapper.appendChild(bullet);
+    itemWrapper.appendChild(content);
+    itemWrapper.appendChild(buttons);
+
+    return itemWrapper;
+  }
+
+  // Crear el primer ítem
+  const firstItem = createListItem(true);
+  listItemsWrapper.appendChild(firstItem);
+
+  container.appendChild(handle);
+  container.appendChild(listItemsWrapper);
+
+  return container;
+}
+
+
+function createHyperText() {
+  const container = document.createElement("div");
+  container.className = "block-container";
+
+  const block = document.createElement("div");
+  block.className = "content-block text-block hyperText";
+  block.contentEditable = true;
+  block.setAttribute("data-placeholder", "Escribe aquí...");
+
+  const handle = document.createElement("div");
+  handle.className = "block-handle";
+  handle.innerHTML = "⋮";
+  handle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showContextMenu(block);
+  });
+
+  const buttons = document.createElement("div");
+  buttons.className = "block-buttons";
+
+  const editButton = document.createElement("button");
+  editButton.textContent = "✎";
+  editButton.title = "Editar";
+  editButton.addEventListener("click", () => {
+    block.contentEditable = true;
+    block.focus();
+  });
+
+  buttons.appendChild(editButton);
+
+  // Detectar URL al salir del bloque
+  block.addEventListener("blur", () => {
+    const text = block.innerText.trim();
+    if (text.startsWith("http")) {
+      block.classList.add("link");
+      block.contentEditable = false;
     } else {
-      contextMenu.style.left = (rect.left - workspaceRect.left + 10) + "px";
-      contextMenu.style.top = (rect.top - workspaceRect.top + selectedBlock.offsetHeight + 10) + "px";
+      block.classList.remove("link");
     }
-    
-    contextMenu.style.display = "flex";
+  });
 
-    // Cargar estilos actuales del bloque
-    updateContextMenuWithBlockStyles();
-  }
+  // Click para abrir si es link
+  block.addEventListener("click", () => {
+    if (!block.isContentEditable && block.classList.contains("link")) {
+      window.open(block.innerText.trim(), "_blank");
+    }
+  });
 
-  // Actualizar menú contextual con estilos del bloque
-  function updateContextMenuWithBlockStyles() {
-    if (!selectedBlock) return;
-    
-    document.getElementById("font-select").value = 
-      selectedBlock.style.fontFamily || "Segoe UI";
-    
-    document.getElementById("font-size").value = 
-      parseInt(selectedBlock.style.fontSize) || 16;
-    
-    document.getElementById("text-color").value = 
-      rgbToHex(getComputedStyle(selectedBlock).color);
-    
-    document.getElementById("bg-color").value = 
-      rgbToHex(getComputedStyle(selectedBlock).backgroundColor);
-  }
+  container.appendChild(block);
+  container.appendChild(handle);
+  container.appendChild(buttons);
+  return container;
+}
 
-  // Inicializar interacción con bloques
-  function initBlockInteractions() {
-    workspace.addEventListener("click", e => {
-      let target = e.target;
+function createCell(isHeader) {
+  const cell = document.createElement(isHeader ? "th" : "td");
+  cell.contentEditable = true;
+  cell.setAttribute("data-placeholder", isHeader ? "Encabezado" : "Escribe...");
+  return cell;
+}
 
-      // Si se hace clic en los controles de menú
-      if (target.classList.contains("menu-button") || target.classList.contains("block-handle")) {
-        e.stopPropagation();
-        target = target.closest(".block") || target.parentElement.closest(".block");
-        showContextMenu(target, e.clientX, e.clientY);
-        return;
+function createTableBlock() {
+  const container = document.createElement("div");
+  container.className = "block-container table-block";
+
+  const table = document.createElement("table");
+  table.className = "editable-table";
+
+  const handle = document.createElement("div");
+  handle.className = "block-handle";
+  handle.innerHTML = "⋮";
+  handle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showContextMenu(table);
+  });
+
+  // Crear encabezado
+  const headerRow = document.createElement("tr");
+  headerRow.appendChild(createCell(true));
+  table.appendChild(headerRow);
+
+  // Crear primera fila
+  const row = document.createElement("tr");
+  row.appendChild(createCell(false));
+  table.appendChild(row);
+
+  // Crear contenedor para controles
+  const controlsWrapper = document.createElement("div");
+  controlsWrapper.className = "table-controls-wrapper";
+
+  const controls = document.createElement("div");
+  controls.className = "table-controls";
+
+  const addRowBtn = document.createElement("button");
+  addRowBtn.textContent = "+ Fila";
+  addRowBtn.onclick = () => {
+    const newRow = document.createElement("tr");
+    const colCount = table.rows[0].cells.length;
+    for (let i = 0; i < colCount; i++) {
+      newRow.appendChild(createCell(false));
+    }
+    table.appendChild(newRow);
+  };
+
+  const removeRowBtn = document.createElement("button");
+  removeRowBtn.textContent = "− Fila";
+  removeRowBtn.onclick = () => {
+    if (table.rows.length > 2) {
+      table.deleteRow(-1);
+    }
+  };
+
+  const addColBtn = document.createElement("button");
+  addColBtn.textContent = "+ Columna";
+  addColBtn.onclick = () => {
+    for (let i = 0; i < table.rows.length; i++) {
+      table.rows[i].appendChild(createCell(i === 0));
+    }
+  };
+
+  const removeColBtn = document.createElement("button");
+  removeColBtn.textContent = "− Columna";
+  removeColBtn.onclick = () => {
+    const colCount = table.rows[0].cells.length;
+    if (colCount > 1) {
+      for (let row of table.rows) {
+        row.deleteCell(-1);
       }
+    }
+  };
 
-      // Si el clic fue en un bloque
-      if (target.classList.contains("block")) {
-        e.stopPropagation();
-        showContextMenu(target, e.clientX, e.clientY);
+  controls.appendChild(addRowBtn);
+  controls.appendChild(removeRowBtn);
+  controls.appendChild(addColBtn);
+  controls.appendChild(removeColBtn);
+
+  controlsWrapper.appendChild(controls);
+
+  container.appendChild(table);
+  container.appendChild(handle);
+  container.appendChild(controlsWrapper);
+
+  return container;
+}
+
+
+
+
+
+
+
+// Mostrar menú contextual
+function showContextMenu(block, clientX = null, clientY = null) {
+  if (!block) return; // Evita errores si no se pasó un bloque válido
+
+  if (selectedBlock) selectedBlock.classList.remove("selected");
+
+  selectedBlock = block;
+  selectedBlock.classList.add("selected");
+
+  const rect = selectedBlock.getBoundingClientRect();
+  const workspaceRect = workspace.getBoundingClientRect();
+
+  // Posicionar el menú contextual
+  contextMenu.style.left = (clientX ? clientX - workspaceRect.left : rect.left - workspaceRect.left + 10) + "px";
+  contextMenu.style.top = (clientY ? clientY - workspaceRect.top : rect.top - workspaceRect.top + selectedBlock.offsetHeight + 10) + "px";
+  contextMenu.style.display = "flex";
+
+  // Cargar estilos actuales del bloque
+  updateContextMenuWithBlockStyles();
+}
+
+// Actualizar menú contextual con estilos del bloque
+function updateContextMenuWithBlockStyles() {
+  if (!selectedBlock) return;
+
+  const computedStyles = getComputedStyle(selectedBlock);
+
+  document.getElementById("font-select").value = selectedBlock.style.fontFamily || "Segoe UI";
+  document.getElementById("font-size").value = parseInt(selectedBlock.style.fontSize) || 16;
+  document.getElementById("text-color").value = rgbToHex(computedStyles.color);
+  document.getElementById("bg-color").value = rgbToHex(computedStyles.backgroundColor);
+}
+
+// Inicializar interacción con bloques
+function initBlockInteractions() {
+  workspace.addEventListener("click", (e) => {
+    let target = e.target;
+
+    // Clic en los botones del menú o el handle del bloque
+    if (target.classList.contains("menu-button") || target.classList.contains("block-handle")) {
+      e.stopPropagation();
+      const block = target.closest(".block");
+      if (block) showContextMenu(block, e.clientX, e.clientY);
+      return;
+    }
+
+    // Clic en cualquier bloque
+    const block = target.closest(".block");
+    if (block) {
+      e.stopPropagation();
+      showContextMenu(block, e.clientX, e.clientY);
+    } else {
+      // Clic fuera: cerrar menú
+      closeContextMenu();
+    }
+  });
+
+  // Cerrar menú si se hace clic fuera
+  document.addEventListener("click", (e) => {
+    if (!contextMenu.contains(e.target)) {
+      closeContextMenu();
+    }
+  });
+
+  // Estilos desde menú contextual
+  document.getElementById("font-select").addEventListener("change", (e) => {
+    if (selectedBlock) selectedBlock.style.fontFamily = e.target.value;
+  });
+
+  document.getElementById("font-size").addEventListener("input", (e) => {
+    if (selectedBlock) selectedBlock.style.fontSize = e.target.value + "px";
+  });
+
+  document.getElementById("text-color").addEventListener("input", (e) => {
+    if (selectedBlock) selectedBlock.style.color = e.target.value;
+  });
+
+  document.getElementById("bg-color").addEventListener("input", (e) => {
+    if (selectedBlock) selectedBlock.style.backgroundColor = e.target.value;
+  });
+
+  // Eliminar bloque
+  document.getElementById("delete-block").addEventListener("click", () => {
+    if (selectedBlock) {
+      const container = selectedBlock.closest(".block-container");
+      if (container) {
+        container.remove();
       } else {
-        // Clic fuera de un bloque - cerrar menú
-        closeContextMenu();
+        selectedBlock.remove();
       }
-    });
+      closeContextMenu();
+    }
+  });
+}
 
-    // Cerrar menú al hacer clic fuera
-    document.addEventListener("click", (e) => {
-      if (!contextMenu.contains(e.target) && e.target !== openEmojiPickerBtn) {
-        closeContextMenu();
-      }
-    });
+// Cerrar menú contextual
+function closeContextMenu() {
+  contextMenu.style.display = "none";
+  if (selectedBlock) selectedBlock.classList.remove("selected");
+  selectedBlock = null;
+}
 
-    // Manejar cambios de estilo desde el menú contextual
-    document.getElementById("font-select").addEventListener("change", e => {
-      if (selectedBlock) selectedBlock.style.fontFamily = e.target.value;
-    });
-
-    document.getElementById("font-size").addEventListener("input", e => {
-      if (selectedBlock) selectedBlock.style.fontSize = e.target.value + "px";
-    });
-
-    document.getElementById("text-color").addEventListener("input", e => {
-      if (selectedBlock) selectedBlock.style.color = e.target.value;
-    });
-
-    document.getElementById("bg-color").addEventListener("input", e => {
-      if (selectedBlock) selectedBlock.style.backgroundColor = e.target.value;
-    });
-
-    // Botón eliminar bloque
-    document.getElementById("delete-block").addEventListener("click", () => {
-      if (selectedBlock) {
-        const container = selectedBlock.closest(".block-container");
-        if (container) {
-          container.remove();
-        } else {
-          selectedBlock.remove();
-        }
-        closeContextMenu();
-      }
-    });
-  }
-
-  // Cerrar menú contextual
-  function closeContextMenu() {
-    contextMenu.style.display = "none";
-    if (selectedBlock) selectedBlock.classList.remove("selected");
-    selectedBlock = null;
-  }
 
   // Convertir color RGB a HEX
   function rgbToHex(rgb) {
@@ -349,10 +738,27 @@
     document.getElementById("close-image-picker").onclick = closeImagePicker;
   }
   
-  function closeImagePicker() {
-    document.getElementById("image-picker-modal").style.display = "none";
-    document.getElementById("modal-overlay").style.display = "none";
+  // Función para cerrar el modal
+function closeImagePicker() {
+  document.getElementById("image-picker-modal").style.display = "none";
+  document.getElementById("modal-overlay").style.display = "none";
+}
+
+// Función de inicialización
+function initModal() {
+  // Configurar botón de cerrar
+  const closeButton = document.getElementById("close-image-picker");
+  if (closeButton) {
+    closeButton.addEventListener("click", closeImagePicker);
   }
+  
+  // Opcional: Cerrar con tecla Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeImagePicker();
+    }
+  });
+}
   
 
   function initImageClick(selector, callback) {
@@ -364,21 +770,21 @@
     });
   }
 
-  function initEditableTitle() {
-    const title = document.getElementById('editable-title');
-  
-    title.addEventListener('focus', () => {
-      if (title.innerText.trim() === '[Escribe tu título aquí]') {
-        title.innerText = '';
+  document.querySelectorAll('.editable-h1').forEach(editable => {
+    // Limpiar placeholder al enfocar
+    editable.addEventListener('focus', () => {
+      if (editable.textContent.trim() === '') {
+        editable.innerHTML = '';
       }
     });
-  
-    title.addEventListener('blur', () => {
-      if (title.innerText.trim() === '') {
-        title.innerText = '[Escribe tu título aquí]';
+    
+    // Restaurar placeholder si está vacío al perder foco
+    editable.addEventListener('blur', () => {
+      if (editable.textContent.trim() === '') {
+        editable.innerHTML = '';
       }
     });
-  }
+  });
   
   
   // Inicializar la aplicación
@@ -386,9 +792,10 @@
     initToolDrag();
     initWorkspaceDrop();
     initBlockInteractions();
-    initEditableTitle();
     initImageClick('.portada', openImagePicker);
     initImageClick('.icono', openImagePicker);
+    initModal();
+    initImage();
   }
 
   // Iniciar cuando el DOM esté listo
