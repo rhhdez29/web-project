@@ -30,7 +30,7 @@ session_start();
                 </div>
                 <div class="user-tooltip">
                     <div class="user-home">
-                        <a href="#" class="menu-link small">
+                        <a href="#" class="menu-link small" onclick="loadContent('home')">
                             <i class='bx bx-home-smile'></i>
                             <span>Inicio</span>
                         </a>
