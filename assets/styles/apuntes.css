@@ -1,11 +1,83 @@
-/* Estilos base */
-* { box-sizing: border-box; }
+/* Estilos para todos los elementos con scroll */
+:root {
+  scrollbar-color: #c1c1c1 #f8f9fa; /* Firefox */
+  scrollbar-width: thin; /* Firefox */
+}
+
+/* WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 3px;
+  border: 1px solid #f8f9fa;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a1a1a1;
+}
+
+/* Estructura principal */
 body {
-    margin: 0;
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden; /* Evita doble scroll en la página */
+}
+
+.contenedor-principal {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Contenido principal con scroll */
+header {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Scroll vertical */
+  height: 100vh;
+  position: relative;
+}
+
+/* Toggle switch fijo */
+.D {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  z-index: 200;
+  margin-right: 20px;
+}
+
+#Contenido {
+  background-color: #eaeaea;
+  overflow-y: auto;
+  overflow-x: hidden; /* Evita barra horizontal */
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box; /* Asegura que padding/border no desborde */
+}
+
+#workspace {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 100%;            /*Asegura que no se desborde */
+  min-height: 100vh;
+  position: relative;
+  overflow-y: auto;
+  margin-top: 0;
+  box-sizing: border-box;
 }
 
 .imagen-wrapper {
@@ -14,175 +86,561 @@ body {
     overflow: hidden;
 }
   
-  .imagen-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: opacity 0.3s ease;
-    display: block;
-  }
+.imagen-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+  display: block;
+}
   
-  .imagen-texto {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 16px;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 6px 10px;
-    border-radius: 6px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
+.imagen-texto {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 16px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 6px 10px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
   
-  .imagen-wrapper:hover img {
-    cursor: pointer;
-    opacity: 0.8;
-  }
+.imagen-wrapper:hover img {
+  cursor: pointer;
+  opacity: 0.8;
+}
   
-  .imagen-wrapper:hover .imagen-texto {
-    opacity: 1;
-  }
+.imagen-wrapper:hover .imagen-texto {
+  opacity: 1;
+}
   
-  /* 🔥 Si quieres que sea redonda, agregamos esta clase extra */
-  .redonda {
+/* imagen redonda */
+.redonda {
     width: 150px;
     height: 150px;
     object-fit: cover;
     border-radius: 50%;
     margin-top: -50px;
     margin-left: 50px;
-  }
+}
 
-  .portada-wrapper {
-    width: 100%;
-    height: 108px;
-    margin-top: 20px;
-    overflow: hidden;
-    position: relative;
-    background-color: #7e7e7e;
-    margin-bottom: -4px;
-  }
+.portada-wrapper {
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  position: relative;
+}
   
-  .portada-wrapper img {
-    width: 100%;
-    height: 108px;
-    object-fit: cover;
-  }
+.portada-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
   
   
+.contenedor-centrado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+  
+.contenedor-centrado h1 {
+  font-size: 40px;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-left: 60px;
+  width: 100%;
+}
 
-.contenedor-principal {
-    display: flex;
-    flex-direction: column; /* Para que primero esté el contenedor-centrado y luego el layout */
-    width: 100%;
-    min-height: 100vh;
-  }
-  
-  .contenedor-centrado {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    background-color: #e8e8e8;
-  }
-  
-  
-  .contenedor-centrado h1 {
-    font-size: 40px;
-    font-weight: 600;
-    margin-top: 10px;
-    margin-left: 60px;
-  }
+.editable-h1 {
+  position: relative;
+  outline: none;
+  background-color: transparent;
+}
 
-  .editable-h1 {
-    position: relative;
-    outline: none;
-    background-color: transparent;
-  }
+.editable-h1:hover{
+  cursor: pointer;
+  opacity: 0.8;
+}
+  
+.editable-h1:empty::before {
+  content: "[Escribe tu título aquí]";
+  color: #aaa;
+  position: absolute;
+  pointer-events: none;
+  transform-origin: left center;
+  transition: all 0.3s ease;
+}
 
-  .editable-h1:hover{
-    cursor: pointer;
-    opacity: 0.8;
-  }
-  
-  .editable-h1:empty::before {
-    content: "[Escribe tu título aquí]";
-    color: #080808;
-    position: absolute;
-    pointer-events: none; /* El texto de placeholder no bloquea el clic */
-    left: 0;
-    top: 0;
-    font-size: 40px;
-    width: 426px;
-    height: 59px;
-    background-color: #d7eaff;
-  }
-  
-  /* Cuando tiene focus */
-  .editable-h1:focus {
-    background-color: #f0f8ff;
-  }
-  
-  
-  
-  .layout {
-    display: flex;
-    width: 100%;
-  }
-  
-  /* Barra de herramientas */
-  #toolbar {
-    width: 100px;
-    background: #f8f9fa;
-    border-right: 1px solid #e0e0e0;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-height: 100vh;
-  }
-  
-  .tool {
-    width: 80px;
-    height: 56px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    text-align: center;
-    cursor: grab; /* Opcional: muestra la mano para arrastrar */
-  }
-  
-  .tool img {
-    max-width: 100%;
-    max-height: 60%;
-    object-fit: contain;
-  }
-  
-  .tool p {
-    margin: 0;
-    font-size: 12px; /* Ajustamos el tamaño del texto */
-    line-height: 1;
-  }
-  
-  .tool:hover {
-    background: #f0f0f0;
-    transform: translateY(-2px);
-  }
-  
-  #workspace {
-    flex-grow: 1;
-    width: 100%;
-    min-height: 100vh; /* 👈 Esto hace que siempre mida al menos el alto de la ventana */
-    position: relative;
-    overflow: auto;
-    margin-top: -10px;
-  }
-  
+.editable-h1:focus::before {
+  transform: translateY(-10px) scale(0.7);
+  opacity: 0.5;
+  color: #000000;
+}
 
+/* Toolbar con scroll que no afecta el tamaño de los elementos */
+#toolbar {
+  width: 90px;
+  background: #f8f9fa;
+  border-right: 1px solid #e0e0e0;
+  padding: 15px 15px 50px; /* Más padding bottom para espacio al hacer scroll */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  overflow-y: auto; /* Scroll vertical */
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+/* Mantener el tamaño original de los elementos hijos */
+#toolbar > * {
+  flex-shrink: 0; /* Evita que se encojan */
+  width: 100%;
+}
+
+/* Estilo para el último elemento */
+#toolbar > *:last-child {
+  margin-bottom: 20px; /* Espacio extra al final */
+}
+
+/* Estilos específicos para las herramientas */
+.tool {
+  width: 80px;
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  cursor: grab; /* Opcional: muestra la mano para arrastrar */
+  flex-shrink: 0; /* Importante: no se reduce */
+}
+
+/* Personalización del scroll para navegadores WebKit */
+#toolbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+#toolbar::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+
+#toolbar::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 4px;
+}
+  
+.tool img {
+  max-width: 100%;
+  max-height: 60%;
+  object-fit: contain;
+}
+  
+.tool p {
+  margin: 0;
+  font-size: 12px; /* Ajustamos el tamaño del texto */
+  line-height: 1;
+}
+  
+.tool:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+/* Estilo para el botón PDF manteniendo la apariencia de tool */
+.pdf-tool {
+  width: 80px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  transition: all 0.2s;
+  flex-shrink: 0; /* Importante: no se reduce */
+}
+
+.pdf-tool img {
+  max-width: 100%;
+  max-height: 50%;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+
+.pdf-tool p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1;
+  color: #333; /* Color de texto consistente */
+}
+
+.pdf-tool:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.pdf-tool:active {
+  transform: translateY(0);
+}
+
+/* Si necesitas que parezca un botón tradicional al hacer clic */
+.pdf-tool:focus {
+  outline: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+#add-image-btn img {
+  max-height: 60%;
+}
+
+/* Contenedor principal de bloques */
+.block-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 0;
+  margin-left: 20px;
+  margin-right: 20px;
+  max-width: 100%;
+}
+
+/* Manejador de bloques (oculto por defecto) */
+.block-handle {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  display: none; /* Oculto inicialmente */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #666;
+  font-size: 16px;
+  user-select: none;
+  z-index: 1;
+}
+
+/* Mostrar handle cuando el bloque está en edición */
+.content-block:focus-within ~ .block-handle,
+.block-container:hover .block-handle {
+  display: flex;
+}
+
+.block-handle:hover {
+  background: #e0e0e0;
+}
+
+/* Estilo base para bloques */
+.content-block {
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  min-height: 40px;
+  cursor: text;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  width: 100%;
+  position: relative;
+  padding-left: 40px;
+  box-sizing: border-box;
+}
+
+.content-block:hover {
+  border-color: #c0c0c0;
+}
+
+.content-block:empty::before {
+  content: attr(data-placeholder);
+  color: #aaa;
+  pointer-events: none;
+  display: block;
+}
+
+/* Variante para texto normal */
+.text-block {
+  /* Hereda todo de content-block */
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: start;
+  max-width: 100%;
+}
+
+/* Variante para títulos */
+.heading-block {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  min-height: 50px;
+  text-align: start;
+}
+
+/* Contenedor principal de la lista (como un bloque normal) */
+.block-container.list-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 0;
+  margin-left: 20px;
+  margin-right: 20px;
+  max-width: 100%;
+  background: #ffffff;
+}
+
+/* Contenedor de los ítems individuales */
+.list-items-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Cada ítem dentro de la lista */
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* El punto de viñeta */
+.block-bullet {
+  font-weight: bold;
+  margin-top: 8px;
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Caja de texto editable */
+.listBlock {
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: start;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+}
+
+/* Botones de acción (agregar, eliminar) */
+.block-buttons {
+  display: flex;
+  gap: 6px;
+  margin-left: 10px;
+  align-self: center;
+}
+
+.block-buttons button {
+  border: none;
+  background-color: #eee;
+  padding: 6px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.block-buttons button:hover {
+  background-color: #ccc;
+}
+
+.block-number {
+  margin-right: 8px;
+  font-weight: bold;
+  display: inline-block;
+  width: 20px;
+  text-align: right;
+  align-self: center;
+}
+
+.hyperText {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.editable-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.editable-table th,
+.editable-table td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  min-width: 80px;
+  text-align: left;
+  position: relative;
+}
+
+.editable-table [contenteditable]:empty::before {
+  content: attr(data-placeholder);
+  color: #888;
+  pointer-events: none;
+  position: absolute;
+}
+
+.table-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding-left: 40px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+}
+
+.table-controls-wrapper {
+  width: 100%;
+}
+
+.table-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.table-controls button {
+  padding: 4px 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.table-controls button:hover {
+  background-color: #e0e0e0;
+}
+
+
+/* Elementos arrastrables */
+.draggable {
+  position: absolute;
+  cursor: move;
+  border-radius: 8px;
+}
+
+/* Estilos para imágenes redimensionables */
+.resizable-image-container {
+  position: absolute;
+  border: 2px dashed transparent;
+  transition: border-color 0.2s;
+  min-width: 100px;
+  min-height: 100px;
+  z-index: 10;
+  cursor: grab;
+}
+
+.resizable-image-container.dragging {
+  cursor: grabbing;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.resizable-image-container:hover {
+  border-color: #4285f4;
+}
+
+.resizable-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Handles de redimensionamiento */
+.resize-handle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 2px solid #4285f4;
+  border-radius: 50%;
+  z-index: 20;
+}
+
+.handle-nw {
+  top: -6px;
+  left: -6px;
+  cursor: nwse-resize;
+}
+
+.handle-ne {
+  top: -6px;
+  right: -6px;
+  cursor: nesw-resize;
+}
+
+.handle-sw {
+  bottom: -6px;
+  left: -6px;
+  cursor: nesw-resize;
+}
+
+.handle-se {
+  bottom: -6px;
+  right: -6px;
+  cursor: nwse-resize;
+}
+
+.close-handle {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+  z-index: 30;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}
+
+.close-handle:hover {
+  background: #ff0000;
+  transform: scale(1.1);
+}
+
+.resizable-image-container:focus {
+  outline: 2px dashed #4285f4;
+}
+
+
+  
 /* ------------------------------------ */
 /* Header */
 /* ------------------------------------ */
@@ -198,129 +656,64 @@ header nav {
     justify-content: flex-end;
     align-items: center;
     margin: 0 0 0 20px;
+    margin-bottom: 20px;
 }
 
 header nav .D {
     margin-top: 5px;
 }
 
-/* ------------------------------------ */
 /* Switch */
-/* ------------------------------------ */
 .switch {
-    position: relative;
-    display: inline-block;
-    width: 70px;
-    height: 30px;
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  justify-content: flex-start;
+  
 }
 
 .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    width: 70px;
-    height: 30px;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 30px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 30px;
 }
-
 .slider:before {
-    position: absolute;
-    content: "";
-    height: 22px; /* Ajustado */
-    width: 22px; /* Ajustado */
-    left: 4px;
-    top: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-}
-
-.slider .icon {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%); /* <-- modifica esto */
-    font-size: 14px;
-    transition: opacity 0.4s;
-}
-
-.slider .icon:first-child {
-    left: 15px;
-    opacity: 1;
-}
-
-.slider .icon:last-child {
-    right: -5px;
-    opacity: 0;
+  position: absolute;
+  content: "";
+  height: 24px;
+  width: 24px;
+  left: 3px;
+  top: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
 }
 
 input:checked + .slider {
-    background-color: #7e7e7e;
+  background-color: #007BFF;
 }
 
 input:checked + .slider:before {
-    transform: translateX(40px); /* Ajustado para 70px de ancho */
+  transform: translateX(30px);
 }
 
-input:checked + .slider .icon:first-child {
-    opacity: 0;
+.icon {
+  display: none; /* Para los SVGs luego */
 }
 
-input:checked + .slider .icon:last-child {
-    opacity: 1;
-}
-
-
-    
-
-    /* Bloques de contenido */
-    .block {
-      padding: 16px;
-      background: #ffffff;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      min-height: 40px;
-      cursor: text;
-      position: relative;
-      transition: all 0.2s;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      margin-left: 20px;
-      text-align: justify;
-      width: calc(100% - 70px);
-    }
-
-    .block:hover {
-      border-color: #c0c0c0;
-    }
-
-    .block:empty::before {
-        content: attr(data-placeholder);
-        color: #aaa;
-        pointer-events: none;
-        display: block;
-      }
-
-    .checklist-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    /* Elementos arrastrables */
-    .draggable {
-      position: absolute;
-      cursor: move;
-      border-radius: 8px;
-    }
 
     /* Menú contextual */
     #context-menu {
@@ -377,33 +770,80 @@ input:checked + .slider .icon:last-child {
       background: #e0e0e0;
     }
 
-    /* Manejador de bloques */
-    .block-handle {
-      position: absolute;
-      left: -36px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 28px;
-      height: 28px;
-      background: #f0f0f0;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transition: all 0.2s;
-    }
-    .block-container:hover .block-handle {
-      opacity: 1;
-    }
-    .block-handle:hover {
-      background: #e0e0e0;
-    }
 
-    /* Contenedor de bloques */
-    .block-container {
-      position: relative;
-      padding-left: 40px;
-      margin: 15px 0;
-    }
+    
+
+
+/* Estilos para impresión y generación de PDF */
+.printing-pdf {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  background: white !important;
+}
+
+/* Eliminar TODOS los efectos de focus en PDF */
+.printing-pdf .content-block:focus,
+.printing-pdf .heading-block:focus,
+.printing-pdf .editable-h1:focus {
+  outline: none !important;
+  border-color: transparent !important; /* Mantiene el color normal del borde */
+  box-shadow: none !important;
+}
+
+/* Ocultar elementos de interfaz */
+.printing-pdf .block-handle,
+.printing-pdf .block-buttons,
+.printing-pdf .imagen-texto,
+.printing-pdf .switch {
+  display: none !important;
+}
+
+/* Estilos limpios para bloques */
+.printing-pdf .content-block {
+  border: none !important;
+  background: transparent !important;
+  padding: 4px 0 !important;
+  margin-bottom: 12px !important;
+  box-shadow: none !important;
+  border-color: white !important;
+}
+
+/* Estilo específico para títulos en PDF */
+.printing-pdf .heading-block {
+  font-size: 22px !important;
+  font-weight: bold !important;
+  border-bottom: 1px solid white !important;
+  padding-bottom: 8px !important;
+  margin-bottom: 16px !important;
+}
+
+.printing-pdf .text-block,
+.printing-pdf .heading-block,
+.printing-pdf .listBlock {
+  margin-left: 40px !important;
+  margin-right: 40px !important;
+}
+
+/* Estilo para viñetas alineadas correctamente */
+.printing-pdf .block-bullet {
+  display: inline-block !important;
+  width: 20px;
+  text-align: center;
+  font-weight: bold;
+  margin-right: 8px;
+  color: black;
+  vertical-align: top;
+}
+
+/* Estilo para el contenedor del texto con viñeta */
+.printing-pdf .text-block-wrapper {
+  display: flex !important;
+  align-items: flex-start !important;
+}
+
+/* Eliminar placeholders */
+.printing-pdf .content-block:empty::before {
+  content: none !important;
+}
