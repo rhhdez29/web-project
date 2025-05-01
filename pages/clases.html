@@ -31,8 +31,29 @@
             </tr>
             <tr>
                 <th>Horas de clase</th>
-                <td><input type="text" placeholder="Ej. 10:00 - 12:00"></td>
+                <td>
+                    <select id="hora">
+                        <option value="">Selecciona una hora</option>
+                        <script>
+                            for (let h = 7; h <= 20; h++) {
+                                // Hora en punto (ej. 7:00)
+                                document.write(`<option value="${h}:00">${h < 10 ? '0' + h : h}:00</option>`);
+                                
+                                // Media hora (ej. 7:30) - excepto para las 20:00 (8pm)
+                                if (h < 20) {
+                                    document.write(`<option value="${h}:30">${h < 10 ? '0' + h : h}:30</option>`);
+                                }
+                            }
+                        </script>
+                    </select>
+                </td>
             </tr>
+
+            <tr>
+                <th>Salón</th>
+                <td><input type="text" placeholder="Ej. 202"></td>
+            </tr>
+
             <tr>
                 <th>Instructor</th>
                 <td><input type="text" placeholder="Nombre del Instructor"></td>
@@ -47,15 +68,25 @@
             </tr>
         </table>
 
+        <button onclick="agregarNota()">Agregar</button>
+
         <section class="anuncio">
             <p><strong>01/abr/2025</strong> - ¡Este es un Anuncio!</p>
         </section>
 
         <section class="apuntes">
             <h3>Apuntes del curso proporcionados</h3>
-            <p>📄 Apunte</p>
+            <textarea id="inputApunte" placeholder="Escribe un apunte y presiona Enter..."></textarea>
+            <div id="listaApuntes"></div>
+        </section>
+
+        <section class="notas-guardadas">
+            <h3>Notas agregadas</h3>
+            <div id="contenedorNotas"></div>
         </section>
     </div>
+
+    <script src="../scripts/clases.js"></script>
 </body>
 </html>
 
