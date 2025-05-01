@@ -62,7 +62,7 @@ input[type="text"] {
 
 /* Estilos específicos para el anuncio */
 .anuncio {
-    background-color: #eca2a2; /* Rosa */
+    background-color: #b33988; /* Rosa */
     color: white;
     padding: 15px;
     border-radius: 5px;
@@ -70,6 +70,15 @@ input[type="text"] {
     text-align: center;
     position: relative;
     z-index: 1; /* Asegura que esté sobre otros elementos */
+}
+
+.anuncio:hover {
+    background-color: #ff3333; /* Rojo intenso */
+    color: white; /* Cambia el color del texto para mejor contraste */
+}
+
+.anuncio:hover strong {
+    color: white; /* Cambia también el color del texto en negrita */
 }
 
 .anuncio strong {
