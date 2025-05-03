@@ -1,4 +1,7 @@
-<?php session_start(); ?>
+<?php 
+//verificamos si el usuario ha iniciado sesión
+include_once '../includes/verificar_sesion.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>

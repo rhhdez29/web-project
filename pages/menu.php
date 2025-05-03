@@ -1,5 +1,7 @@
-<?php
-session_start();
+<?php 
+// Verificar si el usuario ha iniciado sesión
+// Si no se ha iniciado sesión, redirigir a la página de inicio
+include_once '../includes/verificar_sesion.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,7 +94,7 @@ session_start();
                     </a>
                 </li>
                 <li class="menu-item menu-item-static">
-                    <a href="#" class="menu-link">
+                    <a href="../includes/cerrar_sesion.php" class="menu-link">
                         <i class='bx bx-log-out' ></i>
                         <span>Cerrar Sesión</span>
                     </a>
@@ -119,16 +121,16 @@ session_start();
             // Aquí puedes cargar diferentes contenidos dependiendo de la página seleccionada
             if (page === 'planificador') {
                                         
-                content.innerHTML = '<<iframe src="planificador.html" width="100%" height="100%" style="border: none;"></iframe>';
+                content.innerHTML = '<<iframe src="planificador.php" width="100%" height="100%" style="border: none;"></iframe>';
             } 
             if (page === 'mis_cursos') {
-                content.innerHTML = '<iframe src="clases.html" width="100%" height="100%" style="border: none;"></iframe>';
+                content.innerHTML = '<iframe src="clases.php" width="100%" height="100%" style="border: none;"></iframe>';
             }
             if (page === 'mis_apuntes') {
-                content.innerHTML = '<iframe src="apuntes.html" width="100%" height="100%" style="border: none;"></iframe>';
+                content.innerHTML = '<iframe src="apuntes.php" width="100%" height="100%" style="border: none;"></iframe>';
             }
             if (page === 'home') {
-                content.innerHTML = '<iframe src="home.html" width="100%" height="100%" style="border: none;"></iframe>';
+                content.innerHTML = '<iframe src="home.php" width="100%" height="100%" style="border: none;"></iframe>';
             }
         }
 

@@ -1,3 +1,8 @@
+<?php 
+// Incluir al principio de home.php (antiguo home.html)
+include_once '../includes/verificar_sesion.php';
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

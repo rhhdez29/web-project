@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         try {
             // Guarda en la base de datos
-            const response = await fetch('../includes/planner_api.php?action=addItem', {
+            const response = await fetch('../includes/planificador.php?action=addItem', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Función para cargar elementos del planificador desde la base de datos
     async function loadPlannerItems() {
         try {
-            const response = await fetch('../includes/planner_api.php?action=getItems');
+            const response = await fetch('../includes/planificador.php?action=getItems');
             const data = await response.json();
             
             if (data.error) {
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Eliminar elementos expirados de la base de datos
         expiredItems.forEach(async item => {
             try {
-                await fetch(`../includes/planner_api.php?action=deleteItem&id=${item.id}`);
+                await fetch(`../includes/planificador.php?action=deleteItem&id=${item.id}`);
             } catch (error) {
                 console.error('Error al eliminar elemento expirado:', error);
             }
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function completeTask(taskId) {
         try {
             // Eliminar de la base de datos
-            const response = await fetch(`../includes/planner_api.php?action=deleteItem&id=${taskId}`);
+            const response = await fetch(`../includes/planificador.php?action=deleteItem&id=${taskId}`);
             const data = await response.json();
             
             if (data.error) {
