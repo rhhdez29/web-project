@@ -1,7 +1,7 @@
 <?php
 $host = "localhost"; // Servidor de la base de datos
 $user = "root"; // Usuario de la base de datos
-$password = "1234"; // Contraseña de la base de datos
+$password = ""; // Contraseña de la base de datos
 $dbname = "epadbp"; // Nombre de la base de datos
 
 // Crear conexión

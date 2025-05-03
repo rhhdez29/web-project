@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM elements
+    // Referencias a elementos del DOM
     const calendarDaysEl = document.getElementById('calendar-days');
     const currentMonthEl = document.getElementById('current-month');
     const prevMonthBtn = document.getElementById('prev-month');
@@ -16,20 +16,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const itemDateInput = document.getElementById('item-date');
     const itemTypeSelect = document.getElementById('item-type');
 
-    // State variables
+    // Variables de estado
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
     let selectedDate = new Date(currentDate);
     let selectedWeekStart = getWeekStart(selectedDate);
     
-    // Initialize empty planner items array
+    // Array para elementos del planificador
     let plannerItems = [];
 
-    // Initialize
-    renderCalendar();
-    renderWeeklyView();
-    renderImportantReminders();
+    // Cargar elementos del planificador desde la base de datos
+    loadPlannerItems();
 
     // Clean up expired items every minute
     setInterval(cleanupExpiredItems, 60000);
@@ -88,9 +86,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    addItemForm.addEventListener('submit', (e) => {
+    addItemForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        // Obtener datos del formulario
         const title = document.getElementById('item-title').value;
         const type = document.getElementById('item-type').value;
         const dateStr = document.getElementById('item-date').value;
@@ -101,27 +100,108 @@ document.addEventListener('DOMContentLoaded', function() {
         const [year, month, day] = dateStr.split('-');
         const date = new Date(year, month - 1, day);
         
+        // Crear objeto para enviar a la API
         const newItem = {
-            id: Date.now(),
             title,
             type,
-            date,
+            date: dateStr,
             time,
             description,
             important
         };
         
-        plannerItems.push(newItem);
-        
-        addModal.classList.remove('active');
-        addItemForm.reset();
-        
-        renderCalendar();
-        renderWeeklyView();
-        renderImportantReminders();
+        try {
+            // Guarda en la base de datos
+            const response = await fetch('../includes/planner_api.php?action=addItem', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newItem)
+            });
+            
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            // Procesar la respuesta, manejo especial de fechas para evitar problemas
+            const [year, month, day] = data.Fecha.split('-').map(Number);
+            
+            // Convertir el elemento recibido al formato utilizado por el cliente
+            const savedItem = {
+                id: data.idPlanificador,
+                title: data.Titulo,
+                type: data.Tipo === 'Tarea' ? 'task' : (data.Tipo === 'Cita' ? 'appointment' : 'goal'),
+                // Crear la fecha con el constructor de Date pero usando los componentes individuales
+                date: new Date(year, month - 1, day, 12, 0, 0), // Hora fija a mediodía para evitar problemas
+                time: data.Hora,
+                description: data.Descripcion,
+                important: data.Importante == 1
+            };
+
+            // Agregar a la lista local y actualizar interfaz
+            plannerItems.push(savedItem);
+            
+            addModal.classList.remove('active');
+            addItemForm.reset();
+            
+            renderCalendar();
+            renderWeeklyView();
+            renderImportantReminders();
+            
+        } catch (error) {
+            console.error('Error al guardar el elemento:', error);
+            alert('Error al guardar: ' + error.message);
+        }
     });
 
-    // Helper functions
+    // Función para cargar elementos del planificador desde la base de datos
+    async function loadPlannerItems() {
+        try {
+            const response = await fetch('../includes/planner_api.php?action=getItems');
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            // Procesa los datos recibidos con manejo especial de fechas
+            plannerItems = data.map(item => {
+            // Extrae componentes de fecha para evitar problemas de zona horaria
+            const [year, month, day] = item.Fecha.split('-').map(Number);
+                
+                return {
+                    id: item.idPlanificador,
+                    title: item.Titulo,
+                    // Convertir tipos de BD a tipos de JS
+                    type: item.Tipo === 'Tarea' ? 'task' : (item.Tipo === 'Cita' ? 'appointment' : 'goal'),
+                    // Crear fecha con hora 12:00 para evitar problemas de zona horaria
+                    date: new Date(year, month - 1, day, 12, 0, 0),
+                    // También guardar las partes individuales para comparaciones más seguras
+                    dateComponents: {
+                        year: year,
+                        month: month - 1, // JavaScript usa 0-11 para meses
+                        day: day
+                    },
+                    time: item.Hora,
+                    description: item.Descripcion,
+                    important: item.Importante == 1
+                };
+            });
+            
+            // Actualizar la interfaz
+            renderCalendar();
+            renderWeeklyView();
+            renderImportantReminders();
+            
+        } catch (error) {
+            console.error('Error al cargar los elementos:', error);
+        }
+    }
+
+    // Obtener el inicio de semana (lunes)
     function getWeekStart(date) {
         const d = new Date(date);
         const day = d.getDay();
@@ -136,6 +216,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function cleanupExpiredItems() {
         const now = new Date();
+        const expiredItems = plannerItems.filter(item => {
+            if (item.type === 'appointment') {
+                const itemDateTime = new Date(item.date);
+                if (item.time) {
+                    const [hours, minutes] = item.time.split(':');
+                    itemDateTime.setHours(parseInt(hours), parseInt(minutes));
+                }
+                return itemDateTime <= now;
+            }
+            return false;
+        });
+        
+        // Eliminar elementos expirados de la base de datos
+        expiredItems.forEach(async item => {
+            try {
+                await fetch(`../includes/planner_api.php?action=deleteItem&id=${item.id}`);
+            } catch (error) {
+                console.error('Error al eliminar elemento expirado:', error);
+            }
+        });
+        
+        // Actualizar la lista local
         plannerItems = plannerItems.filter(item => {
             if (item.type === 'appointment') {
                 const itemDateTime = new Date(item.date);
@@ -147,21 +249,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return true;
         });
+        
         renderCalendar();
         renderWeeklyView();
         renderImportantReminders();
     }
 
     function renderCalendar() {
+        
+        // Mostrar mes y año actual
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         currentMonthEl.textContent = `${monthNames[currentMonth]} ${currentYear}`;
         
+        // Limpiar el contenedor
         calendarDaysEl.innerHTML = '';
         
+        // Calcular el primer día del mes (ajustado para que lunes sea el día 1)
         const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
         const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
         
+        // Días del mes anterior (inactivos)
         const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
         
         for (let i = adjustedFirstDay - 1; i >= 0; i--) {
@@ -169,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
             calendarDaysEl.appendChild(dayEl);
         }
         
+        // Días del mes actual
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(currentYear, currentMonth, day);
             const isToday = isDateToday(date);
@@ -177,6 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const dayEl = createCalendarDay(day, false, isToday, isSelected, hasItems);
             
+            // Evento de click para seleccionar día
             dayEl.addEventListener('click', () => {
                 const prevSelected = document.querySelector('.calendar-day.selected');
                 if (prevSelected) {
@@ -187,12 +297,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 selectedDate = date;
                 selectedWeekStart = getWeekStart(date);
                 
-                renderWeeklyView();
+                renderWeeklyView(); // Actualizar vista semanal al seleccionar día
             });
             
             calendarDaysEl.appendChild(dayEl);
         }
-        
+
+        // Días del mes siguiente (inactivos)
         const totalDaysShown = adjustedFirstDay + daysInMonth;
         const daysFromNextMonth = 42 - totalDaysShown;
         
@@ -216,10 +327,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderWeeklyView() {
+        
         weeklyGridEl.innerHTML = '';
         weeklyTitleEl.textContent = `Semana del ${formatDate(selectedWeekStart)}`;
         
-        // Render weekly goal
+        // Mostrar objetivo semanal
         const weeklyGoal = plannerItems.find(item => 
             item.type === 'goal' && 
             isInSameWeek(item.date, selectedWeekStart)
@@ -229,16 +341,18 @@ document.addEventListener('DOMContentLoaded', function() {
             ? `<p>${weeklyGoal.title}</p><small>${weeklyGoal.description}</small>`
             : '<p class="text-muted">No hay objetivo definido para esta semana</p>';
 
-        // Render daily cards
+        // Crear tarjetas para cada día de la semana
         for (let i = 0; i < 7; i++) {
             const date = new Date(selectedWeekStart);
             date.setDate(date.getDate() + i);
             
+            // Filtrar elementos de este día (excluyendo objetivos)
             const dayItems = plannerItems.filter(item => 
                 item.type !== 'goal' && 
                 isSameDay(item.date, date)
             );
             
+            // Separar en tareas y citas
             const tasks = dayItems.filter(item => item.type === 'task');
             const appointments = dayItems.filter(item => item.type === 'appointment');
             
@@ -342,10 +456,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return isSameDay(date, selectedDate);
     }
 
+    // Función para comparar días sin problemas de zona horaria
     function isSameDay(d1, d2) {
+        // Usar solo día, mes y año para comparar, ignorando hora y zona horaria
         return d1.getDate() === d2.getDate() &&
-               d1.getMonth() === d2.getMonth() &&
-               d1.getFullYear() === d2.getFullYear();
+            d1.getMonth() === d2.getMonth() &&
+            d1.getFullYear() === d2.getFullYear();
     }
 
     function isInSameWeek(d1, d2) {
@@ -358,12 +474,27 @@ document.addEventListener('DOMContentLoaded', function() {
         return plannerItems.some(item => isSameDay(item.date, date));
     }
 
-    // Task completion handler
-    function completeTask(taskId) {
-        plannerItems = plannerItems.filter(item => item.id !== taskId);
-        renderCalendar();
-        renderWeeklyView();
-        renderImportantReminders();
+    // Task completion handler - modificado para eliminar de la base de datos
+    async function completeTask(taskId) {
+        try {
+            // Eliminar de la base de datos
+            const response = await fetch(`../includes/planner_api.php?action=deleteItem&id=${taskId}`);
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            // Actualizar localmente y refrescar la interfaz
+            plannerItems = plannerItems.filter(item => item.id !== taskId);
+            renderCalendar();
+            renderWeeklyView();
+            renderImportantReminders();
+            
+        } catch (error) {
+            console.error('Error al completar la tarea:', error);
+            alert('Error al completar la tarea: ' + error.message);
+        }
     }
 
     // Make functions available globally
