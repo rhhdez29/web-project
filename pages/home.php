@@ -15,14 +15,13 @@ include_once '../includes/verificar_sesion.php';
     <!-- Header -->
     <header>
         <div class="D">
-            <label class="switch">
-                <input type="checkbox">
-                <span class="slider">
-                    <!-- Espacio para SVGs -->
-                    <i class="icon"></i>
-                    <i class="icon"></i>
-                </span>
-            </label>
+        <label class="switch">
+                    <input type="checkbox" id="toggle-mode">
+                    <span class="slider">
+                        <span class="icon">☀️</span>
+                        <span class="icon">🌙</span>
+                    </span>
+                </label>
         </div>
     
         <div class="titulo">

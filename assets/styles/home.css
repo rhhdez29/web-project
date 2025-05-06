@@ -25,14 +25,14 @@ header {
 }
 
 
-/* Switch */
+/* ------------------------------------ */
+/* Estilos del interruptor deslizable */
+/* ------------------------------------ */
 .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 30px;
-    justify-content: flex-start;
-    
+    width: 114px;
+    height: 47px;
 }
 
 .switch input {
@@ -46,35 +46,61 @@ header {
     cursor: pointer;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 114px;
+    height: 47px;
     background-color: #ccc;
     transition: 0.4s;
-    border-radius: 30px;
+    border-radius: 47px; /* mismo valor que la altura para que sea redondo */
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 24px;
-    width: 24px;
-    left: 3px;
-    top: 3px;
+    height: 39px;
+    width: 39px;
+    left: 4px;
+    top: 4px;
     background-color: white;
     transition: 0.4s;
     border-radius: 50%;
 }
 
+/* Iconos dentro del slider */
+.slider .icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    transition: opacity 0.4s;
+}
+
+.slider .icon:first-child {
+    left: 8px;
+    opacity: 1;
+}
+
+.slider .icon:last-child {
+    right: 8px;
+    opacity: 0;
+}
+
+/* Cambio de iconos al activar el switch */
+input:checked + .slider .icon:first-child {
+    opacity: 0;
+}
+
+input:checked + .slider .icon:last-child {
+    opacity: 1;
+}
+
+/* Cambio de fondo al activar */
 input:checked + .slider {
-    background-color: #007BFF;
+    background-color: #555;
 }
 
+/* Movimiento de la bolita al activar */
 input:checked + .slider:before {
-    transform: translateX(30px);
-}
-
-.icon {
-    display: none; /* Para los SVGs luego */
+    transform: translateX(67px); /* 114 - 4 (padding) - 39 (diámetro del círculo) = 71. Ajustado un poco */
 }
 
 /* Trabajos recientes */
@@ -345,4 +371,11 @@ input:checked + .slider:before {
     .tarjetas, .contenedor-tutoriales {
         flex-direction: column;
     }
+}
+
+
+body.modo-oscuro {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    background-color: #121212;
+    color: #f1f1f1;
 }

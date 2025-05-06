@@ -16,17 +16,38 @@ body {
     font-style: normal;
     color: #0d0d0d;
     background-color: #fff;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 body.modo-oscuro {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
     background-color: #121212;
     color: #f1f1f1;
+}
+
+body.modo-oscuro #textoCurvo textPath,
+body.modo-oscuro .texto-curvo{
+    fill: #999; /* Color claro para modo oscuro */
+}
+
+body.modo-oscuro .slider{
+    background-color: #555;
+    color: #fff;
+}
+
+body.modo-oscuro .comillas,
+body.modo-oscuro .texto2,
+body.modo-oscuro .footer-derechos {
+    color: #999;
+    opacity: 0.5;
 }
 
 body.modo-oscuro header,
 body.modo-oscuro nav,
 body.modo-oscuro section,
-body.modo-oscuro footer {
+body.modo-oscuro footer,
+body.modo-oscuro #banner,
+body.modo-oscuro main {
     background-color: #1e1e1e;
     box-shadow: 0 2px 6px rgba(255,255,255,0.05);
 }
@@ -342,12 +363,12 @@ video {
     padding-right: 70px;
 }
 
-#banner button {
+body #banner button {
     font-size: 24px;
     width: 318px;
     height: 76px;
-    background-color:#E6E6E6;
-    color:#0d0d0d;
+    background-color:#0d0d0d;
+    color:#E6E6E6;
     padding: auto;
 }
 
@@ -430,7 +451,7 @@ input:checked + .slider .icon:last-child {
 
 /* Cambio de fondo al activar */
 input:checked + .slider {
-    background-color: #007BFF;
+    background-color: #555;
 }
 
 /* Movimiento de la bolita al activar */
@@ -477,7 +498,7 @@ footer {
 .footer-seccion h3 {
     margin-bottom: 10px;
     font-size: 16px;
-    color: #0d0d0d;
+    color: #1363b9;
 }
 
 .footer-seccion .texto2 {

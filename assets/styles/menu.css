@@ -104,9 +104,14 @@ body {
     color: var(--color-text-primary);
     background-color: #E6F0FF;
 }
+
+/* Control específico para el icono */
 .menu-link i {
-    font-size: 1.35rem;
-    padding: 0 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0; /* Eliminar cualquier margen existente */
+    padding-right: 5px; /* Espacio controlado a la derecha del icono */
 }
 .menu-link i:last-child {
     margin-left: auto;
@@ -251,22 +256,32 @@ body {
     text-align: center;
     color: var(--color-text-primary);
 }
+
+/* Mejora del alineamiento del botón de inicio */
 .user-home .menu-link {
     font-size: 0.75rem;
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    justify-content: center; /* Centra horizontalmente */
+    gap: 0.2rem; /* Reduce el espacio entre icono y texto */
     text-decoration: none;
-    padding: 0.2rem 0;
+    padding: 0.2rem 0.5rem; /* Añade un poco de padding horizontal */
     color: var(--color-text-primary);
+    transition: color 0.3s ease; /* Transición suave para el hover */
 }
 .user-home .menu-link i {
     font-size: 1rem;
+    display: flex; /* Permite mejor alineamiento vertical */
+    align-items: center;
+    justify-content: center;
+    margin-right: 2px; /* Espacio fino entre el icono y el texto */
 }
+/* Opcional: mejora el aspecto al pasar el ratón */
 .user-home .menu-link:hover {
     color: #007BFF;
+    background-color: rgba(0, 123, 255, 0.05); /* Fondo sutil al hover */
+    border-radius: 4px;
 }
-
 /* Tooltip para usuario */
 .sidebar.minimize .user {
     position: relative;
