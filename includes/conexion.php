@@ -1,8 +1,8 @@
 <?php
-$host = "localhost"; // Servidor de la base de datos
-$user = "root"; // Usuario de la base de datos
-$password = ""; // Contraseña de la base de datos
-$dbname = "epadbp"; // Nombre de la base de datos
+$host = "sql.freedb.tech:3306"; // Servidor de la base de datos
+$user = "freedb_root_epa"; // Usuario de la base de datos
+$password = "53!ANVPxB4yTw\$s"; // Contraseña de la base de datos
+$dbname = "freedb_epadbp"; // Nombre de la base de datos
 
 // Crear conexión
 $conn = new mysqli($host, $user, $password, $dbname);
