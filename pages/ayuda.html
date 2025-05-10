@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuda | EPA!</title>
+    <link rel="stylesheet" href="../assets/styles/ayuda.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="help-container">
+        <div class="help-header">
+            <h1><i class='bx bx-help-circle'></i> Centro de Ayuda</h1>
+            <p>Encuentra respuestas a tus preguntas frecuentes</p>
+        </div>
+
+        <div class="search-container">
+            <input type="text" placeholder="Buscar en ayuda..." id="help-search">
+            <button><i class='bx bx-search'></i></button>
+        </div>
+
+        <div class="faq-section">
+            <h2>Preguntas Frecuentes</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>¿Cómo crear un nuevo apunte?</span>
+                    <i class='bx bx-chevron-down'></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Dirígete a "Mi Espacio" > "Mis apuntes" y haz clic en el botón "+ Nuevo apunte". Completa los campos requeridos y guarda.</p>
+                    <div class="video-tutorial-trigger">
+                        <div class="video-tutorial-trigger">
+    <div class="video-container">
+        <video controls poster="../assets/imagenes/Apuntes.png">
+            <source src="../assets/videos/video.mp4" type="video/mp4">
+            Tu navegador no soporta videos HTML5.
+        </video>
+    </div>
+    <p class="video-description">Video tutorial: Creación de apuntes</p>
+</div>
+                        <div class="video-container" style="display:none">
+                            <video controls>
+                                <source src="../assets/videos/video.mp4" type="video/mp4">
+                                Tu navegador no soporta videos HTML5.
+                            </video>
+                            <button class="close-video" onclick="closeVideo(this)"><i class='bx bx-x'></i> Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>¿Cómo organizar mi planificador?</span>
+                    <i class='bx bx-chevron-down'></i>
+                </div>
+                <div class="faq-answer">
+                    <p>En "Mi Espacio" > "Mi planificador" puedes agregar tareas, fechas importantes y recordatorios. Arrastra y suelta para reorganizar.</p>
+                    <div class="video-tutorial-trigger">
+                        <div class="video-preview" onclick="openVideo(this)" data-video-src="../assets/videos/usar-planificador.mp4" data-poster="../assets/images/video-planificador.jpg">
+                            <img src="../assets/images/video-planificador.jpg" alt="Video tutorial planificador">
+                            <div class="play-button">
+                                <i class='bx bx-play-circle'></i>
+                                <span>Ver Tutorial</span>
+                            </div>
+                        </div>
+                        <div class="video-container" style="display:none">
+                            <video controls>
+                                <source src="../assets/videos/usar-planificador.mp4" type="video/mp4">
+                                Tu navegador no soporta videos HTML5.
+                            </video>
+                            <button class="close-video" onclick="closeVideo(this)"><i class='bx bx-x'></i> Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>¿Cómo agregar una clase?</span>
+                    <i class='bx bx-chevron-down'></i>
+                </div>
+                <div class="faq-answer">
+                    <p>En "Mi aula virtual" > "Símbolo de más" puedes agregar clases, con la información importante de tu curso.</p>
+                    <div class="video-tutorial-trigger">
+                        <div class="video-preview" onclick="openVideo(this)" data-video-src="../assets/videos/agregar-clase.mp4" data-poster="../assets/images/video-clase.jpg">
+                            <img src="../assets/images/video-clase.jpg" alt="Video tutorial agregar clase">
+                            <div class="play-button">
+                                <i class='bx bx-play-circle'></i>
+                                <span>Ver Tutorial</span>
+                            </div>
+                        </div>
+                        <div class="video-container" style="display:none">
+                            <video controls>
+                                <source src="../assets/videos/agregar-clase.mp4" type="video/mp4">
+                                Tu navegador no soporta videos HTML5.
+                            </video>
+                            <button class="close-video" onclick="closeVideo(this)"><i class='bx bx-x'></i> Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="happiness-section">
+            <div class="happiness-content">
+                <i class='bx bx-smile'></i>
+                <h2>Tu felicidad nos importa</h2>
+                <p>Estamos comprometidos con tu experiencia de aprendizaje</p>
+            </div>
+        </div>
+
+        <div class="contact-section">
+    <h2>¿Necesitas más ayuda?</h2>
+    <p>Contáctanos directamente:</p>
+    <div class="contact-methods">
+        <div class="contact-option">
+            <button class="contact-btn email-btn" id="show-email">
+                <i class='bx bx-envelope'></i> Email
+            </button>
+            <div class="contact-info" id="email-info">EPA.soporte@gmail.com</div>
+        </div>
+        <div class="contact-option">
+            <button class="contact-btn phone-btn" id="show-phone">
+                <i class='bx bx-phone'></i> Llamar
+            </button>
+            <div class="contact-info" id="phone-info">+52 22 22 22 22 22</div>
+        </div>
+    </div>
+</div>
+    </div>
+    <script src="../scripts/ayuda.js"></script>
+    <script>
+        function openVideo(element) {
+            const trigger = element.closest('.video-tutorial-trigger');
+            const preview = trigger.querySelector('.video-preview');
+            const container = trigger.querySelector('.video-container');
+            const video = container.querySelector('video');
+            const videoSrc = element.getAttribute('data-video-src');
+            
+            // Configurar y mostrar el video
+            video.src = videoSrc;
+            preview.style.display = 'none';
+            container.style.display = 'block';
+            video.play();
+        }
+
+        function closeVideo(element) {
+            const container = element.closest('.video-container');
+            const trigger = container.closest('.video-tutorial-trigger');
+            const preview = trigger.querySelector('.video-preview');
+            const video = container.querySelector('video');
+            
+            // Detener y ocultar el video
+            video.pause();
+            video.currentTime = 0;
+            container.style.display = 'none';
+            preview.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
