@@ -241,10 +241,12 @@ input:checked + .slider:before {
     background-color: var(--color-surface);
     padding: 20px;
     border-radius: 20px;
-    width: 300px;
-    max-height: 400px;
+    width: 90%; /* Cambiado de 300px */
+    max-width: 600px; /* Añadido */
+    max-height: 500px; /* Aumentado */
     overflow-y: auto;
-    box-shadow: var(--shadow-card);
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+    right: 20px;
 }
 
 .tarea {
@@ -433,32 +435,66 @@ input:checked + .slider:before {
     }
 }
 
+/* Contenedor principal para mantener consistencia */
+#contenedor-tareas {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor para las tarjetas de tareas */
+.tarjetas-contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* Estilos generales para todas las tarjetas */
+.tarea {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 10px;
+}
+
+/* Reemplazar la definición de tarjeta-tarea */
+.tarjeta-tarea {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    text-align: center; /* Cambiado de center a left */
+    transition: transform 0.2s ease;
+    width: 70%; /* Cambiado de 250px a 100% */
+    max-width: 500px; /* Añadido */
+    margin-left: auto; /* Para centrado */
+    margin-right: auto; /* Para centrado */
+}
+
+/* Mensaje cuando no hay tareas */
+.no-tareas {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Título de la fecha */
+.titulo-fecha {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+
 /* Dark mode */
 body.modo-oscuro {
     background-color: #121212;
     color: #f1f1f1;
-    
-    --color-bg: #121212;
-    --color-surface: #1e1e1e;
-    --color-surface-hover: #2a2a2a;
-    --color-text-primary: #f1f1f1;
-    --color-text-secondary: #aaaaaa;
-    --color-border: #333333;
-    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
-    
-    .slider {
-        background-color: #444;
-    }
-    
-    .slider:before {
-        background-color: #ddd;
-    }
-    
-    input:checked + .slider {
-        background-color: #666;
-    }
-    
-    .cls-1 {
-        fill: #f1f1f1;
-    }
 }
