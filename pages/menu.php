@@ -96,11 +96,11 @@ include_once '../includes/verificar_sesion.php';
                     </a>
                 </li>
                 <li class="menu-item menu-item-static">
-                    <a href="#" class="menu-link">
-                        <i class='bx bx-help-circle' ></i>
-                        <span>Ayuda</span>
-                    </a>
-                </li>
+    <a href="#" class="menu-link" onclick="loadContent('ayuda')">
+        <i class='bx bx-help-circle'></i>
+        <span>Ayuda</span>
+    </a>
+</li>
                 <li class="menu-item menu-item-static">
                     <a href="../includes/cerrar_sesion.php" class="menu-link">
                         <i class='bx bx-log-out' ></i>
@@ -151,6 +151,9 @@ include_once '../includes/verificar_sesion.php';
             if (page === 'home') {
                 content.innerHTML = '<iframe src="home.php" width="100%" height="100%" style="border: none;"></iframe>';
             }
+            else if (page === 'ayuda') {
+    content.innerHTML = '<iframe src="ayuda.html" width="100%" height="100%" style="border: none;"></iframe>';
+}
         }
 
         // Al cargar la página, puedes definir un contenido por defecto
