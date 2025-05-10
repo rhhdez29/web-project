@@ -1,6 +1,4 @@
 <?php 
-// Verificar si el usuario ha iniciado sesión
-// Si no se ha iniciado sesión, redirigir a la página de inicio
 include_once '../includes/verificar_sesion.php';
 ?>
 <!DOCTYPE html>
@@ -19,7 +17,7 @@ include_once '../includes/verificar_sesion.php';
                 <i class='bx bx-chevrons-left'></i>
             </div>
             <div class="user">
-                <div class=" user-img">
+                <div class="user-img">
                     <img src="../assets/imagenes/perfil.png" alt="user">
                     <div class="user-tooltip user-date">
                         <span class="name" id="username">
@@ -44,27 +42,26 @@ include_once '../includes/verificar_sesion.php';
             <ul class="menu">
                 <li class="menu-item menu-item-static home-item">
                     <a href="#" class="menu-link">
-                        <i class='bx bx-home-smile' ></i>
+                        <i class='bx bx-home-smile'></i>
                         <span>Home</span>
                     </a>
                 </li>
                 <li class="menu-item menu-item-dropdown">
                     <a href="#" class="menu-link">
-                        <i class='bx bx-book-reader' ></i>
+                        <i class='bx bx-book-reader'></i>
                         <span>Mi Espacio</span>
-                        <i class='bx bx-chevron-down' ></i>
+                        <i class='bx bx-chevron-down'></i>
                     </a>
                     <ul class="sub-menu">
-                        <li> <a href="#" class="sub-menu-link" onclick="loadContent('mis_apuntes')">Mis apuntes</a></li> 
-                        <li> <a href="#" class="sub-menu-link" onclick="loadContent('planificador')">Mi planificador</a></li>
-                        
+                        <li><a href="#" class="sub-menu-link" onclick="loadContent('mis_apuntes')">Mis apuntes</a></li> 
+                        <li><a href="#" class="sub-menu-link" onclick="loadContent('planificador')">Mi planificador</a></li>
                     </ul>
                 </li>
                 <li class="menu-item menu-item-dropdown">
                     <a href="#" class="menu-link">
-                        <i class='bx bx-chalkboard' ></i>
+                        <i class='bx bx-chalkboard'></i>
                         <span>Mi Aula Virtual</span>
-                        <i class='bx bx-chevron-down' ></i>
+                        <i class='bx bx-chevron-down'></i>
                     </a>
                     <ul class="sub-menu">
                         <li>
@@ -76,12 +73,12 @@ include_once '../includes/verificar_sesion.php';
                             </div>
                         </li>
                         <li><a href="#" class="sub-menu-link" onclick="loadContent('mis_cursos')">Ver todos mis cursos</a></li>
-                        <!-- Los cursos añadidos se insertarán aquí dinámicamente -->
+                        <!-- Los cursos se insertarán aquí dinámicamente -->
                     </ul>
                 </li>
                 <li class="menu-item menu-item-static">
                     <a href="#" class="menu-link">
-                        <i class='bx bx-trash' ></i>
+                        <i class='bx bx-trash'></i>
                         <span>Papelera</span>
                     </a>
                 </li>
@@ -91,19 +88,19 @@ include_once '../includes/verificar_sesion.php';
             <ul class="menu">
                 <li class="menu-item menu-item-static">
                     <a href="#" class="menu-link">
-                        <i class='bx bx-cog' ></i>
+                        <i class='bx bx-cog'></i>
                         <span>Configuración</span>
                     </a>
                 </li>
                 <li class="menu-item menu-item-static">
-    <a href="#" class="menu-link" onclick="loadContent('ayuda')">
-        <i class='bx bx-help-circle'></i>
-        <span>Ayuda</span>
-    </a>
-</li>
+                    <a href="#" class="menu-link" onclick="loadContent('ayuda')">
+                        <i class='bx bx-help-circle'></i>
+                        <span>Ayuda</span>
+                    </a>
+                </li>
                 <li class="menu-item menu-item-static">
                     <a href="../includes/cerrar_sesion.php" class="menu-link">
-                        <i class='bx bx-log-out' ></i>
+                        <i class='bx bx-log-out'></i>
                         <span>Cerrar Sesión</span>
                     </a>
                 </li>
@@ -121,20 +118,17 @@ include_once '../includes/verificar_sesion.php';
 
     <script src="../scripts/menu.js"></script>
     <script>
-        // Función para cargar contenido dinámicamente en el centro
+        // Función para cargar contenido dinámicamente
         function loadContent(page, action) {
             const content = document.getElementById('main-content');
             
-            // Aquí puedes cargar diferentes contenidos dependiendo de la página seleccionada
             if (page === 'planificador') {
                 content.innerHTML = '<iframe src="planificador.php" width="100%" height="100%" style="border: none;"></iframe>';
             } 
             if (page === 'mis_cursos') {
                 content.innerHTML = '<iframe src="clases.php" width="100%" height="100%" style="border: none;"></iframe>';
                 
-                // Si se indica mostrar el formulario, enviar mensaje al iframe
                 if (action === 'showForm') {
-                    // Esperamos a que el iframe esté cargado
                     setTimeout(() => {
                         const iframe = document.querySelector('#main-content iframe');
                         if (iframe) {
@@ -151,46 +145,37 @@ include_once '../includes/verificar_sesion.php';
             if (page === 'home') {
                 content.innerHTML = '<iframe src="home.php" width="100%" height="100%" style="border: none;"></iframe>';
             }
-            else if (page === 'ayuda') {
-    content.innerHTML = '<iframe src="ayuda.html" width="100%" height="100%" style="border: none;"></iframe>';
-}
+            if (page === 'ayuda') {
+                content.innerHTML = '<iframe src="ayuda.html" width="100%" height="100%" style="border: none;"></iframe>';
+            }
         }
 
-        // Al cargar la página, puedes definir un contenido por defecto
-        window.onload = function() {
-            loadContent('home');
-        };
-        
-        // Escuchar mensajes desde el iframe
-        window.addEventListener('message', function(event) {
-            // Verificar si es un mensaje para añadir clase al menú
-            if (event.data && event.data.type === 'addClass') {
-                const classData = event.data.classData;
-                // Buscar el submenú de "Mis cursos"
-                const aulaVirtualItem = document.querySelector('.menu-item-dropdown:nth-child(3)');
-                const subMenu = aulaVirtualItem.querySelector('.sub-menu');
-                
-                // Crear un nuevo elemento de lista para la clase
+        // Función para actualizar las clases en el menú
+        function updateMenuClasses() {
+            const classes = JSON.parse(localStorage.getItem('userClasses')) || [];
+            const aulaVirtualItem = document.querySelector('.menu-item-dropdown:nth-child(3)');
+            const subMenu = aulaVirtualItem.querySelector('.sub-menu');
+            
+            // Eliminar solo los elementos de clase, manteniendo los primeros 2 elementos
+            const existingClasses = subMenu.querySelectorAll('.class-item');
+            existingClasses.forEach(item => {
+                item.parentElement.remove();
+            });
+            
+            // Añadir las clases actualizadas
+            classes.forEach(classData => {
                 const classItem = document.createElement('li');
                 classItem.innerHTML = `<a href="#" class="sub-menu-link class-item" data-id="${classData.id}">${classData.nombre}</a>`;
                 
-                // Añadir el elemento al submenú
-                subMenu.appendChild(classItem);
+                // Insertar antes del último elemento ("Ver todos mis cursos")
+                subMenu.insertBefore(classItem, subMenu.children[2]);
                 
-                // Actualizar la altura del submenú si está abierto
-                if (aulaVirtualItem.classList.contains('sub-menu-toggle')) {
-                    subMenu.style.height = `${subMenu.scrollHeight + 6}px`;
-                }
-                
-                // Añadir evento click al elemento
-                classItem.querySelector('.class-item').addEventListener('click', (e) => {
+                // Añadir evento click
+                classItem.querySelector('a').addEventListener('click', (e) => {
                     e.preventDefault();
                     const classId = e.target.getAttribute('data-id');
-                    
-                    // Cargar el contenido de la clase
                     loadContent('mis_cursos');
                     
-                    // Esperar a que el iframe esté cargado
                     setTimeout(() => {
                         const iframe = document.querySelector('#main-content iframe');
                         if (iframe) {
@@ -201,6 +186,34 @@ include_once '../includes/verificar_sesion.php';
                         }
                     }, 500);
                 });
+            });
+            
+            // Ajustar altura del submenú si está abierto
+            if (aulaVirtualItem.classList.contains('sub-menu-toggle')) {
+                subMenu.style.height = `${subMenu.scrollHeight}px`;
+            }
+        }
+
+        // Inicialización
+        window.onload = function() {
+            loadContent('home');
+            updateMenuClasses();
+            
+            // Configurar el botón de menú
+            const menuBtn = document.getElementById('menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            
+            menuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('close');
+                menuBtn.querySelector('i').classList.toggle('bx-chevrons-right');
+                menuBtn.querySelector('i').classList.toggle('bx-chevrons-left');
+            });
+        };
+        
+        // Escuchar mensajes desde iframes
+        window.addEventListener('message', function(event) {
+            if (event.data && (event.data.type === 'addClass' || event.data.type === 'updateMenu')) {
+                updateMenuClasses();
             }
         });
     </script>
