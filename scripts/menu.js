@@ -37,7 +37,6 @@ menusItemsDropDown.forEach((menuItem) => {
         });
     });
 
-    // 🧠 Manejar cierre diferido solo si el mouse realmente se va
     let timeout;
 
     menuItem.addEventListener('mouseleave', () => {
@@ -70,3 +69,53 @@ menusItemsStatic.forEach((menuItem) => {
         });
     });
 });
+
+// Función para añadir clases al menú
+function addClassToMenu(classData) {
+    // Buscar el submenú de "Mis cursos"
+    const aulaVirtualItem = document.querySelector('.menu-item-dropdown:nth-child(3)');
+    const subMenu = aulaVirtualItem.querySelector('.sub-menu');
+    
+    // Crear un nuevo elemento de lista para la clase
+    const classItem = document.createElement('li');
+    classItem.innerHTML = `<a href="#" class="sub-menu-link class-item" data-id="${classData.id}">${classData.nombre}</a>`;
+    
+    // Añadir el elemento al submenú
+    subMenu.appendChild(classItem);
+    
+    // Actualizar la altura del submenú si está abierto
+    if (aulaVirtualItem.classList.contains('sub-menu-toggle')) {
+        subMenu.style.height = `${subMenu.scrollHeight + 6}px`;
+    }
+    
+    // Añadir evento click al elemento
+    classItem.querySelector('.class-item').addEventListener('click', (e) => {
+        e.preventDefault();
+        const classId = e.target.getAttribute('data-id');
+        loadClassContent(classId);
+    });
+}
+
+// Cargar las clases guardadas al iniciar
+function loadSavedClasses() {
+    const savedClasses = JSON.parse(localStorage.getItem('userClasses')) || [];
+    savedClasses.forEach(classData => {
+        addClassToMenu(classData);
+    });
+}
+
+// Cargar al iniciar la página
+window.addEventListener('DOMContentLoaded', () => {
+    loadSavedClasses();
+});
+
+// Función para cargar el contenido de una clase
+function loadClassContent(classId) {
+    const iframe = document.querySelector('#main-content iframe');
+    if (iframe) {
+        iframe.contentWindow.postMessage({
+            type: 'loadClass',
+            classId: classId
+        }, '*');
+    }
+}

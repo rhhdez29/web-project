@@ -67,7 +67,16 @@ include_once '../includes/verificar_sesion.php';
                         <i class='bx bx-chevron-down' ></i>
                     </a>
                     <ul class="sub-menu">
-                        <li> <a href="#" class="sub-menu-link" onclick="loadContent('mis_cursos')">Mis cursos</a></li>
+                        <li>
+                            <div class="courses-header">
+                                <span>Mis cursos</span>
+                                <div class="add-class-btn pulse" onclick="loadContent('mis_cursos', 'showForm')">
+                                    <i class='bx bx-plus'></i>
+                                </div>
+                            </div>
+                        </li>
+                        <li><a href="#" class="sub-menu-link" onclick="loadContent('mis_cursos')">Ver todos mis cursos</a></li>
+                        <!-- Los cursos añadidos se insertarán aquí dinámicamente -->
                     </ul>
                 </li>
                 <li class="menu-item menu-item-static">
@@ -112,18 +121,29 @@ include_once '../includes/verificar_sesion.php';
 
     <script src="../scripts/menu.js"></script>
     <script>
-
         // Función para cargar contenido dinámicamente en el centro
-        function loadContent(page) {
+        function loadContent(page, action) {
             const content = document.getElementById('main-content');
             
             // Aquí puedes cargar diferentes contenidos dependiendo de la página seleccionada
             if (page === 'planificador') {
-                                        
-                content.innerHTML = '<<iframe src="planificador.php" width="100%" height="100%" style="border: none;"></iframe>';
+                content.innerHTML = '<iframe src="planificador.php" width="100%" height="100%" style="border: none;"></iframe>';
             } 
             if (page === 'mis_cursos') {
                 content.innerHTML = '<iframe src="clases.php" width="100%" height="100%" style="border: none;"></iframe>';
+                
+                // Si se indica mostrar el formulario, enviar mensaje al iframe
+                if (action === 'showForm') {
+                    // Esperamos a que el iframe esté cargado
+                    setTimeout(() => {
+                        const iframe = document.querySelector('#main-content iframe');
+                        if (iframe) {
+                            iframe.contentWindow.postMessage({
+                                type: 'showAddForm'
+                            }, '*');
+                        }
+                    }, 500);
+                }
             }
             if (page === 'mis_apuntes') {
                 content.innerHTML = '<iframe src="apuntes.php" width="100%" height="100%" style="border: none;"></iframe>';
@@ -137,6 +157,49 @@ include_once '../includes/verificar_sesion.php';
         window.onload = function() {
             loadContent('home');
         };
+        
+        // Escuchar mensajes desde el iframe
+        window.addEventListener('message', function(event) {
+            // Verificar si es un mensaje para añadir clase al menú
+            if (event.data && event.data.type === 'addClass') {
+                const classData = event.data.classData;
+                // Buscar el submenú de "Mis cursos"
+                const aulaVirtualItem = document.querySelector('.menu-item-dropdown:nth-child(3)');
+                const subMenu = aulaVirtualItem.querySelector('.sub-menu');
+                
+                // Crear un nuevo elemento de lista para la clase
+                const classItem = document.createElement('li');
+                classItem.innerHTML = `<a href="#" class="sub-menu-link class-item" data-id="${classData.id}">${classData.nombre}</a>`;
+                
+                // Añadir el elemento al submenú
+                subMenu.appendChild(classItem);
+                
+                // Actualizar la altura del submenú si está abierto
+                if (aulaVirtualItem.classList.contains('sub-menu-toggle')) {
+                    subMenu.style.height = `${subMenu.scrollHeight + 6}px`;
+                }
+                
+                // Añadir evento click al elemento
+                classItem.querySelector('.class-item').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const classId = e.target.getAttribute('data-id');
+                    
+                    // Cargar el contenido de la clase
+                    loadContent('mis_cursos');
+                    
+                    // Esperar a que el iframe esté cargado
+                    setTimeout(() => {
+                        const iframe = document.querySelector('#main-content iframe');
+                        if (iframe) {
+                            iframe.contentWindow.postMessage({
+                                type: 'loadClass',
+                                classId: classId
+                            }, '*');
+                        }
+                    }, 500);
+                });
+            }
+        });
     </script>
 </body>
 </html>
