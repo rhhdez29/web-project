@@ -242,7 +242,7 @@ include_once '../includes/verificar_sesion.php';
                     </div>
                 </div>
             </div>
-        </div> <!-- Este cierre estaba faltando -->
+        </div> 
     </div>
     <div class="lista-tareas">
         <h3>Tareas del día</h3>
