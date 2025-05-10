@@ -113,7 +113,55 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="welcome-message">¡Bienvenido/a a tu clase de ${classData.nombre}!</p>
                     
                     <div class="class-details">
-                        <!-- ... (mantener el contenido de detalles igual) ... -->
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class='bx bx-time'></i>
+                            </div>
+                            <div class="detail-content-inner">
+                                <h4>Horario</h4>
+                                <p>${classData.horario}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class='bx bx-map'></i>
+                            </div>
+                            <div class="detail-content-inner">
+                                <h4>Lugar</h4>
+                                <p>${classData.lugar}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class='bx bx-user'></i>
+                            </div>
+                            <div class="detail-content-inner">
+                                <h4>Instructor</h4>
+                                <p>${classData.instructor}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class='bx bx-envelope'></i>
+                            </div>
+                            <div class="detail-content-inner">
+                                <h4>Contacto</h4>
+                                <p>${classData.contacto}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class='bx bx-conversation'></i>
+                            </div>
+                            <div class="detail-content-inner">
+                                <h4>Asesoría</h4>
+                                <p>${classData.asesoria}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -140,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button id="empty-add-class-btn" class="btn-secondary">Añadir una clase</button>
                 </div>
             `;
+            
             document.getElementById('empty-add-class-btn').addEventListener('click', showAddForm);
         } else {
             let coursesHTML = '';
@@ -197,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
         imageInput.click();
     });
     
-    // Manejo de eventos principales
+    // Manejo de eventos
     addClassBtn.addEventListener('click', showAddForm);
     closeFormBtn.addEventListener('click', () => setActiveSection(coursesView));
     cancelFormBtn.addEventListener('click', () => setActiveSection(coursesView));
@@ -221,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         classes.push(classData);
         localStorage.setItem('userClasses', JSON.stringify(classes));
         
+        // Notificar al menú principal para actualizar
         window.parent.postMessage({
             type: 'addClass',
             classData: {
@@ -229,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, '*');
         
+        // Volver a la vista de cursos y actualizar la lista
         setActiveSection(coursesView);
         renderClasses();
     });
@@ -247,14 +298,15 @@ document.addEventListener('DOMContentLoaded', () => {
             classes = classes.filter(c => c.id !== currentClassId);
             localStorage.setItem('userClasses', JSON.stringify(classes));
             
+            // Notificar al padre para actualizar el menú
+            window.parent.postMessage({
+                type: 'updateMenu'
+            }, '*');
+            
+            // Cerrar modal y volver a la vista de cursos
             deleteModal.classList.remove('active');
             setActiveSection(coursesView);
             renderClasses();
-            
-            window.parent.postMessage({
-                type: 'removeClass',
-                classId: currentClassId
-            }, '*');
         }
     });
     
@@ -267,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Resetear la imagen de edición
         editBase64Image = null;
-        editImageInput.value = ''; // Limpiar input file
+        editImageInput.value = '';
         
         // Rellenar el formulario con los datos actuales
         document.getElementById('edit-nombre').value = classData.nombre;
@@ -334,13 +386,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Determinar qué imagen usar
         let imagenActualizada;
         if (editBase64Image !== null) {
-            // Usar nueva imagen subida
             imagenActualizada = editBase64Image;
         } else if (editImagePreview.classList.contains('has-image')) {
-            // Conservar imagen existente (no hubo cambios)
             imagenActualizada = classes[classIndex].imagen;
         } else {
-            // Eliminar imagen (se hizo clic en eliminar)
             imagenActualizada = null;
         }
         
@@ -359,23 +408,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Guardar en localStorage
         localStorage.setItem('userClasses', JSON.stringify(classes));
         
-        // Cerrar el modal
-        editModal.classList.remove('active');
-        
-        // Actualizar la vista
-        showClassDetail(currentClassId);
-        renderClasses();
-        
-        // Notificar al menú principal
+        // Notificar al padre para actualizar el menú
         window.parent.postMessage({
-            type: 'updateClass',
-            classData: {
-                id: currentClassId,
-                nombre: classes[classIndex].nombre
-            }
+            type: 'updateMenu'
         }, '*');
         
-        alert('Los cambios se han guardado correctamente');
+        // Cerrar el modal y actualizar la vista
+        editModal.classList.remove('active');
+        showClassDetail(currentClassId);
     });
     
     // Manejar el botón de cancelar en el modal de edición
