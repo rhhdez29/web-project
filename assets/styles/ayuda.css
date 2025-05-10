@@ -1,4 +1,4 @@
-/* ayuda.css - Actualizado con paleta de colores de planificador.css */
+/* ayuda.css - Estilos completos para la página de ayuda */
 :root {
     /* Main colors */
     --color-primary: #f4b5c5;
@@ -21,12 +21,6 @@
     --shadow-border: rgba(148, 163, 184, 0.15);
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
     
-    /* Functional colors */
-    --color-tooltip-bg: #475569;
-    --color-tooltip-text: #FFFFFF;
-    --menu-active-bg: var(--color-primary-light);
-    --menu-active-border: var(--color-primary-dark);
-    
     /* Borders and shadows */
     --border-radius: 8px;
     --transition: all 0.2s ease;
@@ -38,6 +32,7 @@ body {
     margin: 0;
     padding: 0;
     color: var(--color-text-primary);
+    line-height: 1.6;
 }
 
 .help-container {
@@ -102,6 +97,7 @@ body {
     background: var(--color-primary-dark);
 }
 
+/* FAQ Section */
 .faq-section h2 {
     color: var(--color-primary-dark);
     margin-bottom: 1.5rem;
@@ -167,79 +163,85 @@ body {
     padding: 0 20px 20px;
 }
 
-/* Video Tutorials Section */
-.video-tutorials {
-    margin: 30px 0;
-    padding: 20px;
-    background-color: var(--color-surface);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-card);
+/* Video Tutorial Styles */
+.video-tutorial-trigger {
+    margin: 20px 0;
+    width: 100%;
+    max-width: 800px;
 }
 
-.video-tutorials h2 {
-    color: var(--color-text-primary);
-    margin-bottom: 20px;
-    font-weight: 600;
-}
-
-.video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.video-card {
-    background: var(--color-surface);
+.video-preview {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--shadow-card);
-    transition: var(--transition);
+    transition: transform 0.3s ease;
 }
 
-.video-card:hover {
+.video-preview:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.video-placeholder {
-    position: relative;
-    height: 180px;
-    background-color: var(--color-surface-hover);
+.video-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--border-radius);
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(244, 181, 197, 0.8);
+    padding: 10px 20px;
+    border-radius: 50px;
     display: flex;
     align-items: center;
-    justify-content: center;
-}
-
-.video-placeholder img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.video-placeholder i {
-    position: absolute;
-    font-size: 50px;
-    color: rgba(255, 255, 255, 0.8);
-    cursor: pointer;
-    background-color: var(--color-primary);
-    border-radius: 50%;
-    padding: 10px;
-    transition: var(--transition);
-}
-
-.video-placeholder i:hover {
-    background-color: var(--color-primary-dark);
-    transform: scale(1.1);
-}
-
-.video-card h3 {
-    padding: 15px 15px 5px;
-    color: var(--color-text-primary);
+    gap: 8px;
+    color: white;
     font-weight: 500;
 }
 
-.video-card p {
-    padding: 0 15px 15px;
+.play-button i {
+    font-size: 24px;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    margin: 15px 0;
+}
+
+.video-container video {
+    width: 100%;
+    display: block;
+}
+
+.close-video {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.video-description {
+    text-align: center;
+    margin-top: 10px;
     color: var(--color-text-secondary);
     font-size: 0.9rem;
 }
@@ -289,110 +291,14 @@ body {
     margin-top: 20px;
 }
 
-.contact-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    background: var(--color-primary);
-    color: white;
-    text-decoration: none;
-    border-radius: var(--border-radius);
-    transition: var(--transition);
-    font-weight: 500;
-}
-
-.contact-btn:hover {
-    background: var(--color-primary-dark);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-card);
-}
-
-.contact-btn i {
-    font-size: 1.2rem;
-}
-
-/* Video Tutorial Trigger */
-.video-tutorial-trigger {
-    margin: 20px 0;
-    width: 100%;
-    max-width: 800px;
-}
-
-.video-container {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-    height: 0;
-    overflow: hidden;
-    background: var(--color-surface-hover);
-    border-radius: var(--border-radius);
-}
-
-.video-container video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-.video-description {
-    text-align: center;
-    margin-top: 10px;
-    color: var(--color-text-secondary);
-    font-size: 0.9rem;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .help-container {
-        margin: 1rem;
-        padding: 1.5rem;
-    }
-    
-    .contact-methods {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .video-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-contact-option {
+.contact-option {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.contact-info {
-    position: absolute;
-    bottom: -40px;
-    background: var(--color-surface);
-    padding: 8px 16px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-card);
-    opacity: 0;
-    visibility: hidden;
-    transition: var(--transition);
-    z-index: 10;
-    white-space: nowrap;
-    border: 1px solid var(--color-border);
-}
-
-.contact-option:hover .contact-info {
-    opacity: 1;
-    visibility: visible;
-    bottom: -45px;
-}
-
-/* Ajustes para los botones de contacto */
 .contact-btn {
-    position: relative;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -419,5 +325,43 @@ contact-option {
 }
 
 .phone-btn:hover {
-    background: #7c4dff; /* Tono más oscuro del acento */
+    background: #7c4dff;
+}
+
+.contact-info {
+    position: absolute;
+    bottom: -40px;
+    background: var(--color-surface);
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-card);
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    z-index: 10;
+    white-space: nowrap;
+    border: 1px solid var(--color-border);
+}
+
+.contact-option:hover .contact-info {
+    opacity: 1;
+    visibility: visible;
+    bottom: -45px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .help-container {
+        padding: 20px 15px;
+    }
+    
+    .contact-methods {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .video-preview {
+        max-width: 100%;
+    }
 }
