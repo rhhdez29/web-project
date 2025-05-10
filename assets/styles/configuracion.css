@@ -1,0 +1,342 @@
+/* configuracion.css - Con paleta de colores de ayuda.css */
+:root {
+    /* Main colors */
+    --color-primary: #f4b5c5;
+    --color-primary-light: #f8d5e0;
+    --color-primary-dark: #e47a9a; 
+    --color-accent: #8B5CF6;
+    --color-accent-light: #EDE9FE;
+    
+    /* Background colors */
+    --color-bg: #F8FAFC;
+    --color-surface: #FFFFFF;
+    --color-surface-hover: #F7F9FC;
+    
+    /* Text colors */
+    --color-text-primary: #334155;
+    --color-text-secondary: #64748B;
+    
+    /* Border and shadow */
+    --color-border: #D1D9E6;
+    --shadow-border: rgba(148, 163, 184, 0.15);
+    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
+    
+    /* Functional colors */
+    --color-tooltip-bg: #475569;
+    --color-tooltip-text: #FFFFFF;
+    --menu-active-bg: var(--color-primary-light);
+    --menu-active-border: var(--color-primary-dark);
+    
+    /* Borders and shadows */
+    --border-radius: 8px;
+    --transition: all 0.2s ease;
+}
+
+/* Estilos base */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--color-bg);
+    margin: 0;
+    padding: 0;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+}
+
+/* Contenedor principal */
+.configuracion-container {
+    padding: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-card);
+}
+
+.configuracion-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--color-primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+/* Secciones de configuración */
+.config-section {
+    margin-bottom: 30px;
+    padding: 25px;
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-card);
+}
+
+.config-section h2 {
+    color: var(--color-primary-dark);
+    margin-top: 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Información del perfil */
+.profile-info {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-picture-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+#profile-picture {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-primary);
+    transition: var(--transition);
+}
+
+.upload-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 20px;
+    padding: 8px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: var(--transition);
+    border: none;
+}
+
+.upload-btn:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+}
+
+.profile-details {
+    flex: 1;
+}
+
+.detail {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.detail label {
+    font-weight: bold;
+    min-width: 100px;
+    color: var(--color-text-primary);
+}
+
+.detail span {
+    margin-left: 15px;
+    color: var(--color-text-secondary);
+}
+
+/* Opciones de configuración */
+.option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.option:last-child {
+    border-bottom: none;
+}
+
+.option label {
+    font-weight: 500;
+    margin-right: 10px;
+    color: var(--color-text-primary);
+}
+
+select, input[type="checkbox"] {
+    padding: 10px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    transition: var(--transition);
+}
+
+select:focus, input[type="checkbox"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary);
+}
+
+/* Botones */
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--color-primary);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    font-weight: 500;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+
+.btn i {
+    font-size: 1.1rem;
+}
+
+.btn.danger {
+    background-color: #e74c3c;
+}
+
+.btn.danger:hover {
+    background-color: #c0392b;
+}
+
+.btn.secondary {
+    background-color: var(--color-accent);
+}
+
+.btn.secondary:hover {
+    background-color: #7c4dff;
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    transition: var(--transition);
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+/* Tema oscuro */
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+}
+
+body.dark-mode .configuracion-container,
+body.dark-mode .config-section {
+    background-color: #2c3e50;
+    color: #fff;
+}
+
+body.dark-mode .detail label {
+    color: #bbb;
+}
+
+body.dark-mode select, 
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="password"] {
+    background-color: #34495e;
+    color: #fff;
+    border-color: #2c3e50;
+}
+
+body.dark-mode .option label {
+    color: #ddd;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .detail {
+        justify-content: center;
+        flex-direction: column;
+    }
+    
+    .detail label {
+        min-width: auto;
+        margin-bottom: 5px;
+    }
+    
+    .detail span {
+        margin-left: 0;
+    }
+    
+    .option {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .config-section {
+        padding: 20px 15px;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.config-section {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+.config-section:nth-child(2) { animation-delay: 0.1s; }
+.config-section:nth-child(3) { animation-delay: 0.2s; }
+.config-section:nth-child(4) { animation-delay: 0.3s; }
+.config-section:nth-child(5) { animation-delay: 0.4s; }
