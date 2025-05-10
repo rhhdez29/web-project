@@ -6,17 +6,37 @@
     padding: 0;
     font-family: "Poppins", sans-serif;
 }
+
 :root {
-    --color-bg: #F5F9FF;
+    /* Main colors */
+    --color-primary: #f4b5c5; /* Rosa principal */
+    --color-primary-light: #f8d5e0; /* Rosa claro */
+    --color-primary-dark: #e47a9a; /* Rosa oscuro */
+    --color-accent: #8B5CF6;
+    --color-accent-light: #EDE9FE;
+    
+    /* Background colors */
+    --color-bg: #F8FAFC;
     --color-surface: #FFFFFF;
-    --color-border: #D0D8E8;
-    --color-text-primary: #1F2D3D;
-    --color-text-secondary: #5C6B77;
-    --color-tooltip-bg: #4A5A6A;
+    --color-surface-hover: #F7F9FC;
+    
+    /* Text colors */
+    --color-text-primary: #334155;
+    --color-text-secondary: #64748B;
+    
+    /* Border and shadow */
+    --color-border: #D1D9E6;
+    --shadow-border: rgba(148, 163, 184, 0.15);
+    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
+    
+    /* Functional colors */
+    --color-tooltip-bg: #475569;
     --color-tooltip-text: #FFFFFF;
-    --shadow-border: rgba(0, 0, 0, 0.05);
-    --user-bg-color: #F9FAFB;
+    --menu-active-bg: var(--color-primary-light); /* Fondo rosa para items activos */
+    --menu-active-text: var(--color-primary-dark); /* Texto rosa oscuro para items activos */
+    --user-bg-color: var(--color-bg);
 }
+
 /* Body */
 body {
     width: 100%;
@@ -34,7 +54,7 @@ body {
     height: 100%;
     padding: 0 1rem;
     background-color: var(--color-surface);
-    box-shadow: 1px 0px 10px var(--shadow-border);
+    box-shadow: var(--shadow-card);
     transition: width 0.5s ease;
 }
 .sidebar.minimize {
@@ -60,9 +80,9 @@ body {
     width: 1.75rem;
     height: 1.75rem;
     border-radius: 50%;
-    background-color: #fff;
-    color: #6C757D;
-    box-shadow: 2px 2px 5px var(--shadow-border);
+    background-color: var(--color-surface);
+    color: var(--color-text-secondary);
+    box-shadow: var(--shadow-card);
     cursor: pointer;
     transition: right 0.3s ease;
 }
@@ -101,13 +121,17 @@ body {
 .menu-item:hover .menu-link,
 .sub.menu .sub-menu-link:hover,
 .menu-item.active .menu-link {
-    color: var(--color-text-primary);
-    background-color: #E6F0FF;
+    color: var(--menu-active-text);
+    background-color: var(--menu-active-bg);
 }
-
 .menu-link i {
     font-size: 1.35rem;
     padding: 0 0.8rem;
+    color: var(--color-text-secondary);
+}
+.menu-item:hover .menu-link i,
+.menu-item.active .menu-link i {
+    color: var(--menu-active-text);
 }
 .menu-link i:last-child {
     margin-left: auto;
@@ -132,8 +156,8 @@ body {
     position: absolute;
     left: 4.2rem;
     padding: 0.5rem;
-    background-color: var(--color-tooltip-bg);
-    color: var(--color-tooltip-text);
+    background-color: var(--color-primary-dark);
+    color: white;
     border-radius: 0.25rem;
     transition: all 0.3s ease;
 }
@@ -151,6 +175,7 @@ body {
     top: 3rem;
     background-color: var(--color-surface);
     border-radius: 0.2rem;
+    box-shadow: var(--shadow-card);
 }
 .sub-menu .sub-menu-link {
     display: flex;
@@ -161,6 +186,11 @@ body {
     color: var(--color-text-secondary);
     text-decoration: none;
     border-radius: 0.3rem;
+    transition: all 0.3s;
+}
+.sub-menu .sub-menu-link:hover {
+    color: var(--menu-active-text);
+    background-color: var(--menu-active-bg);
 }
 .sub-menu::before {
     content: "";
@@ -225,7 +255,7 @@ body {
     height: 70px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #CED4DA;
+    border: 2px solid var(--color-border);
 }
 .user-date {
     text-align: center;
@@ -252,7 +282,6 @@ body {
     text-align: center;
     color: var(--color-text-primary);
 }
-
 .user-home .menu-link {
     font-size: 0.75rem;
     display: inline-flex;
@@ -260,14 +289,18 @@ body {
     gap: 0.4rem;
     text-decoration: none;
     padding: 0.2rem 0;
-    color: var(--color-text-primary);
+    color: var(--color-primary-dark);
+    transition: color 0.3s;
 }
 .user-home .menu-link i {
     font-size: 1rem;
+    color: var(--color-primary-dark);
 }
 .user-home .menu-link:hover {
-    color: #007BFF;
+    color: var(--color-primary-dark);
+    text-decoration: underline;
 }
+
 /* Tooltip para usuario */
 .sidebar.minimize .user {
     position: relative;
@@ -278,11 +311,12 @@ body {
     top: 0;
     left: 4.2rem;
     background-color: var(--color-surface);
-    color: var(--color-tooltip-text);
+    color: var(--color-text-primary);
     padding: 0.6rem;
     border-radius: 0.4rem;
     white-space: nowrap;
     z-index: 10;
+    box-shadow: var(--shadow-card);
 }
 .sidebar.minimize .user:hover .user-tooltip {
     display: block;
@@ -296,16 +330,18 @@ body {
     font-size: 0.75rem;
     display: block;
     margin-bottom: 0.4rem;
+    color: var(--color-text-secondary);
 }
 .sidebar.minimize .user-tooltip .menu-link {
     font-size: 0.75rem;
-    color: var(--color-text-primary);
+    color: var(--color-primary-dark);
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
     text-decoration: none;
 }
 .sidebar.minimize .user-tooltip .menu-link:hover {
+    color: var(--color-primary-dark);
     text-decoration: underline;
 }
 
@@ -315,8 +351,64 @@ body {
     width: calc(100% - 15rem);
     height: 100vh;
     overflow: hidden;
+    background-color: var(--color-bg);
 }
 .sidebar.minimize ~ #main-content {
     margin-left: 4.94rem;
     width: calc(100% - 4.94rem);
 }
+
+/* Dark mode */
+body.modo-oscuro .sidebar {
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.modo-oscuro .sidebar .menu-link {
+    color: #aaaaaa;
+}
+
+body.modo-oscuro .sidebar .menu-item:hover .menu-link,
+body.modo-oscuro .sidebar .menu-item.active .menu-link {
+    color: #f1f1f1;
+    background-color: #3a2a3a; /* Fondo morado oscuro para modo oscuro */
+}
+
+body.modo-oscuro .sidebar .brand span,
+body.modo-oscuro .sidebar .user-date .name,
+body.modo-oscuro .sidebar .user-home .menu-link {
+    color: #f1f1f1;
+}
+
+body.modo-oscuro .sidebar .user-date .email {
+    color: #aaaaaa;
+}
+
+body.modo-oscuro .sidebar .menu-btn {
+    background-color: #1e1e1e;
+    color: #aaaaaa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body.modo-oscuro .sidebar.minimize .menu-item:hover span,
+body.modo-oscuro .sidebar.minimize .menu-item.sub-menu-toggle span {
+    background-color: var(--color-primary-dark);
+    color: white;
+}
+
+body.modo-oscuro .sidebar.minimize .sub-menu {
+    background-color: #2a2a2a;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.modo-oscuro .sidebar.minimize .user-tooltip {
+    background-color: #2a2a2a;
+    color: #f1f1f1;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.modo-oscuro .sidebar .user-home .menu-link,
+body.modo-oscuro .sidebar.minimize .user-tooltip .menu-link {
+    color: var(--color-primary-light);
+}
+

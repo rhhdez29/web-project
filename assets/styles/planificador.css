@@ -1,8 +1,36 @@
-/* Base styles and variables */
+/* Base styles and variables - Updated to match menu.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 :root {
-    --primary-color: #ff92d9;
-    --primary-light: #eef1ff;
-    --primary-dark: #eeb6fc;
+    /* Main colors */
+    --color-primary: #f4b5c5;
+    --color-primary-light: #f8d5e0;
+    --color-primary-dark: #e47a9a; 
+    --color-accent: #8B5CF6;
+    --color-accent-light: #EDE9FE;
+    
+    /* Background colors */
+    --color-bg: #F8FAFC;
+    --color-surface: #FFFFFF;
+    --color-surface-hover: #F7F9FC;
+    
+    /* Text colors */
+    --color-text-primary: #334155;
+    --color-text-secondary: #64748B;
+    
+    /* Border and shadow */
+    --color-border: #D1D9E6;
+    --shadow-border: rgba(148, 163, 184, 0.15);
+    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
+    
+    /* Functional colors */
+    --color-tooltip-bg: #475569;
+    --color-tooltip-text: #FFFFFF;
+    --menu-active-bg: var(--color-primary-light);
+    --menu-active-border: var(--color-primary-dark);
+    --user-bg-color: var(--color-bg);
+    
+    /* Planner specific colors */
     --task-color: #ff8a3d;
     --task-light: #fff1e6;
     --appointment-color: #3d9eff;
@@ -11,32 +39,22 @@
     --goal-light: #e8f5e9;
     --important-color: #dc3545;
     --important-light: #fff5f5;
-    --grey-100: #f8f9fa;
-    --grey-200: #e9ecef;
-    --grey-300: #dee2e6;
-    --grey-400: #ced4da;
-    --grey-500: #adb5bd;
-    --grey-600: #6c757d;
-    --grey-700: #495057;
-    --grey-800: #343a40;
-    --grey-900: #212529;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    /* Borders and shadows */
     --border-radius: 8px;
     --transition: all 0.2s ease;
 }
 
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
 body {
-    background-color: var(--grey-100);
-    color: var(--grey-800);
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
 }
 
 /* Container for the entire planner */
@@ -56,19 +74,20 @@ body {
     justify-content: space-between;
     align-items: center;
     padding-bottom: 16px;
-    border-bottom: 1px solid var(--grey-200);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .planificador-header h1 {
-    color: var(--primary-dark);
+    color: var(--color-primary-dark);
     font-size: 1.75rem;
+    font-weight: 600;
 }
 
 .add-btn {
     display: flex;
     align-items: center;
     gap: 8px;
-    background-color: var(--primary-color);
+    background-color: var(--color-primary);
     color: white;
     border: none;
     border-radius: var(--border-radius);
@@ -76,12 +95,13 @@ body {
     font-size: 1rem;
     cursor: pointer;
     transition: var(--transition);
+    font-weight: 500;
 }
 
 .add-btn:hover {
-    background-color: var(--primary-dark);
+    background-color: var(--color-primary-dark);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-card);
 }
 
 /* Main content layout */
@@ -101,9 +121,9 @@ body {
 
 /* Calendar styles */
 .calendar-container {
-    background: white;
+    background: var(--color-surface);
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
     padding: 16px;
 }
 
@@ -116,13 +136,14 @@ body {
 
 .calendar-header h2 {
     font-size: 1.2rem;
-    color: var(--grey-800);
+    color: var(--color-text-primary);
+    font-weight: 500;
 }
 
 .calendar-nav-btn {
     background: transparent;
     border: none;
-    color: var(--grey-600);
+    color: var(--color-text-secondary);
     font-size: 1.2rem;
     cursor: pointer;
     padding: 4px;
@@ -134,8 +155,8 @@ body {
 }
 
 .calendar-nav-btn:hover {
-    background-color: var(--grey-200);
-    color: var(--grey-800);
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
 }
 
 .weekdays {
@@ -143,8 +164,9 @@ body {
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
     font-weight: 500;
-    color: var(--grey-700);
+    color: var(--color-text-secondary);
     margin-bottom: 8px;
+    font-size: 0.85rem;
 }
 
 .calendar-days {
@@ -163,26 +185,28 @@ body {
     transition: var(--transition);
     position: relative;
     font-size: 0.9rem;
+    color: var(--color-text-primary);
 }
 
 .calendar-day:hover:not(.inactive) {
-    background-color: var(--grey-200);
+    background-color: var(--color-surface-hover);
 }
 
 .calendar-day.today {
-    background-color: var(--primary-color);
+    background-color: var(--color-primary);
     color: white;
     font-weight: 500;
 }
 
 .calendar-day.selected {
-    background-color: var(--primary-light);
-    color: var(--primary-dark);
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
     font-weight: 500;
 }
 
 .calendar-day.inactive {
-    color: var(--grey-400);
+    color: var(--color-text-secondary);
+    opacity: 0.5;
 }
 
 .calendar-day.has-items::after {
@@ -197,9 +221,9 @@ body {
 
 /* Important reminders section */
 .important-reminders {
-    background: white;
+    background: var(--color-surface);
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
     padding: 16px;
 }
 
@@ -210,6 +234,7 @@ body {
     color: var(--important-color);
     margin-bottom: 16px;
     font-size: 1.1rem;
+    font-weight: 500;
 }
 
 .reminders-list {
@@ -228,11 +253,12 @@ body {
 .reminder-item .title {
     font-weight: 500;
     margin-bottom: 4px;
+    color: var(--color-text-primary);
 }
 
 .reminder-item .date {
     font-size: 0.9rem;
-    color: var(--grey-600);
+    color: var(--color-text-secondary);
 }
 
 /* Weekly container styles */
@@ -245,9 +271,9 @@ body {
 
 /* Weekly goal section */
 .weekly-goal-section {
-    background: white;
+    background: var(--color-surface);
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
     padding: 16px;
 }
 
@@ -258,6 +284,7 @@ body {
     color: var(--goal-color);
     margin-bottom: 12px;
     font-size: 1.1rem;
+    font-weight: 500;
 }
 
 .weekly-goal {
@@ -269,17 +296,18 @@ body {
 
 /* Weekly items grid */
 .weekly-items {
-    background: white;
+    background: var(--color-surface);
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
     padding: 16px;
     flex: 1;
 }
 
 .weekly-items h2 {
     margin-bottom: 16px;
-    color: var(--grey-800);
+    color: var(--color-text-primary);
     font-size: 1.2rem;
+    font-weight: 500;
 }
 
 .weekly-grid {
@@ -289,14 +317,15 @@ body {
 }
 
 .day-card {
-    border: 1px solid var(--grey-200);
+    border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     padding: 16px;
     transition: var(--transition);
+    background-color: var(--color-surface);
 }
 
 .day-card:hover {
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-card);
 }
 
 .day-card-header {
@@ -305,12 +334,13 @@ body {
     align-items: center;
     margin-bottom: 16px;
     padding-bottom: 8px;
-    border-bottom: 1px solid var(--grey-200);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .day-card-header h3 {
     font-size: 1.1rem;
     font-weight: 500;
+    color: var(--color-text-primary);
 }
 
 .day-card-content {
@@ -325,11 +355,12 @@ body {
 
 .section-title {
     font-size: 0.9rem;
-    color: var(--grey-600);
+    color: var(--color-text-secondary);
     margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 4px;
+    font-weight: 500;
 }
 
 .tasks-list,
@@ -355,12 +386,13 @@ body {
 
 .task-title {
     font-weight: 500;
+    color: var(--color-text-primary);
 }
 
 .task-description {
     margin-top: 8px;
     font-size: 0.9rem;
-    color: var(--grey-600);
+    color: var(--color-text-secondary);
     padding: 8px;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: var(--border-radius);
@@ -416,13 +448,13 @@ body {
 }
 
 .modal-content {
-    background-color: white;
+    background-color: var(--color-surface);
     border-radius: var(--border-radius);
     width: 90%;
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-card);
     animation: modalFadeIn 0.3s;
 }
 
@@ -442,18 +474,19 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 16px;
-    border-bottom: 1px solid var(--grey-200);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .modal-header h2 {
-    color: var(--primary-dark);
+    color: var(--color-primary-dark);
     font-size: 1.2rem;
+    font-weight: 500;
 }
 
 .close-btn {
     background: transparent;
     border: none;
-    color: var(--grey-600);
+    color: var(--color-text-secondary);
     font-size: 1.5rem;
     cursor: pointer;
     display: flex;
@@ -463,7 +496,7 @@ body {
 }
 
 .close-btn:hover {
-    color: var(--grey-800);
+    color: var(--color-text-primary);
 }
 
 /* Form styles */
@@ -482,7 +515,7 @@ form {
 
 .form-group label {
     font-weight: 500;
-    color: var(--grey-700);
+    color: var(--color-text-primary);
     font-size: 0.9rem;
 }
 
@@ -503,18 +536,20 @@ form {
 .form-group select,
 .form-group textarea {
     padding: 8px 12px;
-    border: 1px solid var(--grey-300);
+    border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     font-size: 1rem;
     transition: var(--transition);
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px var(--primary-light);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
 }
 
 .form-actions {
@@ -526,30 +561,33 @@ form {
 
 .cancel-btn {
     padding: 8px 16px;
-    background-color: var(--grey-200);
-    color: var(--grey-700);
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-secondary);
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
+    font-weight: 500;
 }
 
 .cancel-btn:hover {
-    background-color: var(--grey-300);
+    background-color: var(--color-border);
+    color: var(--color-text-primary);
 }
 
 .submit-btn {
     padding: 8px 16px;
-    background-color: var(--primary-color);
+    background-color: var(--color-primary);
     color: white;
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
+    font-weight: 500;
 }
 
 .submit-btn:hover {
-    background-color: var(--primary-dark);
+    background-color: var(--color-primary-dark);
 }
 
 /* Responsive styles */
