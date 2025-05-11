@@ -65,18 +65,17 @@ function createNewBlock(type) {
     case "table":
       element = createTableBlock(); // Bloque de tabla
       break;
+    case "note":
+      element = createNoteBlock(); // opción para nota
+      break;
+    case "formula":
+      element = CreateFormulaBlock(); // opción para fórmula
+      break;
     default:
       return;
   }
 
   if (element) {
-    if (type !== "image") { // Si no es una imagen, añadir el botón de menú
-      const menu = document.createElement("span");
-      menu.className = "menu-button";
-      menu.textContent = "⋮";
-      element.insertBefore(menu, element.firstChild);
-    }
-
     // Estilo normal, sin posición absoluta
     element.style.position = "relative";
 
@@ -85,151 +84,6 @@ function createNewBlock(type) {
   }
 }
 
-
-
-// Función de inicialización
-function initImage() {
-  // Configurar event listeners
-  function setupEventListeners() {
-    addImageBtn.addEventListener('click', addNewImage);
-  }
-
-  // Añadir nueva imagen centrada
-  function addNewImage() {
-    const workspaceRect = workspace.getBoundingClientRect();
-    const centerX = workspace.scrollLeft + workspaceRect.width / 2 - 150;
-    const centerY = workspace.scrollTop + workspaceRect.height / 2 - 100;
-
-    createResizableImage(centerX, centerY, workspace);
-  }
-
-  // Inicializar
-  setupEventListeners();
-}
-
-function createResizableImage(x, y, container) {
-  const imageContainer = document.createElement('div');
-  imageContainer.className = 'resizable-image-container';
-  imageContainer.style.left = `${x}px`;
-  imageContainer.style.top = `${y}px`;
-  imageContainer.style.width = '300px';
-  imageContainer.style.height = '200px';
-
-  // Crear elemento de imagen
-  const img = document.createElement('img');
-  img.className = 'resizable-image';
-  img.src = '../assets/imagenes/elemento.svg'; // Imagen de ejemplo
-  img.draggable = false;
-
-  // Crear handles de redimensionamiento
-  const handles = ['nw', 'ne', 'sw', 'se'].map(pos => {
-    const handle = document.createElement('div');
-    handle.className = `resize-handle handle-${pos}`;
-    handle.dataset.position = pos;
-    return handle;
-  });
-
-  // Añadir elementos al contenedor
-  imageContainer.appendChild(img);
-  handles.forEach(handle => imageContainer.appendChild(handle));
-  container.appendChild(imageContainer);
-
-  // Variables de estado
-  let isDragging = false;
-  let isResizing = false;
-  let activeHandle = null;
-  let startX, startY, startWidth, startHeight, startLeft, startTop;
-
-  // Evento para comenzar interacción
-  imageContainer.addEventListener('mousedown', (e) => {
-    if (e.target.classList.contains('resize-handle')) {
-      // Redimensionamiento
-      isResizing = true;
-      activeHandle = e.target;
-      imageContainer.style.cursor = e.target.style.cursor;
-    } else {
-      // Arrastre
-      isDragging = true;
-      imageContainer.classList.add('dragging');
-      imageContainer.style.cursor = 'grabbing';
-    }
-
-    // Guardar estado inicial
-    startX = e.clientX;
-    startY = e.clientY;
-    startWidth = parseInt(imageContainer.style.width);
-    startHeight = parseInt(imageContainer.style.height);
-    startLeft = parseInt(imageContainer.style.left);
-    startTop = parseInt(imageContainer.style.top);
-
-    e.preventDefault();
-  });
-
-  // Evento para mover
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging && !isResizing) return;
-
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
-
-    if (isResizing && activeHandle) {
-      // Lógica de redimensionamiento
-      const position = activeHandle.dataset.position;
-      const newWidth = startWidth + (position.includes('e') ? dx : -dx);
-      const newHeight = startHeight + (position.includes('s') ? dy : -dy);
-
-      // Aplicar límites mínimos
-      imageContainer.style.width = `${Math.max(100, newWidth)}px`;
-      imageContainer.style.height = `${Math.max(100, newHeight)}px`;
-
-      // Ajustar posición para handles noroeste y suroeste
-      if (position.includes('w')) {
-        imageContainer.style.left = `${startLeft + dx}px`;
-      }
-
-      // Ajustar posición para handles noroeste y noreste
-      if (position.includes('n')) {
-        imageContainer.style.top = `${startTop + dy}px`;
-      }
-    } else if (isDragging) {
-      // Lógica de arrastre
-      imageContainer.style.left = `${startLeft + dx}px`;
-      imageContainer.style.top = `${startTop + dy}px`;
-    }
-  });
-
-  // Evento para finalizar interacción
-  document.addEventListener('mouseup', () => {
-    if (isDragging || isResizing) {
-      isDragging = false;
-      isResizing = false;
-      activeHandle = null;
-      imageContainer.classList.remove('dragging');
-      imageContainer.style.cursor = 'grab';
-    }
-  });
-
-  return imageContainer;
-}
-
-workspace.addEventListener('focusin', (e) => {
-  const block = e.target;
-  if (block.classList.contains('block') && block.isContentEditable) {
-    if (block.innerText.trim() === 'Escribe aquí...') {
-      block.innerHTML = ''; // Borra el placeholder al enfocarlo si todavía estaba
-    }
-  }
-});
-
-workspace.addEventListener('input', (e) => {
-  const block = e.target;
-  if (block.classList.contains('block') && block.isContentEditable) {
-    // Si se borra todo y quedan <br>, limpiar para que ::before funcione
-    if (block.innerHTML.trim() === '<br>' || block.innerHTML.trim() === '') {
-      block.innerHTML = '';
-    }
-  }
-});
 
 // Crear bloque de texto
 function createTextBlock() {
@@ -591,8 +445,166 @@ const ajustarTamañoTabla = () => {
   tabla.style.fontSize = `${nuevoTamaño}px`;
 };
 
+function createNoteBlock() {
+  const container = document.createElement("div");
+  container.className = "block-container note-container";
+
+  const title = document.createElement("div");
+  title.className = "note-title";
+  title.contentEditable = true;
+  title.setAttribute("data-placeholder", "Título...");
+
+  const content = document.createElement("div");
+  content.className = "note-content";
+  content.contentEditable = true;
+  content.setAttribute("data-placeholder", "Escribe tu nota...");
+
+  const handle = document.createElement("div");
+      handle.className = "block-handle";
+      handle.innerHTML = "×";
+      handle.addEventListener("click", () => container.remove());
 
 
+  container.appendChild(title);
+  container.appendChild(content);
+  container.appendChild(handle);
+
+  return container;
+}
+
+function createFileBlock(file) {
+      const container = document.createElement("div");
+      container.className = "block-container";
+
+      const block = document.createElement("div");
+      block.className = "content-block file-block";
+
+      if (file.type.startsWith("image/")) {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        block.appendChild(img);
+      } else if (file.type === "application/pdf") {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(file);
+        link.target = "_blank";
+        link.textContent = "Abrir PDF";
+        block.appendChild(link);
+      } else {
+        const text = document.createElement("p");
+        text.textContent = `Archivo: ${file.name}`;
+        block.appendChild(text);
+      }
+
+      const handle = document.createElement("div");
+      handle.className = "block-handle";
+      handle.innerHTML = "×";
+      handle.addEventListener("click", () => container.remove());
+
+      container.appendChild(block);
+      container.appendChild(handle);
+
+      return container;
+    }
+
+    document.getElementById("fileUploader").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const block = createFileBlock(file);
+        workspace.appendChild(block);
+      }
+      e.target.value = ""; // Permitir volver a subir el mismo archivo
+    });
+
+    function CreateFormulaBlock() {
+      const container = document.createElement("div");
+      container.className = "block-container";
+
+      const block = document.createElement("div");
+      block.className = "content-block formula-block";
+      block.dataset.latex = "\\frac{a}{b}";
+
+      const render = document.createElement("div");
+      render.className = "formula-render";
+      render.innerHTML = `\\(${block.dataset.latex}\\)`;
+      MathJax.typesetPromise([render]);
+
+      const button = document.createElement("button");
+      button.className = "edit-formula";
+      button.textContent = "✎ Editar fórmula";
+      button.onclick = () => openFormulaEditor(block, render);
+
+      const handle = document.createElement("div");
+      handle.className = "block-handle";
+      handle.innerHTML = "×";
+      handle.addEventListener("click", () => container.remove());
+
+
+      block.appendChild(render);
+      block.appendChild(button);
+      container.appendChild(block);
+      container.appendChild(handle);
+      document.getElementById("workspace").appendChild(container);
+    }
+
+    function openFormulaEditor(block, renderTarget) {
+      const modal = document.createElement("div");
+      modal.className = "formula-modal";
+
+      const textarea = document.createElement("textarea");
+      textarea.value = block.dataset.latex;
+
+      const controls = document.createElement("div");
+      controls.className = "formula-controls";
+
+      const insert = (text) => {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        textarea.setRangeText(text, start, end, 'end');
+        textarea.focus();
+      };
+
+      const buttons = [
+        { label: "Fracción", code: "\\frac{a}{b}" },
+        { label: "Raíz", code: "\\sqrt{x}" },
+        { label: "Integral", code: "\\int x\\,dx" },
+        { label: "Sumatoria", code: "\\sum_{i=1}^n i^2" },
+        { label: "Pi", code: "\\pi" },
+        { label: "Theta", code: "\\theta" }
+      ];
+
+      buttons.forEach(btn => {
+        const b = document.createElement("button");
+        b.textContent = btn.label;
+        b.onclick = () => insert(btn.code);
+        controls.appendChild(b);
+      });
+
+      const actions = document.createElement("div");
+      actions.className = "modal-actions";
+
+      const saveBtn = document.createElement("button");
+      saveBtn.textContent = "Guardar";
+      saveBtn.className = "save-btn";
+      saveBtn.onclick = () => {
+        block.dataset.latex = textarea.value;
+        renderTarget.innerHTML = `\\(${textarea.value}\\)`;
+        MathJax.typesetPromise([renderTarget]);
+        modal.remove();
+      };
+
+      const cancelBtn = document.createElement("button");
+      cancelBtn.textContent = "Cancelar";
+      cancelBtn.className = "cancel-btn";
+      cancelBtn.onclick = () => modal.remove();
+
+      actions.appendChild(cancelBtn);
+      actions.appendChild(saveBtn);
+
+      modal.appendChild(textarea);
+      modal.appendChild(controls);
+      modal.appendChild(actions);
+      document.body.appendChild(modal);
+    }
 
 
 
@@ -835,7 +847,7 @@ function initModal() {
   });
 }
 
-
+// Inicializar eventos de clic en imágenes
 function initImageClick(selector, callback) {
   document.querySelectorAll(selector).forEach(img => {
     img.addEventListener('click', (e) => {
@@ -845,6 +857,7 @@ function initImageClick(selector, callback) {
   });
 }
 
+// Placeholder para encabezados
 document.querySelectorAll('.editable-h1').forEach(editable => {
   // Limpiar placeholder al enfocar
   editable.addEventListener('focus', () => {
@@ -861,6 +874,27 @@ document.querySelectorAll('.editable-h1').forEach(editable => {
   });
 });
 
+// Placeholder para bloques de texto
+workspace.addEventListener('focusin', (e) => {
+  const block = e.target;
+  if (block.classList.contains('block') && block.isContentEditable) {
+    if (block.innerText.trim() === 'Escribe aquí...') {
+      block.innerHTML = ''; // Borra el placeholder al enfocarlo si todavía estaba
+    }
+  }
+});
+
+// Restaurar placeholder si está vacío al perder foco
+workspace.addEventListener('input', (e) => {
+  const block = e.target;
+  if (block.classList.contains('block') && block.isContentEditable) {
+    // Si se borra todo y quedan <br>, limpiar para que ::before funcione
+    if (block.innerHTML.trim() === '<br>' || block.innerHTML.trim() === '') {
+      block.innerHTML = '';
+    }
+  }
+});
+
 
 // Inicializar la aplicación
 function init() {
@@ -870,7 +904,6 @@ function init() {
   initImageClick('.portada', openImagePicker);
   initImageClick('.icono', openImagePicker);
   initModal();
-  initImage();
 }
 
 // Iniciar cuando el DOM esté listo
