@@ -1,485 +1,398 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Referencias a elementos DOM
+    // Vistas principales
     const coursesView = document.getElementById('courses-view');
     const addFormView = document.getElementById('add-form-view');
     const classDetailView = document.getElementById('class-detail-view');
-    const addClassBtn = document.getElementById('add-class-btn');
-    const emptyAddClassBtn = document.getElementById('empty-add-class-btn');
-    const closeFormBtn = document.getElementById('close-form-btn');
-    const cancelFormBtn = document.getElementById('cancel-form-btn');
-    const addClassForm = document.getElementById('add-class-form');
-    const imageInput = document.getElementById('class-image');
-    const imagePreview = document.getElementById('image-preview');
+
+    // Contenedores y elementos de la lista de cursos
     const coursesContainer = document.getElementById('courses-container');
-    const backToCoursesBtn = document.getElementById('back-to-courses-btn');
+    const mainAddClassBtn = document.getElementById('add-class-btn'); // Botón principal en la vista de lista
+
+    // Elementos del formulario de añadir/editar
+    const classForm = document.getElementById('add-class-form');
+    const formTitle = addFormView.querySelector('h2'); // Título del formulario (ej. "Añadir..." o "Editar...")
+    const courseIdInput = document.createElement('input'); // Se creará un input oculto para el ID si es necesario
+    courseIdInput.type = 'hidden';
+    courseIdInput.name = 'id';
+    if (classForm) classForm.prepend(courseIdInput); // Añadir al inicio del formulario
+
+    const imageNameInput = document.getElementById('class-image'); // Input file
+    const imagePreview = document.getElementById('image-preview');
+    const cancelFormBtn = document.getElementById('cancel-form-btn');
+    const closeFormIconBtn = document.getElementById('close-form-btn'); // Icono 'x'
+
+    // Elementos de la vista de detalle
     const classDetailContent = document.getElementById('class-detail-content');
-    const deleteClassBtn = document.getElementById('delete-class-btn');
-    const editClassBtn = document.getElementById('edit-class-btn');
+    const backToCoursesBtn = document.getElementById('back-to-courses-btn');
+    const editClassDetailBtn = document.getElementById('edit-class-btn'); // Botón editar en vista detalle
+    const deleteClassDetailBtn = document.getElementById('delete-class-btn'); // Botón borrar en vista detalle
+
+    // Elementos del modal de eliminación
     const deleteModal = document.getElementById('delete-modal');
     const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
     const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
-    
-    // Crear modal de edición dinámicamente
-    const editModal = document.createElement('div');
-    editModal.id = 'edit-modal';
-    editModal.className = 'modal';
-    editModal.innerHTML = `
-        <div class="modal-content">
-            <h3>Editar Clase</h3>
-            <form id="edit-class-form">
-                <div class="form-group">
-                    <label for="edit-nombre">Nombre de la clase</label>
-                    <input type="text" id="edit-nombre" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-horario">Horario</label>
-                    <input type="text" id="edit-horario" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-lugar">Lugar</label>
-                    <input type="text" id="edit-lugar" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-instructor">Instructor</label>
-                    <input type="text" id="edit-instructor" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-contacto">Contacto</label>
-                    <input type="text" id="edit-contacto" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-asesoria">Asesoría</label>
-                    <input type="text" id="edit-asesoria" required>
-                </div>
-                <div class="form-group">
-                    <label>Imagen</label>
-                    <div id="edit-image-preview" class="image-preview">
-                        <i class='bx bx-image-add'></i>
-                        <span>Haz clic para seleccionar una imagen</span>
-                    </div>
-                    <input type="file" id="edit-class-image" accept="image/*" style="display: none;">
-                    <button type="button" id="remove-image-btn" class="btn-secondary" style="margin-top: 0.5rem; display: none;">
-                        <i class='bx bx-trash'></i> Eliminar imagen
-                    </button>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" id="cancel-edit-btn" class="btn-secondary">Cancelar</button>
-                    <button type="submit" id="confirm-edit-btn" class="btn-primary">Guardar cambios</button>
-                </div>
-            </form>
-        </div>
-    `;
-    document.body.appendChild(editModal);
-    
-    // Referencias a elementos del modal de edición
-    const editImagePreview = document.getElementById('edit-image-preview');
-    const editImageInput = document.getElementById('edit-class-image');
-    const editForm = document.getElementById('edit-class-form');
-    const cancelEditBtn = document.getElementById('cancel-edit-btn');
-    const removeImageBtn = document.getElementById('remove-image-btn');
-    
-    let currentClassId = null;
-    let classes = JSON.parse(localStorage.getItem('userClasses')) || [];
-    let base64Image = null;
-    let editBase64Image = null;
-    
-    // Función para generar ID único
-    const generateUniqueId = () => {
-        return Date.now().toString(36) + Math.random().toString(36).substring(2);
+
+    let currentEditingClassId = null;
+    let imageBase64 = null;
+    let classToDeleteId = null;
+    let allCoursesData = []; // Para almacenar los datos de los cursos y usarlos en detalles/edición
+
+    // --- FUNCIONES DE NAVEGACIÓN ENTRE VISTAS ---
+    const showView = (viewToShow) => {
+        [coursesView, addFormView, classDetailView].forEach(view => {
+            if (view) view.classList.remove('active');
+        });
+        if (viewToShow) viewToShow.classList.add('active');
     };
-    
-    // Mostrar el formulario de añadir clase
-    const showAddForm = () => {
-        setActiveSection(addFormView);
-        addClassForm.reset();
-        imagePreview.style.backgroundImage = '';
-        imagePreview.classList.remove('has-image');
-        base64Image = null;
-    };
-    
-    // Mostrar vista de detalle de clase
-    const showClassDetail = (classId) => {
-        currentClassId = classId;
-        const classData = classes.find(c => c.id === classId);
-        
-        if (classData) {
-            let bannerClass = classData.imagen ? '' : 'no-image';
-            let bannerStyle = classData.imagen ? `background-image: url(${classData.imagen})` : '';
-            const fechaActual = new Date();
-            const cursoAbrev = classData.nombre.substring(0, 3).toUpperCase();
-            const idCorto = classData.id.substring(classData.id.length - 4);
-            const timestamp = `${fechaActual.getDate()}${fechaActual.getMonth()+1}${fechaActual.getFullYear().toString().substring(2)}`;
-            const claveCurso = `${cursoAbrev}-${idCorto}-${timestamp}`;
-            
-            classDetailContent.innerHTML = `
-                <div class="detail-banner ${bannerClass}" style="${bannerStyle}"></div>
-                <div class="class-info">
-                    <h1 class="class-title">${classData.nombre}</h1>
-                      <div class="welcome-container">
-                            <p class="welcome-message">¡Bienvenido/a a tu clase de ${classData.nombre}!</p>
-                            <h4 class="class-code">Código de clase:</h4>
-                            <span class="course-code">
-                                ${claveCurso}
-                                <i class="bx bx-copy copy-icon" title="Copiar código al portapapeles"></i>
-                            </span>
-                        </div>
-                    
-                    <div class="class-details">
-                        <div class="detail-item">
-                            <div class="detail-icon">
-                                <i class='bx bx-time'></i>
-                            </div>
-                            <div class="detail-content-inner">
-                                <h4>Horario</h4>
-                                <p>${classData.horario}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <div class="detail-icon">
-                                <i class='bx bx-map'></i>
-                            </div>
-                            <div class="detail-content-inner">
-                                <h4>Lugar</h4>
-                                <p>${classData.lugar}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <div class="detail-icon">
-                                <i class='bx bx-user'></i>
-                            </div>
-                            <div class="detail-content-inner">
-                                <h4>Instructor</h4>
-                                <p>${classData.instructor}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <div class="detail-icon">
-                                <i class='bx bx-envelope'></i>
-                            </div>
-                            <div class="detail-content-inner">
-                                <h4>Contacto</h4>
-                                <p>${classData.contacto}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <div class="detail-icon">
-                                <i class='bx bx-conversation'></i>
-                            </div>
-                            <div class="detail-content-inner">
-                                <h4>Asesoría</h4>
-                                <p>${classData.asesoria}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            setActiveSection(classDetailView);
-            const courseCodeElement = classDetailView.querySelector('.course-code');
-            if (courseCodeElement) {
-                courseCodeElement.addEventListener('click', function() {
-                    // Crear un elemento temporal para copiar el texto
-                    const textToCopy = claveCurso;
-                    const textarea = document.createElement('textarea');
-                    textarea.value = textToCopy;
-                    textarea.setAttribute('readonly', '');
-                    textarea.style.position = 'absolute';
-                    textarea.style.left = '-9999px';
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    
-                    // Feedback visual
-                    this.classList.add('copied');
-                    const copyIcon = this.querySelector('.copy-icon');
-                    if (copyIcon) {
-                        copyIcon.classList.remove('bx-copy');
-                        copyIcon.classList.add('bx-check');
-                        
-                        // Restaurar icono después de un tiempo
-                        setTimeout(() => {
-                            copyIcon.classList.remove('bx-check');
-                            copyIcon.classList.add('bx-copy');
-                            this.classList.remove('copied');
-                        }, 1500);
-                    }
-                });
-}
+
+    // --- FUNCIONES DE INTERACCIÓN CON EL BACKEND ---
+    const apiCall = async (action, method = 'GET', body = null) => {
+        const url = `../includes/cursos_controller.php${method === 'GET' && action ? `?action=${action}` : ''}`;
+        const options = {
+            method: method,
+            headers: { 'Accept': 'application/json' }
+        };
+        if (method === 'POST') {
+            // Si el body es FormData, no se establece Content-Type, el navegador lo hace.
+            // Si es un objeto JS, se convierte a JSON.
+            if (body instanceof FormData) {
+                if (action && !body.has('action')) body.append('action', action);
+                options.body = body;
+            } else if (body) {
+                options.headers['Content-Type'] = 'application/json';
+                options.body = JSON.stringify({ action, ...body });
+            } else if (action) { // Para POST sin body pero con action en el cuerpo
+                 const formData = new FormData();
+                 formData.append('action', action);
+                 options.body = formData;
+            }
+        }
+
+        try {
+            const response = await fetch(url, options);
+            const responseData = await response.json().catch(() => ({ // Intenta parsear JSON, si falla, crea un objeto de error
+                success: false, 
+                message: `Respuesta no válida del servidor. Estado: ${response.status}`
+            }));
+
+            if (!response.ok) {
+                throw new Error(responseData.message || `Error ${response.status} del servidor.`);
+            }
+            if (!responseData.success) {
+                throw new Error(responseData.message || 'La operación falló sin un mensaje específico.');
+            }
+            return responseData;
+        } catch (error) {
+            console.error(`Error en apiCall (action: ${action}):`, error);
+            alert(`Error: ${error.message}`);
+            throw error; // Re-lanzar para que la función que llama pueda manejarlo si es necesario
         }
     };
-    
-    // Establecer la sección activa
-    const setActiveSection = (section) => {
-        [coursesView, addFormView, classDetailView].forEach(s => {
-            s.classList.remove('active');
-        });
-        section.classList.add('active');
+
+    const fetchCourses = async () => {
+        try {
+            const result = await apiCall('obtenerCursos', 'GET');
+            allCoursesData = result.data || [];
+            renderCourses(allCoursesData);
+        } catch (error) {
+            if(coursesContainer) coursesContainer.innerHTML = `<div class="empty-state"><p>No se pudieron cargar los cursos. ${error.message}</p></div>`;
+        }
     };
-    
-    // Renderizar la lista de clases
-    const renderClasses = () => {
-        if (classes.length === 0) {
+
+    const saveCourse = async (event) => {
+        event.preventDefault();
+        if (!classForm) return;
+
+        const formData = new FormData(classForm);
+        const action = currentEditingClassId ? 'actualizarCurso' : 'crearCurso';
+
+        // El ID para 'crearCurso' se genera aquí si no está ya en el formulario (ej. campo oculto)
+        // El backend espera un 'id' generado por JS para 'crearCurso'
+        if (!currentEditingClassId && !formData.get('id')) {
+            formData.set('id', generateUniqueId()); // Usar set para asegurar que esté, o reemplazar si estaba vacío
+        } else if (currentEditingClassId) {
+            formData.set('id', currentEditingClassId); // Asegurar que el ID de edición esté
+        }
+        
+        if (imageBase64) {
+            formData.append('imagen', imageBase64);
+        } else if (!currentEditingClassId) {
+            // Para creación, si la imagen es obligatoria y no hay imageBase64, el backend debería fallar.
+            // Podríamos añadir una validación aquí o una imagen placeholder en base64.
+            // Por ahora, si el backend la requiere, fallará allí.
+            // Si el campo imagen es opcional en el backend, esto está bien.
+            // El controller actual la marca como obligatoria.
+            alert("Por favor, selecciona una imagen para el curso.");
+            return; // Detener si la imagen es obligatoria y no está
+        }
+        // Si se está editando y no se cambió la imagen, imageBase64 podría tener la original
+        // o ser null si la original no se cargó. El backend debe manejar si 'imagen' no se envía en actualización.
+        // El controller actual la marca como obligatoria también para actualizar.
+
+        try {
+            const result = await apiCall(action, 'POST', formData);
+            alert(result.message || 'Curso guardado exitosamente.');
+            fetchCourses();
+            closeAndResetForm();
+        } catch (error) {
+            // El error ya se muestra por apiCall, aquí podríamos hacer algo más si es necesario
+        }
+    };
+
+    const handleDeleteCourse = async () => {
+        if (!classToDeleteId) return;
+        try {
+            const formData = new FormData();
+            formData.append('id', classToDeleteId);
+            const result = await apiCall('eliminarCurso', 'POST', formData);
+            alert(result.message || 'Curso eliminado exitosamente.');
+            fetchCourses();
+            closeDeleteModal();
+            showView(coursesView); // Volver a la lista de cursos
+        } catch (error) {
+            // El error ya se muestra
+        }
+    };
+
+    // --- FUNCIONES DE RENDERIZADO Y UI ---
+    const generateUniqueId = () => `curso_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    const renderCourses = (courses = []) => {
+        if (!coursesContainer) return;
+        coursesContainer.innerHTML = '';
+
+        if (courses.length === 0) {
             coursesContainer.innerHTML = `
                 <div class="empty-state">
                     <img src="../assets/imagenes/empty-courses.svg" alt="No hay cursos">
-                    <p>No tienes cursos actualmente</p>
+                    <p>Aún no has creado ninguna clase.</p>
                     <button id="empty-add-class-btn" class="btn-secondary">Añadir una clase</button>
+                </div>`;
+            const emptyBtn = document.getElementById('empty-add-class-btn');
+            if (emptyBtn) emptyBtn.addEventListener('click', openAddForm);
+            return;
+        }
+
+        courses.forEach(course => {
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.dataset.id = course.id;
+            // Asumiendo que el backend envía 'asesoria' si se implementa
+            const asesoriaHTML = course.asesoria ? `<p class="course-detail"><i class='bx bx-help-circle'></i> Asesoría: ${course.asesoria}</p>` : '';
+
+            card.innerHTML = `
+                <div class="course-image" style="background-image: url('${course.imagen || '../assets/imagenes/default-image.png'}');"></div>
+                <div class="course-content">
+                    <h3 class="course-title">${course.nombre}</h3>
+                    <div class="course-details">
+                        <p class="course-detail"><i class='bx bx-time-five'></i> Horario: ${course.horario || 'N/A'}</p>
+                        <p class="course-detail"><i class='bx bx-map'></i> Lugar: ${course.lugar || 'N/A'}</p>
+                        <p class="course-detail"><i class='bx bx-user'></i> Instructor: ${course.instructor || 'N/A'}</p>
+                        <p class="course-detail"><i class='bx bx-phone'></i> Contacto: ${course.contacto || 'N/A'}</p>
+                        ${asesoriaHTML}
+                    </div>
+                </div>`;
+            // No se añaden botones de editar/eliminar aquí, se manejan en la vista de detalle.
+            // El card completo es clickeable para ver detalles.
+            card.addEventListener('click', () => openDetailView(course.id));
+            coursesContainer.appendChild(card);
+        });
+    };
+    
+    const renderClassDetail = (courseId) => {
+        const course = allCoursesData.find(c => c.id === courseId);
+        if (!course || !classDetailContent) return;
+
+        // Asumiendo que el backend envía 'asesoria' si se implementa
+        const asesoriaDetailHTML = course.asesoria ? `
+            <div class="detail-item">
+                <div class="detail-icon"><i class='bx bx-help-circle'></i></div>
+                <div class="detail-content-inner">
+                    <h4>Asesoría</h4>
+                    <p>${course.asesoria}</p>
                 </div>
-            `;
-            
-            document.getElementById('empty-add-class-btn').addEventListener('click', showAddForm);
-        } else {
-            let coursesHTML = '';
-            
-            classes.forEach(classData => {
-                const imageUrl = classData.imagen || '../assets/imagenes/default-course.jpg';
-                
-                coursesHTML += `
-                    <div class="course-card" data-id="${classData.id}">
-                        <img src="${imageUrl}" alt="${classData.nombre}" class="course-image">
-                        <div class="course-content">
-                            <h3 class="course-title">${classData.nombre}</h3>
-                            <div class="course-details">
-                                <div class="course-detail">
-                                    <i class='bx bx-time'></i>
-                                    <span>${classData.horario}</span>
-                                </div>
-                                <div class="course-detail">
-                                    <i class='bx bx-map'></i>
-                                    <span>${classData.lugar}</span>
-                                </div>
-                            </div>
+            </div>` : '';
+        
+        classDetailContent.innerHTML = `
+            <div class="detail-banner ${course.imagen ? '' : 'no-image'}" style="background-image: url('${course.imagen || ''}');">
+            </div>
+            <div class="class-info">
+                <div class="title-container">
+                     <h2 class="class-title">${course.nombre}</h2>
+                     <span class="course-code" title="Copiar clave del curso">${course.id} <i class='bx bx-copy copy-icon'></i></span>
+                </div>
+                <div class="welcome-message">
+                    <p>Bienvenido a los detalles del curso. Aquí puedes ver toda la información relevante.</p>
+                </div>
+                <div class="class-details">
+                    <div class="detail-item">
+                        <div class="detail-icon"><i class='bx bx-time-five'></i></div>
+                        <div class="detail-content-inner">
+                            <h4>Horario</h4>
+                            <p>${course.horario || 'No especificado'}</p>
                         </div>
                     </div>
-                `;
-            });
-            
-            coursesContainer.innerHTML = coursesHTML;
-            
-            document.querySelectorAll('.course-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const classId = card.getAttribute('data-id');
-                    showClassDetail(classId);
-                });
+                    <div class="detail-item">
+                        <div class="detail-icon"><i class='bx bx-map'></i></div>
+                        <div class="detail-content-inner">
+                            <h4>Lugar</h4>
+                            <p>${course.lugar || 'No especificado'}</p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon"><i class='bx bx-user'></i></div>
+                        <div class="detail-content-inner">
+                            <h4>Instructor</h4>
+                            <p>${course.instructor || 'No especificado'}</p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon"><i class='bx bx-phone'></i></div>
+                        <div class="detail-content-inner">
+                            <h4>Contacto</h4>
+                            <p>${course.contacto || 'No especificado'}</p>
+                        </div>
+                    </div>
+                    ${asesoriaDetailHTML}
+                </div>
+            </div>`;
+
+        // Funcionalidad de copiar clave
+        const courseCodeElement = classDetailContent.querySelector('.course-code');
+        if (courseCodeElement) {
+            courseCodeElement.addEventListener('click', () => {
+                navigator.clipboard.writeText(course.id).then(() => {
+                    courseCodeElement.classList.add('copied');
+                    const originalText = courseCodeElement.innerHTML;
+                    courseCodeElement.innerHTML = `${course.id} <i class='bx bx-check copy-icon'></i> Copiado!`;
+                    setTimeout(() => {
+                        courseCodeElement.innerHTML = originalText;
+                        courseCodeElement.classList.remove('copied');
+                    }, 1500);
+                }).catch(err => console.error('Error al copiar: ', err));
             });
         }
+
+        // Asignar IDs a los botones de la vista de detalle para los listeners
+        if (editClassDetailBtn) editClassDetailBtn.dataset.id = course.id;
+        if (deleteClassDetailBtn) deleteClassDetailBtn.dataset.id = course.id;
     };
-    
-    // Manejar la previsualización de la imagen (formulario de añadir)
-    imageInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                base64Image = event.target.result;
-                imagePreview.style.backgroundImage = `url(${base64Image})`;
-                imagePreview.classList.add('has-image');
-            };
-            reader.readAsDataURL(file);
+
+    const resetForm = () => {
+        if (classForm) classForm.reset();
+        if (imagePreview) {
+            imagePreview.style.backgroundImage = 'none';
+            imagePreview.classList.remove('has-image');
+            imagePreview.querySelector('i').style.display = 'block';
+            imagePreview.querySelector('span').style.display = 'block';
         }
-    });
-    
-    // Click en el área de previsualización para abrir el selector de archivos (añadir)
-    imagePreview.addEventListener('click', () => {
-        imageInput.click();
-    });
-    
-    // Manejo de eventos
-    addClassBtn.addEventListener('click', showAddForm);
-    closeFormBtn.addEventListener('click', () => setActiveSection(coursesView));
-    cancelFormBtn.addEventListener('click', () => setActiveSection(coursesView));
-    backToCoursesBtn.addEventListener('click', () => setActiveSection(coursesView));
-    
-    // Manejo del formulario de añadir clase
-    addClassForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+        if (imageNameInput) imageNameInput.value = ''; // Limpiar el input file
+        imageBase64 = null;
+        currentEditingClassId = null;
+        courseIdInput.value = ''; // Limpiar el ID oculto
+        if (formTitle) formTitle.textContent = 'Añadir una nueva clase';
+    };
+
+    const populateFormForEdit = (courseId) => {
+        const course = allCoursesData.find(c => c.id === courseId);
+        if (!course || !classForm) return;
+
+        resetForm(); // Limpiar primero
+        currentEditingClassId = course.id;
+        courseIdInput.value = course.id; // Establecer el ID en el campo oculto
+
+        classForm.querySelector('[name="nombre"]').value = course.nombre || '';
+        classForm.querySelector('[name="horario"]').value = course.horario || '';
+        classForm.querySelector('[name="lugar"]').value = course.lugar || '';
+        classForm.querySelector('[name="instructor"]').value = course.instructor || '';
+        classForm.querySelector('[name="contacto"]').value = course.contacto || '';
+        // Asumiendo que el backend envía 'asesoria' si se implementa
+        if (classForm.querySelector('[name="asesoria"]')) {
+            classForm.querySelector('[name="asesoria"]').value = course.asesoria || '';
+        }
+
+        if (course.imagen && imagePreview) {
+            imagePreview.style.backgroundImage = `url('${course.imagen}')`;
+            imagePreview.classList.add('has-image');
+            imagePreview.querySelector('i').style.display = 'none';
+            imagePreview.querySelector('span').style.display = 'none';
+            imageBase64 = course.imagen; // Guardar la imagen existente (Base64)
+        }
         
-        const classData = {
-            id: generateUniqueId(),
-            nombre: document.getElementById('nombre').value,
-            horario: document.getElementById('horario').value,
-            lugar: document.getElementById('lugar').value,
-            instructor: document.getElementById('instructor').value,
-            contacto: document.getElementById('contacto').value,
-            asesoria: document.getElementById('asesoria').value,
-            imagen: base64Image
-        };
-        
-        classes.push(classData);
-        localStorage.setItem('userClasses', JSON.stringify(classes));
-        
-        // Notificar al menú principal para actualizar
-        window.parent.postMessage({
-            type: 'addClass',
-            classData: {
-                id: classData.id,
-                nombre: classData.nombre
+        if (formTitle) formTitle.textContent = 'Editar Clase';
+        showView(addFormView);
+    };
+
+    // --- MANEJO DE EVENTOS ---
+    if (imagePreview && imageNameInput) {
+        imagePreview.addEventListener('click', () => imageNameInput.click());
+        imageNameInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (imagePreview) {
+                        imagePreview.style.backgroundImage = `url('${e.target.result}')`;
+                        imagePreview.classList.add('has-image');
+                        imagePreview.querySelector('i').style.display = 'none';
+                        imagePreview.querySelector('span').style.display = 'none';
+                    }
+                    imageBase64 = e.target.result;
+                }
+                reader.readAsDataURL(file);
             }
-        }, '*');
-        
-        // Volver a la vista de cursos y actualizar la lista
-        setActiveSection(coursesView);
-        renderClasses();
-    });
-    
-    // Manejar eliminación de clase
-    deleteClassBtn.addEventListener('click', () => {
-        deleteModal.classList.add('active');
-    });
-    
-    cancelDeleteBtn.addEventListener('click', () => {
-        deleteModal.classList.remove('active');
-    });
-    
-    confirmDeleteBtn.addEventListener('click', () => {
-        if (currentClassId) {
-            classes = classes.filter(c => c.id !== currentClassId);
-            localStorage.setItem('userClasses', JSON.stringify(classes));
-            
-            // Notificar al padre para actualizar el menú
-            window.parent.postMessage({
-                type: 'updateMenu'
-            }, '*');
-            
-            // Cerrar modal y volver a la vista de cursos
-            deleteModal.classList.remove('active');
-            setActiveSection(coursesView);
-            renderClasses();
-        }
-    });
-    
-    // Función para abrir el modal de edición
-    const openEditModal = () => {
-        if (!currentClassId) return;
-        
-        const classData = classes.find(c => c.id === currentClassId);
-        if (!classData) return;
-        
-        // Resetear la imagen de edición
-        editBase64Image = null;
-        editImageInput.value = '';
-        
-        // Rellenar el formulario con los datos actuales
-        document.getElementById('edit-nombre').value = classData.nombre;
-        document.getElementById('edit-horario').value = classData.horario;
-        document.getElementById('edit-lugar').value = classData.lugar;
-        document.getElementById('edit-instructor').value = classData.instructor;
-        document.getElementById('edit-contacto').value = classData.contacto;
-        document.getElementById('edit-asesoria').value = classData.asesoria;
-        
-        // Manejar la imagen
-        editImagePreview.style.backgroundImage = '';
-        editImagePreview.classList.remove('has-image');
-        removeImageBtn.style.display = 'none';
-        
-        if (classData.imagen) {
-            editImagePreview.style.backgroundImage = `url(${classData.imagen})`;
-            editImagePreview.classList.add('has-image');
-            editBase64Image = classData.imagen;
-            removeImageBtn.style.display = 'block';
-        }
-        
-        // Mostrar el modal
-        editModal.classList.add('active');
+        });
+    }
+
+    const openAddForm = () => {
+        resetForm();
+        showView(addFormView);
     };
+    const closeAndResetForm = () => {
+        resetForm();
+        showView(coursesView);
+    };
+
+    if (mainAddClassBtn) mainAddClassBtn.addEventListener('click', openAddForm);
+    if (classForm) classForm.addEventListener('submit', saveCourse);
+    if (cancelFormBtn) cancelFormBtn.addEventListener('click', closeAndResetForm);
+    if (closeFormIconBtn) closeFormIconBtn.addEventListener('click', closeAndResetForm);
+
+    const openDetailView = (courseId) => {
+        renderClassDetail(courseId);
+        showView(classDetailView);
+    };
+
+    if (backToCoursesBtn) {
+        backToCoursesBtn.addEventListener('click', () => showView(coursesView));
+    }
+    if (editClassDetailBtn) {
+        editClassDetailBtn.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            if (id) populateFormForEdit(id);
+        });
+    }
+    if (deleteClassDetailBtn) {
+        deleteClassDetailBtn.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            if (id) openDeleteModal(id);
+        });
+    }
     
-    // Manejar la previsualización de la imagen en el modal de edición
-    editImageInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                editBase64Image = event.target.result;
-                editImagePreview.style.backgroundImage = `url(${editBase64Image})`;
-                editImagePreview.classList.add('has-image');
-                removeImageBtn.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-    
-    // Click en el área de previsualización para abrir el selector de archivos (edición)
-    editImagePreview.addEventListener('click', () => {
-        editImageInput.click();
-    });
-    
-    // Manejar el botón para eliminar imagen
-    removeImageBtn.addEventListener('click', () => {
-        editImagePreview.style.backgroundImage = '';
-        editImagePreview.classList.remove('has-image');
-        editBase64Image = null;
-        editImageInput.value = '';
-        removeImageBtn.style.display = 'none';
-    });
-    
-    // Manejar el envío del formulario de edición
-    editForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        if (!currentClassId) return;
-        
-        const classIndex = classes.findIndex(c => c.id === currentClassId);
-        if (classIndex === -1) return;
-        
-        // Determinar qué imagen usar
-        let imagenActualizada;
-        if (editBase64Image !== null) {
-            imagenActualizada = editBase64Image;
-        } else if (editImagePreview.classList.contains('has-image')) {
-            imagenActualizada = classes[classIndex].imagen;
-        } else {
-            imagenActualizada = null;
-        }
-        
-        // Actualizar los datos de la clase
-        classes[classIndex] = {
-            id: currentClassId,
-            nombre: document.getElementById('edit-nombre').value,
-            horario: document.getElementById('edit-horario').value,
-            lugar: document.getElementById('edit-lugar').value,
-            instructor: document.getElementById('edit-instructor').value,
-            contacto: document.getElementById('edit-contacto').value,
-            asesoria: document.getElementById('edit-asesoria').value,
-            imagen: imagenActualizada
-        };
-        
-        // Guardar en localStorage
-        localStorage.setItem('userClasses', JSON.stringify(classes));
-        
-        // Notificar al padre para actualizar el menú
-        window.parent.postMessage({
-            type: 'updateMenu'
-        }, '*');
-        
-        // Cerrar el modal y actualizar la vista
-        editModal.classList.remove('active');
-        showClassDetail(currentClassId);
-    });
-    
-    // Manejar el botón de cancelar en el modal de edición
-    cancelEditBtn.addEventListener('click', () => {
-        editModal.classList.remove('active');
-    });
-    
-    // Manejar el botón de editar
-    editClassBtn.addEventListener('click', openEditModal);
-    
-    // Escuchar mensajes del iframe padre
-    window.addEventListener('message', (event) => {
-        if (event.data && event.data.type === 'showAddForm') {
-            showAddForm();
-        }
-        if (event.data && event.data.type === 'loadClass') {
-            const classId = event.data.classId;
-            showClassDetail(classId);
-        }
-    });
-    
-    // Inicializar
-    renderClasses();
+    const openDeleteModal = (courseId) => {
+        classToDeleteId = courseId;
+        if (deleteModal) deleteModal.classList.add('active');
+    };
+    const closeDeleteModal = () => {
+        classToDeleteId = null;
+        if (deleteModal) deleteModal.classList.remove('active');
+    };
+
+    if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+    if (confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', handleDeleteCourse);
+
+
+    // --- INICIALIZACIÓN ---
+    fetchCourses();
+    showView(coursesView); // Asegurar que la vista inicial sea la lista de cursos
 });
