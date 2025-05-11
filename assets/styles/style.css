@@ -21,13 +21,17 @@ body {
 
 body.modo-oscuro {
     transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
-    background-color: #121212;
+    background-color: #1e1e1e;
     color: #f1f1f1;
 }
 
 body.modo-oscuro #textoCurvo textPath,
 body.modo-oscuro .texto-curvo{
     fill: #999; /* Color claro para modo oscuro */
+}
+
+body.modo-oscuro .cls-1 {
+    fill: #fff;
 }
 
 body.modo-oscuro .slider{
@@ -38,7 +42,7 @@ body.modo-oscuro .slider{
 body.modo-oscuro .comillas,
 body.modo-oscuro .texto2,
 body.modo-oscuro .footer-derechos {
-    color: #999;
+    color: #ffffff;
     opacity: 0.5;
 }
 
@@ -46,10 +50,12 @@ body.modo-oscuro header,
 body.modo-oscuro nav,
 body.modo-oscuro section,
 body.modo-oscuro footer,
-body.modo-oscuro #banner,
 body.modo-oscuro main {
     background-color: #1e1e1e;
-    box-shadow: 0 2px 6px rgba(255,255,255,0.05);
+}
+
+body.modo-oscuro #banner {
+    background-color: #434343;
 }
 
 
@@ -124,6 +130,16 @@ svg {
 .elementoPrincipal {
     max-width: 279px;
     height: 279px;
+}
+
+#Usuario {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0; /* Evita que se deforme */
+}
+
+.cls-1 {
+    fill: #0d0d0d;
 }
 
 
@@ -322,6 +338,7 @@ video {
     position: relative;
     width: 300px;
     height: 300px;
+    z-index: 1;
 }
 .contenedor-brillo::before {
     content: "";
@@ -331,12 +348,12 @@ video {
     right: -20px;
     bottom: -20px;
     background: radial-gradient(
-      circle,
-      rgba(225, 74, 122, 0.9) 0%,
-      rgba(255, 255, 255, 0) 70%
+    circle,
+    rgba(138, 43, 226, 0.8) 0%,      /* Purple/Violet */
+    rgba(255, 255, 255, 0) 70%
     );
     border-radius: 50%;
-    z-index: -1;
+    z-index: -1; /* Ahora estará detrás pero visible */
     opacity: 0;
     transition: opacity 0.5s;
 }
