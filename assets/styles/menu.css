@@ -559,3 +559,21 @@ body.modo-oscuro .sidebar.minimize .user-tooltip .menu-link {
     z-index: 100;
     min-width: 150px;
 }
+
+/*Apuntes*/
+.apuntes-scrollable {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 5px;
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.apuntes-scrollable li a {
+  display: block;
+  padding: 5px 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
