@@ -33,6 +33,10 @@
     /* Scrollbar colors */
     scrollbar-color: var(--color-border) var(--color-bg); /* Firefox */
     scrollbar-width: thin; /* Firefox */
+
+    /* Borders and shadows */
+    --border-radius: 8px;
+    --transition: all 0.2s ease;
 }
 
 /* WebKit (Chrome, Safari, Edge) */
@@ -94,6 +98,25 @@ header {
     margin-right: 20px;
 }
 
+.D button {
+    gap: 8px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 8px 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.D button:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+
 #Contenido {
     background-color: var(--color-bg);
     overflow-y: auto;
@@ -112,8 +135,9 @@ header {
     overflow-y: auto;
     margin-top: 0;
     box-sizing: border-box;
-    padding: 20px;
     background-color: var(--color-bg);
+    gap: 0;
+    overflow-x: hidden;
 }
 
 .imagen-wrapper {
@@ -361,10 +385,11 @@ header {
     display: flex;
     align-items: center;
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 1px;
     margin-left: 20px;
     margin-right: 20px;
     max-width: 100%;
+    background-color: var(--color-surface);
 }
 
 /* Manejador de bloques (oculto por defecto) */
@@ -440,6 +465,7 @@ header {
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 8px;
+    margin-top: 8px;
     min-height: 50px;
     text-align: start;
     color: var(--color-primary-dark);
@@ -455,13 +481,14 @@ header {
     margin-right: 20px;
     max-width: 100%;
     background: var(--color-surface);
+    gap: 0;
 }
 
 /* Contenedor de los ítems individuales */
 .list-items-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0;
     width: 100%;
 }
 
@@ -502,9 +529,11 @@ header {
 /* Botones de acción (agregar, eliminar) */
 .block-buttons {
     display: flex;
+    flex-direction: column;
     gap: 6px;
     margin-left: 10px;
     align-self: center;
+    z-index: 2;
 }
 
 .block-buttons button {
@@ -547,6 +576,9 @@ header {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: var(--shadow-card);
+    width: 100%;
+    table-layout: fixed;  /* fuerza el ajuste de ancho */
+    border-collapse: collapse;
 }
 
 .editable-table th,
@@ -557,6 +589,12 @@ header {
     text-align: left;
     position: relative;
     color: var(--color-text-primary);
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    word-break: break-word;     /* fuerza rompimiento si es necesario */
+    overflow-wrap: break-word;  /* soporte adicional */
+    white-space: normal;        /* evita que el texto se mantenga en una sola línea */
+    overflow: hidden;
 }
 
 .editable-table [contenteditable]:empty::before {
@@ -572,10 +610,12 @@ header {
     align-items: flex-start;
     gap: 8px;
     padding-left: 40px;
+    padding-right: 40px;
     border: 1px solid var(--color-border);
     border-radius: 8px;
     background-color: var(--color-surface);
     box-shadow: var(--shadow-card);
+    max-width: 100%;
 }
 
 .table-controls-wrapper {

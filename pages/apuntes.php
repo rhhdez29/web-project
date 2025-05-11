@@ -16,6 +16,7 @@ include_once '../includes/verificar_sesion.php';
   <div class="contenedor-principal">
     <nav>
       <div class="D">
+        <button id="Guardar-apuntes">Guardar</button>
         <label class="switch">
           <input type="checkbox" id="toggle-mode">
           <span class="slider">
