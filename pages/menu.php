@@ -134,7 +134,7 @@ include_once '../includes/verificar_sesion.php';
                 content.innerHTML = '<iframe src="ayuda.html" width="100%" height="100%" style="border: none;"></iframe>';
             }
             if (page === 'configuracion') {
-                content.innerHTML = '<iframe src="configuracion.html" width="100%" height="100%" style="border: none;"></iframe>';
+                content.innerHTML = '<iframe src="configuracion.php" width="100%" height="100%" style="border: none;"></iframe>';
             }
         }
 
