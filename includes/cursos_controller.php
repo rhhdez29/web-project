@@ -12,7 +12,6 @@ $idUsuarioLogueado = $_SESSION['idUsuario'] ?? null;
 $rolUsuarioLogueado = $_SESSION['rol'] ?? null;
 
 // Función auxiliar para enviar respuestas JSON estandarizadas
-// Definida aquí para asegurar que esté disponible para este script.
 if (!function_exists('responder')) {
     function responder($success, $message = '', $data = null, $statusCode = 200) {
         http_response_code($statusCode);
@@ -28,8 +27,6 @@ if (!function_exists('responder')) {
     }
 }
 
-// Verificar que el usuario esté logueado para cualquier acción
-// verificar_sesion.php ya debería haber manejado esto, pero una doble comprobación aquí es segura.
 if (!$idUsuarioLogueado) {
     responder(false, 'Usuario no autenticado. Por favor, inicie sesión.', null, 401);
 }
@@ -40,7 +37,7 @@ try {
             if ($rolUsuarioLogueado !== 'Maestro') {
                 responder(false, 'Acción no autorizada. Solo los maestros pueden crear cursos.', null, 403);
             }
-
+            // ... (código existente de crearCurso sin cambios)
             $idCurso = trim($_POST['id'] ?? '');
             $nombre = trim($_POST['nombre'] ?? '');
             $horario = trim($_POST['horario'] ?? '');
@@ -48,11 +45,8 @@ try {
             $instructor = trim($_POST['instructor'] ?? '');
             $contacto = trim($_POST['contacto'] ?? '');
             $imagenBase64 = $_POST['imagen'] ?? '';
-            $asesoria = trim($_POST['asesoria'] ?? ''); // Añadido campo asesoría
+            $asesoria = trim($_POST['asesoria'] ?? '');
 
-            // Validar campos obligatorios (según tu tabla Cursos y formulario)
-            // Ajusta esta validación según tus necesidades.
-            // El controller original marcaba la imagen como obligatoria.
             if (empty($idCurso) || empty($nombre) || empty($horario) || empty($lugar) || empty($instructor) || empty($contacto) || empty($imagenBase64) || empty($asesoria) ) {
                 responder(false, 'Todos los campos son obligatorios, incluyendo la imagen y la asesoría.', null, 400);
             }
@@ -75,8 +69,6 @@ try {
             break;
 
         case 'obtenerCursos':
-            // Los maestros ven solo sus cursos. Los estudiantes ven todos (cuando se implemente inscripciones).
-            // Por ahora, si no es maestro, devuelve todos los cursos.
             $cursos = [];
             if ($rolUsuarioLogueado === 'Maestro') {
                 $sql = "SELECT id, nombre, horario, lugar, instructor, contacto, imagen, asesoria 
@@ -86,7 +78,20 @@ try {
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([':idUsuario_creador' => $idUsuarioLogueado]);
                 $cursos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            } else { // Estudiantes u otros roles ven todos los cursos (o los inscritos en el futuro)
+            } else if ($rolUsuarioLogueado === 'Estudiante') {
+                // Para estudiantes, obtenemos todos los cursos y marcamos si están inscritos
+                $sql = "SELECT c.id, c.nombre, c.horario, c.lugar, c.instructor, c.contacto, c.imagen, c.asesoria,
+                               (EXISTS(SELECT 1 FROM Inscripciones i WHERE i.Cursos_id = c.id AND i.Usuario_idUsuario = :idUsuarioLogueado)) AS esta_inscrito
+                        FROM Cursos c
+                        ORDER BY c.fecha_creacion DESC";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([':idUsuarioLogueado' => $idUsuarioLogueado]);
+                $cursos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                // Convertir 'esta_inscrito' a booleano si es necesario (depende del driver PDO)
+                foreach ($cursos as $key => $curso) {
+                    $cursos[$key]['esta_inscrito'] = (bool)$curso['esta_inscrito'];
+                }
+            } else { // Otros roles (si los hubiera) podrían ver todos los cursos sin estado de inscripción
                 $sql = "SELECT id, nombre, horario, lugar, instructor, contacto, imagen, asesoria 
                         FROM Cursos 
                         ORDER BY fecha_creacion DESC";
@@ -98,6 +103,7 @@ try {
             break;
 
         case 'actualizarCurso':
+            // ... (código existente de actualizarCurso sin cambios, ya verifica rol Maestro y idUsuario_creador)
             if ($rolUsuarioLogueado !== 'Maestro') {
                 responder(false, 'Acción no autorizada para actualizar.', null, 403);
             }
@@ -108,7 +114,7 @@ try {
             $lugar = trim($_POST['lugar'] ?? '');
             $instructor = trim($_POST['instructor'] ?? '');
             $contacto = trim($_POST['contacto'] ?? '');
-            $imagenBase64 = $_POST['imagen'] ?? ''; // Puede ser opcional si no se cambia
+            $imagenBase64 = $_POST['imagen'] ?? ''; 
             $asesoria = trim($_POST['asesoria'] ?? '');
 
             if (empty($idCursoActualizar) || empty($nombre) || empty($horario) || empty($lugar) || empty($instructor) || empty($contacto) || empty($asesoria)) {
@@ -127,7 +133,6 @@ try {
                 responder(false, 'No tiene permiso para modificar este curso.', null, 403);
             }
             
-            // Construir la sentencia SQL dinámicamente para la imagen
             $updateFields = "nombre = :nombre, horario = :horario, lugar = :lugar, 
                              instructor = :instructor, contacto = :contacto, asesoria = :asesoria";
             $params = [
@@ -138,29 +143,32 @@ try {
                 ':contacto' => $contacto,
                 ':asesoria' => $asesoria,
                 ':id' => $idCursoActualizar,
-                ':idUsuario_creador' => $idUsuarioLogueado
+                // ':idUsuario_creador' => $idUsuarioLogueado // No es necesario en el SET, sí en el WHERE
             ];
 
             if (!empty($imagenBase64)) {
                 $updateFields .= ", imagen = :imagen";
                 $params[':imagen'] = $imagenBase64;
             }
+            // Añadir idUsuario_creador al final para el WHERE
+            $params[':idUsuario_creador_where'] = $idUsuarioLogueado;
+
 
             $sql = "UPDATE Cursos SET $updateFields 
-                    WHERE id = :id AND idUsuario_creador = :idUsuario_creador";
+                    WHERE id = :id AND idUsuario_creador = :idUsuario_creador_where";
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
 
             if ($stmt->rowCount() > 0) {
                 responder(true, 'Curso actualizado exitosamente.');
             } else {
-                // Podría ser que no hubo cambios efectivos o el curso no se encontró (ya cubierto por el check)
                 responder(false, 'No se pudo actualizar el curso o no hubo cambios detectables.');
             }
             break;
 
         case 'eliminarCurso':
-            if ($rolUsuarioLogueado !== 'Maestro') {
+            // ... (código existente de eliminarCurso sin cambios, ya verifica rol Maestro y idUsuario_creador)
+             if ($rolUsuarioLogueado !== 'Maestro') {
                 responder(false, 'Acción no autorizada para eliminar.', null, 403);
             }
 
@@ -168,6 +176,14 @@ try {
             if (empty($idCursoEliminar)) {
                 responder(false, 'ID del curso no proporcionado para eliminar.', null, 400);
             }
+
+            // Antes de eliminar un curso, se deberían eliminar las inscripciones asociadas
+            // o la FK debería tener ON DELETE CASCADE (lo cual ya configuramos en la tabla Inscripciones)
+            // Si no tuviera ON DELETE CASCADE, haríamos esto:
+            // $sqlDeleteInscripciones = "DELETE FROM Inscripciones WHERE Cursos_id = :idCurso";
+            // $stmtDeleteInscripciones = $pdo->prepare($sqlDeleteInscripciones);
+            // $stmtDeleteInscripciones->execute([':idCurso' => $idCursoEliminar]);
+
 
             $sqlCheck = "SELECT idUsuario_creador FROM Cursos WHERE id = :id";
             $stmtCheck = $pdo->prepare($sqlCheck);
@@ -202,18 +218,77 @@ try {
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([':idUsuario' => $idUsuarioLogueado]);
                 $cursosMenu = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            } 
-            // elseif ($rolUsuarioLogueado === 'Estudiante') { // TEMPORALMENTE COMENTADO
-                // $sql = "SELECT c.id, c.nombre 
-                //         FROM Cursos c
-                //         JOIN Inscripciones i ON c.id = i.idCurso_inscrito
-                //         WHERE i.idUsuario_estudiante = :idUsuario 
-                //         ORDER BY c.nombre ASC";
-                // $stmt = $pdo->prepare($sql);
-                // $stmt->execute([':idUsuario' => $idUsuarioLogueado]);
-                // $cursosMenu = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            // }
+            } elseif ($rolUsuarioLogueado === 'Estudiante') {
+                // Los estudiantes ven los cursos en los que están inscritos
+                $sql = "SELECT c.id, c.nombre 
+                        FROM Cursos c
+                        JOIN Inscripciones i ON c.id = i.Cursos_id
+                        WHERE i.Usuario_idUsuario = :idUsuario 
+                        ORDER BY c.nombre ASC";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([':idUsuario' => $idUsuarioLogueado]);
+                $cursosMenu = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
             responder(true, 'Cursos para menú obtenidos.', $cursosMenu);
+            break;
+
+        case 'inscribirAlumnoEnCurso':
+            if ($rolUsuarioLogueado !== 'Estudiante') {
+                responder(false, 'Acción no autorizada. Solo los estudiantes pueden inscribirse.', null, 403);
+            }
+            $idCursoInscribir = trim($_POST['idCurso'] ?? '');
+            if (empty($idCursoInscribir)) {
+                responder(false, 'ID del curso no proporcionado para la inscripción.', null, 400);
+            }
+
+            // Verificar que el curso exista
+            $sqlCheckCurso = "SELECT id FROM Cursos WHERE id = :idCurso";
+            $stmtCheckCurso = $pdo->prepare($sqlCheckCurso);
+            $stmtCheckCurso->execute([':idCurso' => $idCursoInscribir]);
+            if (!$stmtCheckCurso->fetch()) {
+                responder(false, 'El curso especificado no existe.', null, 404);
+            }
+
+            // Verificar si ya está inscrito (aunque la BD tiene UNIQUE KEY, es bueno chequear)
+            $sqlCheckInscripcion = "SELECT idInscripciones FROM Inscripciones WHERE Usuario_idUsuario = :idUsuario AND Cursos_id = :idCurso";
+            $stmtCheckInscripcion = $pdo->prepare($sqlCheckInscripcion);
+            $stmtCheckInscripcion->execute([':idUsuario' => $idUsuarioLogueado, ':idCurso' => $idCursoInscribir]);
+            if ($stmtCheckInscripcion->fetch()) {
+                responder(false, 'Ya estás inscrito en este curso.', null, 409); // 409 Conflict
+            }
+
+            // Inscribir al alumno
+            $sqlInscribir = "INSERT INTO Inscripciones (Usuario_idUsuario, Cursos_id) VALUES (:idUsuario, :idCurso)";
+            $stmtInscribir = $pdo->prepare($sqlInscribir);
+            $stmtInscribir->execute([
+                ':idUsuario' => $idUsuarioLogueado,
+                ':idCurso' => $idCursoInscribir
+            ]);
+            responder(true, 'Inscripción realizada exitosamente.', ['idCurso' => $idCursoInscribir], 201);
+            break;
+
+        case 'desinscribirAlumnoDeCurso':
+            if ($rolUsuarioLogueado !== 'Estudiante') {
+                responder(false, 'Acción no autorizada. Solo los estudiantes pueden desinscribirse.', null, 403);
+            }
+            $idCursoDesinscribir = trim($_POST['idCurso'] ?? '');
+            if (empty($idCursoDesinscribir)) {
+                responder(false, 'ID del curso no proporcionado para la desinscripción.', null, 400);
+            }
+
+            // Desinscribir al alumno
+            $sqlDesinscribir = "DELETE FROM Inscripciones WHERE Usuario_idUsuario = :idUsuario AND Cursos_id = :idCurso";
+            $stmtDesinscribir = $pdo->prepare($sqlDesinscribir);
+            $stmtDesinscribir->execute([
+                ':idUsuario' => $idUsuarioLogueado,
+                ':idCurso' => $idCursoDesinscribir
+            ]);
+
+            if ($stmtDesinscribir->rowCount() > 0) {
+                responder(true, 'Te has desinscrito del curso exitosamente.');
+            } else {
+                responder(false, 'No se pudo procesar la desinscripción. Es posible que no estuvieras inscrito.');
+            }
             break;
 
         default:
@@ -221,9 +296,7 @@ try {
             break;
     }
 } catch (PDOException $e) {
-    // Loguear el error real para depuración del lado del servidor
     error_log("Error de PDO en cursos_controller.php (Action: $action): " . $e->getMessage() . " - SQL: " . ($stmt ?? null ? $stmt->queryString : "N/A"));
-    // Enviar un mensaje genérico al cliente
     responder(false, 'Error en la base de datos. Por favor, inténtelo más tarde.', null, 500);
 } catch (Exception $e) {
     error_log("Error general en cursos_controller.php (Action: $action): " . $e->getMessage());

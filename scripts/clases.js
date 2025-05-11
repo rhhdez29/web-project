@@ -1,41 +1,46 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Vistas principales
     const coursesView = document.getElementById('courses-view');
-    const addFormView = document.getElementById('add-form-view');
+    const addFormView = document.getElementById('add-form-view'); // Puede ser null si es estudiante
     const classDetailView = document.getElementById('class-detail-view');
 
     // Contenedores y elementos de la lista de cursos
     const coursesContainer = document.getElementById('courses-container');
-    const mainAddClassBtn = document.getElementById('add-class-btn'); // Botón principal en la vista de lista
+    const mainAddClassBtn = document.getElementById('add-class-btn'); // Puede ser null si es estudiante
 
-    // Elementos del formulario de añadir/editar
-    const classForm = document.getElementById('add-class-form');
-    const formTitle = addFormView.querySelector('h2'); // Título del formulario (ej. "Añadir..." o "Editar...")
-    const courseIdInput = document.createElement('input'); // Se creará un input oculto para el ID si es necesario
-    courseIdInput.type = 'hidden';
-    courseIdInput.name = 'id';
-    if (classForm) classForm.prepend(courseIdInput); // Añadir al inicio del formulario
-
-    const imageNameInput = document.getElementById('class-image'); // Input file
-    const imagePreview = document.getElementById('image-preview');
-    const cancelFormBtn = document.getElementById('cancel-form-btn');
-    const closeFormIconBtn = document.getElementById('close-form-btn'); // Icono 'x'
+    // Elementos del formulario de añadir/editar (Maestro)
+    const classForm = document.getElementById('add-class-form'); // Puede ser null
+    const formViewTitle = document.getElementById('form-view-title'); // Puede ser null
+    const editCourseIdInput = document.getElementById('edit-course-id'); // Puede ser null
+    const courseIdFormInput = document.getElementById('course_id_form'); // Puede ser null
+    const classImageInput = document.getElementById('class-image-input'); // Puede ser null
+    const imagePreview = document.getElementById('image-preview'); // Puede ser null
+    const classImageBase64Input = document.getElementById('class-image-base64'); // Puede ser null
+    const cancelFormBtn = document.getElementById('cancel-form-btn'); // Puede ser null
+    const closeFormIconBtn = document.getElementById('close-form-btn'); // Puede ser null
+    const formFeedback = document.getElementById('form-feedback'); // Puede ser null
 
     // Elementos de la vista de detalle
     const classDetailContent = document.getElementById('class-detail-content');
     const backToCoursesBtn = document.getElementById('back-to-courses-btn');
-    const editClassDetailBtn = document.getElementById('edit-class-btn'); // Botón editar en vista detalle
-    const deleteClassDetailBtn = document.getElementById('delete-class-btn'); // Botón borrar en vista detalle
+    const editClassDetailBtn = document.getElementById('edit-class-btn'); // Puede ser null
+    const deleteClassDetailBtn = document.getElementById('delete-class-btn'); // Puede ser null
 
-    // Elementos del modal de eliminación
-    const deleteModal = document.getElementById('delete-modal');
-    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
-    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+    // Elementos del modal de eliminación (Maestro)
+    const deleteModal = document.getElementById('delete-modal'); // Puede ser null
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn'); // Puede ser null
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn'); // Puede ser null
+
+    // Elementos específicos del Estudiante
+    const enrollByCodeSection = document.getElementById('enroll-by-code-section'); // Puede ser null
+    const inputEnrollCourseId = document.getElementById('input-enroll-course-id'); // Puede ser null
+    const btnEnrollByCode = document.getElementById('btn-enroll-by-code'); // Puede ser null
+    const enrollByCodeMessage = document.getElementById('enroll-by-code-message'); // Puede ser null
 
     let currentEditingClassId = null;
-    let imageBase64 = null;
+    let imageBase64 = null; // Para el formulario del maestro
     let classToDeleteId = null;
-    let allCoursesData = []; // Para almacenar los datos de los cursos y usarlos en detalles/edición
+    let allCoursesData = [];
 
     // --- FUNCIONES DE NAVEGACIÓN ENTRE VISTAS ---
     const showView = (viewToShow) => {
@@ -53,15 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: { 'Accept': 'application/json' }
         };
         if (method === 'POST') {
-            // Si el body es FormData, no se establece Content-Type, el navegador lo hace.
-            // Si es un objeto JS, se convierte a JSON.
             if (body instanceof FormData) {
                 if (action && !body.has('action')) body.append('action', action);
                 options.body = body;
             } else if (body) {
                 options.headers['Content-Type'] = 'application/json';
                 options.body = JSON.stringify({ action, ...body });
-            } else if (action) { // Para POST sin body pero con action en el cuerpo
+            } else if (action) {
                  const formData = new FormData();
                  formData.append('action', action);
                  options.body = formData;
@@ -70,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const response = await fetch(url, options);
-            const responseData = await response.json().catch(() => ({ // Intenta parsear JSON, si falla, crea un objeto de error
+            const responseData = await response.json().catch(() => ({
                 success: false, 
                 message: `Respuesta no válida del servidor. Estado: ${response.status}`
             }));
@@ -78,79 +81,26 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 throw new Error(responseData.message || `Error ${response.status} del servidor.`);
             }
-            if (!responseData.success) {
-                throw new Error(responseData.message || 'La operación falló sin un mensaje específico.');
-            }
+            // No lanzar error si !responseData.success aquí, dejar que la función que llama lo maneje
             return responseData;
         } catch (error) {
             console.error(`Error en apiCall (action: ${action}):`, error);
-            alert(`Error: ${error.message}`);
-            throw error; // Re-lanzar para que la función que llama pueda manejarlo si es necesario
+            alert(`Error de conexión: ${error.message}`); // Mensaje genérico para el usuario
+            throw error;
         }
     };
 
     const fetchCourses = async () => {
         try {
             const result = await apiCall('obtenerCursos', 'GET');
-            allCoursesData = result.data || [];
-            renderCourses(allCoursesData);
+            if (result.success) {
+                allCoursesData = result.data || [];
+                renderCourses(allCoursesData);
+            } else {
+                if(coursesContainer) coursesContainer.innerHTML = `<div class="empty-state"><p>Error al cargar cursos: ${result.message}</p></div>`;
+            }
         } catch (error) {
-            if(coursesContainer) coursesContainer.innerHTML = `<div class="empty-state"><p>No se pudieron cargar los cursos. ${error.message}</p></div>`;
-        }
-    };
-
-    const saveCourse = async (event) => {
-        event.preventDefault();
-        if (!classForm) return;
-
-        const formData = new FormData(classForm);
-        const action = currentEditingClassId ? 'actualizarCurso' : 'crearCurso';
-
-        // El ID para 'crearCurso' se genera aquí si no está ya en el formulario (ej. campo oculto)
-        // El backend espera un 'id' generado por JS para 'crearCurso'
-        if (!currentEditingClassId && !formData.get('id')) {
-            formData.set('id', generateUniqueId()); // Usar set para asegurar que esté, o reemplazar si estaba vacío
-        } else if (currentEditingClassId) {
-            formData.set('id', currentEditingClassId); // Asegurar que el ID de edición esté
-        }
-        
-        if (imageBase64) {
-            formData.append('imagen', imageBase64);
-        } else if (!currentEditingClassId) {
-            // Para creación, si la imagen es obligatoria y no hay imageBase64, el backend debería fallar.
-            // Podríamos añadir una validación aquí o una imagen placeholder en base64.
-            // Por ahora, si el backend la requiere, fallará allí.
-            // Si el campo imagen es opcional en el backend, esto está bien.
-            // El controller actual la marca como obligatoria.
-            alert("Por favor, selecciona una imagen para el curso.");
-            return; // Detener si la imagen es obligatoria y no está
-        }
-        // Si se está editando y no se cambió la imagen, imageBase64 podría tener la original
-        // o ser null si la original no se cargó. El backend debe manejar si 'imagen' no se envía en actualización.
-        // El controller actual la marca como obligatoria también para actualizar.
-
-        try {
-            const result = await apiCall(action, 'POST', formData);
-            alert(result.message || 'Curso guardado exitosamente.');
-            fetchCourses();
-            closeAndResetForm();
-        } catch (error) {
-            // El error ya se muestra por apiCall, aquí podríamos hacer algo más si es necesario
-        }
-    };
-
-    const handleDeleteCourse = async () => {
-        if (!classToDeleteId) return;
-        try {
-            const formData = new FormData();
-            formData.append('id', classToDeleteId);
-            const result = await apiCall('eliminarCurso', 'POST', formData);
-            alert(result.message || 'Curso eliminado exitosamente.');
-            fetchCourses();
-            closeDeleteModal();
-            showView(coursesView); // Volver a la lista de cursos
-        } catch (error) {
-            // El error ya se muestra
+            if(coursesContainer) coursesContainer.innerHTML = `<div class="empty-state"><p>No se pudieron cargar los cursos. Intenta de nuevo más tarde.</p></div>`;
         }
     };
 
@@ -162,14 +112,22 @@ document.addEventListener('DOMContentLoaded', () => {
         coursesContainer.innerHTML = '';
 
         if (courses.length === 0) {
+            let emptyMessage = "No hay cursos disponibles actualmente.";
+            let buttonHTML = "";
+            if (currentUserRole === 'Maestro') {
+                emptyMessage = "Aún no has creado ninguna clase.";
+                buttonHTML = `<button id="empty-add-class-btn" class="btn-primary"><i class='bx bx-plus'></i> Añadir una clase</button>`;
+            }
             coursesContainer.innerHTML = `
                 <div class="empty-state">
                     <img src="../assets/imagenes/empty-courses.svg" alt="No hay cursos">
-                    <p>Aún no has creado ninguna clase.</p>
-                    <button id="empty-add-class-btn" class="btn-secondary">Añadir una clase</button>
+                    <p>${emptyMessage}</p>
+                    ${buttonHTML}
                 </div>`;
-            const emptyBtn = document.getElementById('empty-add-class-btn');
-            if (emptyBtn) emptyBtn.addEventListener('click', openAddForm);
+            if (currentUserRole === 'Maestro') {
+                const emptyBtn = document.getElementById('empty-add-class-btn');
+                if (emptyBtn) emptyBtn.addEventListener('click', openAddForm);
+            }
             return;
         }
 
@@ -177,33 +135,47 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'course-card';
             card.dataset.id = course.id;
-            // Asumiendo que el backend envía 'asesoria' si se implementa
-            const asesoriaHTML = course.asesoria ? `<p class="course-detail"><i class='bx bx-help-circle'></i> Asesoría: ${course.asesoria}</p>` : '';
+            
+            let studentButtonsHTML = '';
+            if (currentUserRole === 'Estudiante') {
+                if (course.esta_inscrito) {
+                    studentButtonsHTML = `<button class="btn-unenroll btn-secondary" data-id="${course.id}"><i class='bx bx-user-minus'></i> Desinscribirse</button>`;
+                } else {
+                    studentButtonsHTML = `<button class="btn-enroll btn-primary" data-id="${course.id}"><i class='bx bx-user-plus'></i> Inscribirse</button>`;
+                }
+            }
 
             card.innerHTML = `
                 <div class="course-image" style="background-image: url('${course.imagen || '../assets/imagenes/default-image.png'}');"></div>
                 <div class="course-content">
                     <h3 class="course-title">${course.nombre}</h3>
                     <div class="course-details">
-                        <p class="course-detail"><i class='bx bx-time-five'></i> Horario: ${course.horario || 'N/A'}</p>
-                        <p class="course-detail"><i class='bx bx-map'></i> Lugar: ${course.lugar || 'N/A'}</p>
+                        <p class="course-detail"><i class='bx bx-id-card'></i> ID: ${course.id}</p>
                         <p class="course-detail"><i class='bx bx-user'></i> Instructor: ${course.instructor || 'N/A'}</p>
-                        <p class="course-detail"><i class='bx bx-phone'></i> Contacto: ${course.contacto || 'N/A'}</p>
-                        ${asesoriaHTML}
+                        ${currentUserRole === 'Estudiante' ? `<div class="student-actions">${studentButtonsHTML}</div>` : ''}
                     </div>
                 </div>`;
-            // No se añaden botones de editar/eliminar aquí, se manejan en la vista de detalle.
-            // El card completo es clickeable para ver detalles.
-            card.addEventListener('click', () => openDetailView(course.id));
+            
+            card.addEventListener('click', (e) => {
+                // Evitar que el click en botones de inscripción propague al card
+                if (e.target.closest('.btn-enroll') || e.target.closest('.btn-unenroll')) {
+                    return;
+                }
+                openDetailView(course.id);
+            });
             coursesContainer.appendChild(card);
         });
+
+        if (currentUserRole === 'Estudiante') {
+            coursesContainer.querySelectorAll('.btn-enroll').forEach(btn => btn.addEventListener('click', (e) => handleEnrollmentAction(e.currentTarget.dataset.id, 'inscribir')));
+            coursesContainer.querySelectorAll('.btn-unenroll').forEach(btn => btn.addEventListener('click', (e) => handleEnrollmentAction(e.currentTarget.dataset.id, 'desinscribir')));
+        }
     };
     
     const renderClassDetail = (courseId) => {
         const course = allCoursesData.find(c => c.id === courseId);
         if (!course || !classDetailContent) return;
 
-        // Asumiendo que el backend envía 'asesoria' si se implementa
         const asesoriaDetailHTML = course.asesoria ? `
             <div class="detail-item">
                 <div class="detail-icon"><i class='bx bx-help-circle'></i></div>
@@ -213,8 +185,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>` : '';
         
+        let studentDetailButtonsHTML = '';
+        if (currentUserRole === 'Estudiante') {
+            if (course.esta_inscrito) {
+                studentDetailButtonsHTML = `<button class="btn-unenroll-detail btn-secondary" data-id="${course.id}"><i class='bx bx-user-minus'></i> Desinscribirse de este curso</button>`;
+            } else {
+                studentDetailButtonsHTML = `<button class="btn-enroll-detail btn-primary" data-id="${course.id}"><i class='bx bx-user-plus'></i> Inscribirse a este curso</button>`;
+            }
+        }
+
         classDetailContent.innerHTML = `
-            <div class="detail-banner ${course.imagen ? '' : 'no-image'}" style="background-image: url('${course.imagen || ''}');">
+            <div class="detail-banner ${course.imagen ? '' : 'no-image'}" style="background-image: url('${course.imagen || '../assets/imagenes/default-image.png'}');">
             </div>
             <div class="class-info">
                 <div class="title-container">
@@ -256,109 +237,313 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     ${asesoriaDetailHTML}
                 </div>
+                ${currentUserRole === 'Estudiante' ? `<div class="detail-student-actions">${studentDetailButtonsHTML}</div>` : ''}
             </div>`;
 
-        // Funcionalidad de copiar clave
         const courseCodeElement = classDetailContent.querySelector('.course-code');
         if (courseCodeElement) {
             courseCodeElement.addEventListener('click', () => {
                 navigator.clipboard.writeText(course.id).then(() => {
-                    courseCodeElement.classList.add('copied');
-                    const originalText = courseCodeElement.innerHTML;
+                    const originalHTML = courseCodeElement.innerHTML;
                     courseCodeElement.innerHTML = `${course.id} <i class='bx bx-check copy-icon'></i> Copiado!`;
+                    courseCodeElement.classList.add('copied');
                     setTimeout(() => {
-                        courseCodeElement.innerHTML = originalText;
+                        courseCodeElement.innerHTML = originalHTML;
                         courseCodeElement.classList.remove('copied');
                     }, 1500);
                 }).catch(err => console.error('Error al copiar: ', err));
             });
         }
 
-        // Asignar IDs a los botones de la vista de detalle para los listeners
-        if (editClassDetailBtn) editClassDetailBtn.dataset.id = course.id;
-        if (deleteClassDetailBtn) deleteClassDetailBtn.dataset.id = course.id;
+        if (currentUserRole === 'Maestro') {
+            if (editClassDetailBtn) editClassDetailBtn.dataset.id = course.id;
+            if (deleteClassDetailBtn) deleteClassDetailBtn.dataset.id = course.id;
+        } else if (currentUserRole === 'Estudiante') {
+            const btnEnrollDetail = classDetailContent.querySelector('.btn-enroll-detail');
+            const btnUnenrollDetail = classDetailContent.querySelector('.btn-unenroll-detail');
+            if (btnEnrollDetail) btnEnrollDetail.addEventListener('click', (e) => handleEnrollmentAction(e.currentTarget.dataset.id, 'inscribir'));
+            if (btnUnenrollDetail) btnUnenrollDetail.addEventListener('click', (e) => handleEnrollmentAction(e.currentTarget.dataset.id, 'desinscribir'));
+        }
     };
+    
+    // --- LÓGICA DE INSCRIPCIÓN/DESINSCRIPCIÓN PARA ESTUDIANTES ---
+    async function handleEnrollmentAction(courseId, actionType) {
+        const controllerAction = actionType === 'inscribir' ? 'inscribirAlumnoEnCurso' : 'desinscribirAlumnoDeCurso';
+        const feedbackElement = enrollByCodeMessage || document.getElementById('generic-feedback'); // Usar el de código o uno genérico
+        
+        if (feedbackElement) {
+            feedbackElement.textContent = 'Procesando...';
+            feedbackElement.className = 'message-feedback info';
+        }
 
+        try {
+            const formData = new FormData();
+            formData.append('idCurso', courseId);
+            const result = await apiCall(controllerAction, 'POST', formData);
+
+            if (result.success) {
+                if (feedbackElement) {
+                    feedbackElement.textContent = result.message;
+                    feedbackElement.className = 'message-feedback success';
+                } else {
+                    alert(result.message);
+                }
+                fetchCourses(); // Recargar la lista de cursos para actualizar el estado
+                
+                if (classDetailView.classList.contains('active')) {
+                    const courseInDetail = allCoursesData.find(c => c.id === courseId);
+                    if(courseInDetail) {
+                         // Actualizar el estado localmente para la vista de detalle antes de re-renderizar
+                        const updatedCourse = {...courseInDetail, esta_inscrito: (actionType === 'inscribir')};
+                        const index = allCoursesData.findIndex(c => c.id === courseId);
+                        if (index !== -1) allCoursesData[index] = updatedCourse;
+                        renderClassDetail(courseId);
+                    }
+                }
+                
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({ type: 'updateCourseListInMenu' }, '*');
+                }
+            } else {
+                if (feedbackElement) {
+                    feedbackElement.textContent = `Error: ${result.message}`;
+                    feedbackElement.className = 'message-feedback error';
+                } else {
+                    alert(`Error: ${result.message}`);
+                }
+            }
+        } catch (error) {
+            // El error ya se muestra por apiCall
+            if (feedbackElement) {
+                feedbackElement.textContent = `Error de conexión al ${actionType === 'inscribir' ? 'inscribir' : 'desinscribir'}.`;
+                feedbackElement.className = 'message-feedback error';
+            }
+        }
+        if (feedbackElement) setTimeout(() => { feedbackElement.textContent = ''; feedbackElement.className = 'message-feedback'; }, 4000);
+    }
+
+    function handleEnrollByCode() {
+        if (!inputEnrollCourseId || !enrollByCodeMessage) return;
+        const courseIdToEnroll = inputEnrollCourseId.value.trim();
+        if (!courseIdToEnroll) {
+            enrollByCodeMessage.textContent = 'Por favor, introduce un ID de curso.';
+            enrollByCodeMessage.className = 'message-feedback error';
+            setTimeout(() => { enrollByCodeMessage.textContent = ''; enrollByCodeMessage.className = 'message-feedback'; }, 3000);
+            return;
+        }
+        handleEnrollmentAction(courseIdToEnroll, 'inscribir');
+        inputEnrollCourseId.value = '';
+    }
+
+    // --- FUNCIONES DE MAESTRO ---
     const resetForm = () => {
-        if (classForm) classForm.reset();
+        if (!classForm) return;
+        classForm.reset();
         if (imagePreview) {
             imagePreview.style.backgroundImage = 'none';
             imagePreview.classList.remove('has-image');
-            imagePreview.querySelector('i').style.display = 'block';
-            imagePreview.querySelector('span').style.display = 'block';
+            const icon = imagePreview.querySelector('i');
+            const span = imagePreview.querySelector('span');
+            if (icon) icon.style.display = 'block';
+            if (span) span.style.display = 'block';
         }
-        if (imageNameInput) imageNameInput.value = ''; // Limpiar el input file
+        if (classImageInput) classImageInput.value = '';
+        if (classImageBase64Input) classImageBase64Input.value = '';
         imageBase64 = null;
         currentEditingClassId = null;
-        courseIdInput.value = ''; // Limpiar el ID oculto
-        if (formTitle) formTitle.textContent = 'Añadir una nueva clase';
+        if (editCourseIdInput) editCourseIdInput.value = '';
+        if (courseIdFormInput) courseIdFormInput.readOnly = false;
+        if (formViewTitle) formViewTitle.textContent = 'Añadir una nueva clase';
+        if (formFeedback) {
+            formFeedback.textContent = '';
+            formFeedback.className = 'message-feedback';
+        }
     };
 
     const populateFormForEdit = (courseId) => {
         const course = allCoursesData.find(c => c.id === courseId);
         if (!course || !classForm) return;
 
-        resetForm(); // Limpiar primero
+        resetForm();
         currentEditingClassId = course.id;
-        courseIdInput.value = course.id; // Establecer el ID en el campo oculto
-
+        if (editCourseIdInput) editCourseIdInput.value = course.id; // Para el campo oculto de actualización
+        if (courseIdFormInput) {
+            courseIdFormInput.value = course.id; // Mostrar el ID
+            courseIdFormInput.readOnly = true; // No se puede cambiar el ID al editar
+        }
+        
         classForm.querySelector('[name="nombre"]').value = course.nombre || '';
         classForm.querySelector('[name="horario"]').value = course.horario || '';
         classForm.querySelector('[name="lugar"]').value = course.lugar || '';
         classForm.querySelector('[name="instructor"]').value = course.instructor || '';
         classForm.querySelector('[name="contacto"]').value = course.contacto || '';
-        // Asumiendo que el backend envía 'asesoria' si se implementa
         if (classForm.querySelector('[name="asesoria"]')) {
             classForm.querySelector('[name="asesoria"]').value = course.asesoria || '';
         }
 
-        if (course.imagen && imagePreview) {
+        if (course.imagen && imagePreview && classImageBase64Input) {
             imagePreview.style.backgroundImage = `url('${course.imagen}')`;
             imagePreview.classList.add('has-image');
-            imagePreview.querySelector('i').style.display = 'none';
-            imagePreview.querySelector('span').style.display = 'none';
+            const icon = imagePreview.querySelector('i');
+            const span = imagePreview.querySelector('span');
+            if (icon) icon.style.display = 'none';
+            if (span) span.style.display = 'none';
             imageBase64 = course.imagen; // Guardar la imagen existente (Base64)
+            classImageBase64Input.value = course.imagen;
         }
         
-        if (formTitle) formTitle.textContent = 'Editar Clase';
+        if (formViewTitle) formViewTitle.textContent = 'Editar Clase';
         showView(addFormView);
+    };
+    
+    const saveCourse = async (event) => {
+        event.preventDefault();
+        if (!classForm || !formFeedback) return;
+
+        const formData = new FormData(classForm);
+        const action = currentEditingClassId ? 'actualizarCurso' : 'crearCurso';
+        
+        // Para 'crearCurso', el ID se toma del input 'course_id_form'
+        // Para 'actualizarCurso', el ID se toma de 'currentEditingClassId' y se pone en 'id'
+        if (currentEditingClassId) {
+            formData.set('id', currentEditingClassId); // Asegurar que el ID de edición esté
+        }
+        // El campo 'id' del formulario (course_id_form) se enviará para creación.
+
+        // Manejo de la imagen
+        if (imageBase64) { // Si se seleccionó una nueva imagen o se mantuvo la existente (ya en base64)
+            formData.set('imagen', imageBase64);
+        } else if (action === 'crearCurso') {
+            formFeedback.textContent = "Por favor, selecciona una imagen para el curso.";
+            formFeedback.className = 'message-feedback error';
+            setTimeout(() => { formFeedback.textContent = ''; formFeedback.className = 'message-feedback'; }, 3000);
+            return;
+        }
+        // Si es actualización y no hay imageBase64 (no se cambió la imagen), no se envía 'imagen'
+        // y el backend no debería actualizarla.
+        if (action === 'actualizarCurso' && !imageBase64 && !formData.has('imagen')) {
+             // No hacer nada, el backend no tocará la imagen si no se envía.
+        }
+
+
+        formFeedback.textContent = 'Guardando...';
+        formFeedback.className = 'message-feedback info';
+
+        try {
+            const result = await apiCall(action, 'POST', formData);
+            if (result.success) {
+                formFeedback.textContent = result.message || 'Curso guardado exitosamente.';
+                formFeedback.className = 'message-feedback success';
+                fetchCourses();
+                setTimeout(() => {
+                    closeAndResetForm();
+                }, 1500);
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({ type: 'updateCourseListInMenu' }, '*');
+                }
+            } else {
+                formFeedback.textContent = `Error: ${result.message || 'No se pudo guardar el curso.'}`;
+                formFeedback.className = 'message-feedback error';
+            }
+        } catch (error) {
+            // El error ya se muestra por apiCall, aquí podríamos hacer algo más si es necesario
+            formFeedback.textContent = `Error al guardar: ${error.message}`;
+            formFeedback.className = 'message-feedback error';
+        }
+    };
+
+    const handleDeleteCourse = async () => {
+        if (!classToDeleteId || !deleteModal) return;
+        try {
+            const formData = new FormData();
+            formData.append('id', classToDeleteId);
+            const result = await apiCall('eliminarCurso', 'POST', formData);
+            
+            if (result.success) {
+                alert(result.message || 'Curso eliminado exitosamente.');
+                fetchCourses();
+                closeDeleteModal();
+                showView(coursesView);
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({ type: 'updateCourseListInMenu' }, '*');
+                }
+            } else {
+                 alert(result.message || 'No se pudo eliminar el curso.');
+            }
+        } catch (error) {
+            // El error ya se muestra
+        }
     };
 
     // --- MANEJO DE EVENTOS ---
-    if (imagePreview && imageNameInput) {
-        imagePreview.addEventListener('click', () => imageNameInput.click());
-        imageNameInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    if (imagePreview) {
-                        imagePreview.style.backgroundImage = `url('${e.target.result}')`;
-                        imagePreview.classList.add('has-image');
-                        imagePreview.querySelector('i').style.display = 'none';
-                        imagePreview.querySelector('span').style.display = 'none';
+    if (currentUserRole === 'Maestro') {
+        if (imagePreview && classImageInput && classImageBase64Input) {
+            imagePreview.addEventListener('click', () => classImageInput.click());
+            classImageInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        if (imagePreview) {
+                            imagePreview.style.backgroundImage = `url('${e.target.result}')`;
+                            imagePreview.classList.add('has-image');
+                            const icon = imagePreview.querySelector('i');
+                            const span = imagePreview.querySelector('span');
+                            if (icon) icon.style.display = 'none';
+                            if (span) span.style.display = 'none';
+                        }
+                        imageBase64 = e.target.result;
+                        classImageBase64Input.value = imageBase64; // Guardar en el input oculto
                     }
-                    imageBase64 = e.target.result;
+                    reader.readAsDataURL(file);
                 }
-                reader.readAsDataURL(file);
-            }
-        });
+            });
+        }
+
+        const openAddForm = () => {
+            resetForm();
+            showView(addFormView);
+        };
+        const closeAndResetForm = () => {
+            resetForm();
+            showView(coursesView);
+        };
+
+        if (mainAddClassBtn) mainAddClassBtn.addEventListener('click', openAddForm);
+        if (classForm) classForm.addEventListener('submit', saveCourse);
+        if (cancelFormBtn) cancelFormBtn.addEventListener('click', closeAndResetForm);
+        if (closeFormIconBtn) closeFormIconBtn.addEventListener('click', closeAndResetForm);
+        
+        if (editClassDetailBtn) {
+            editClassDetailBtn.addEventListener('click', (e) => {
+                const id = e.currentTarget.dataset.id;
+                if (id) populateFormForEdit(id);
+            });
+        }
+        if (deleteClassDetailBtn) {
+            deleteClassDetailBtn.addEventListener('click', (e) => {
+                const id = e.currentTarget.dataset.id;
+                if (id) openDeleteModal(id);
+            });
+        }
+        
+        const openDeleteModal = (courseId) => {
+            classToDeleteId = courseId;
+            if (deleteModal) deleteModal.classList.add('active');
+        };
+        const closeDeleteModal = () => {
+            classToDeleteId = null;
+            if (deleteModal) deleteModal.classList.remove('active');
+        };
+
+        if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+        if (confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', handleDeleteCourse);
+    } else if (currentUserRole === 'Estudiante') {
+        if (btnEnrollByCode) {
+            btnEnrollByCode.addEventListener('click', handleEnrollByCode);
+        }
     }
-
-    const openAddForm = () => {
-        resetForm();
-        showView(addFormView);
-    };
-    const closeAndResetForm = () => {
-        resetForm();
-        showView(coursesView);
-    };
-
-    if (mainAddClassBtn) mainAddClassBtn.addEventListener('click', openAddForm);
-    if (classForm) classForm.addEventListener('submit', saveCourse);
-    if (cancelFormBtn) cancelFormBtn.addEventListener('click', closeAndResetForm);
-    if (closeFormIconBtn) closeFormIconBtn.addEventListener('click', closeAndResetForm);
-
+    
     const openDetailView = (courseId) => {
         renderClassDetail(courseId);
         showView(classDetailView);
@@ -367,33 +552,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (backToCoursesBtn) {
         backToCoursesBtn.addEventListener('click', () => showView(coursesView));
     }
-    if (editClassDetailBtn) {
-        editClassDetailBtn.addEventListener('click', (e) => {
-            const id = e.currentTarget.dataset.id;
-            if (id) populateFormForEdit(id);
-        });
-    }
-    if (deleteClassDetailBtn) {
-        deleteClassDetailBtn.addEventListener('click', (e) => {
-            const id = e.currentTarget.dataset.id;
-            if (id) openDeleteModal(id);
-        });
-    }
-    
-    const openDeleteModal = (courseId) => {
-        classToDeleteId = courseId;
-        if (deleteModal) deleteModal.classList.add('active');
-    };
-    const closeDeleteModal = () => {
-        classToDeleteId = null;
-        if (deleteModal) deleteModal.classList.remove('active');
-    };
-
-    if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', closeDeleteModal);
-    if (confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', handleDeleteCourse);
-
 
     // --- INICIALIZACIÓN ---
     fetchCourses();
-    showView(coursesView); // Asegurar que la vista inicial sea la lista de cursos
+    showView(coursesView);
 });

@@ -726,7 +726,7 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--color-success);
 }
 .class-title{
-    margin-right: 35%;
+    margin-right: auto;
 }
 
 .welcome-container {
@@ -752,4 +752,92 @@ h1, h2, h3, h4, h5, h6 {
     .welcome-message {
         margin-bottom: 0.5rem;
     }
+}
+
+.enroll-by-code-container {
+    background-color: var(--color-surface);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 2rem;
+}
+
+.enroll-by-code-container h2 {
+    font-size: 1.3rem;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+}
+
+.enroll-form {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.enroll-form input[type="text"] {
+    flex-grow: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.enroll-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.enroll-form .btn-primary i { /* Para el icono del botón de inscribir por código */
+    font-size: 1.1em;
+}
+
+
+/* Estilos para los botones de inscripción/desinscripción en las tarjetas */
+.course-card .student-actions {
+    margin-top: 0.8rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.course-card .student-actions .btn-primary,
+.course-card .student-actions .btn-secondary {
+    width: 100%; /* Ocupar todo el ancho disponible en la tarjeta */
+    font-size: 0.85rem;
+    padding: 0.5rem 0.8rem;
+}
+
+/* Estilos para los botones de inscripción/desinscripción en la vista de detalle */
+.detail-student-actions {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: center; /* O flex-end si prefieres */
+}
+
+.detail-student-actions .btn-primary,
+.detail-student-actions .btn-secondary {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.95rem;
+}
+
+
+/* Mensajes de feedback (genéricos si no los tienes) */
+.message-feedback {
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.9em;
+    display: block; /* Para que ocupe su línea */
+    min-height: 1.5em; /* Para evitar saltos cuando está vacío */
+}
+.message-feedback.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.message-feedback.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.message-feedback.info { background-color: #cce5ff; color: #004085; border: 1px solid #b8daff; }
+
+/* Ajuste para el ID del curso en la tarjeta */
+.course-details .course-detail i.bx-id-card {
+    color: var(--color-accent); /* Un color diferente para el ID */
 }
