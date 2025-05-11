@@ -7,7 +7,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = trim($_POST['password']);
 
     // Buscar por correo
-    $sql = "SELECT Cuenta.*, Usuario.idUsuario as usuario_id, Usuario.rol FROM Cuenta 
+     $sql = "SELECT Cuenta.*, Usuario.idUsuario as usuario_id, Usuario.rol, 
+            Usuario.nombre, Usuario.apellidoP, Usuario.apellidoM 
+            FROM Cuenta 
             INNER JOIN Usuario ON Cuenta.Usuario_idUsuario = Usuario.idUsuario
             WHERE Cuenta.correo = :mail OR Cuenta.userName = :mail LIMIT 1";
     $stmt = $pdo->prepare($sql);
@@ -22,6 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['correo'] = $cuenta['correo'];
         $_SESSION['rol'] = $cuenta['rol'];
         
+        // AÑADIR LOS NUEVOS DATOS A LA SESIÓN
+        $_SESSION['nombre'] = $cuenta['nombre'];
+        $_SESSION['apellidoP'] = $cuenta['apellidoP']; 
+        $_SESSION['apellidoM'] = $cuenta['apellidoM'];
+        $_SESSION['nombreCompleto'] = $cuenta['nombre'] . ' ' . $cuenta['apellidoP'] . ' ' . $cuenta['apellidoM'];
+        
+
         // Para depuración
         $_SESSION['debug_info'] = [
             'id_cuenta' => $cuenta['idCuenta'] ?? 'no disponible',

@@ -30,7 +30,7 @@ include_once '../includes/verificar_sesion.php';
                 <div class="profile-details">
                     <div class="detail">
                         <label>Nombre:</label>
-                        <span id="user-name"><?php echo isset($_SESSION['userName']) ? htmlspecialchars($_SESSION['userName']) : 'Invitado'; ?></span>
+                        <span id="user-name"><?php echo isset($_SESSION['nombreCompleto']) ? htmlspecialchars($_SESSION['nombreCompleto']) : 'Invitado'; ?></span>
                     </div>
                     <div class="detail">
                         <label>Correo:</label>
