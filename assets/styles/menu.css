@@ -9,9 +9,9 @@
 
 :root {
     /* Main colors */
-    --color-primary: #f4b5c5; /* Rosa principal */
-    --color-primary-light: #f8d5e0; /* Rosa claro */
-    --color-primary-dark: #e47a9a; /* Rosa oscuro */
+    --color-primary: #f4b5c5;
+    --color-primary-light: #f8d5e0;
+    --color-primary-dark: #e47a9a;
     --color-accent: #8B5CF6;
     --color-accent-light: #EDE9FE;
     
@@ -32,9 +32,8 @@
     /* Functional colors */
     --color-tooltip-bg: #475569;
     --color-tooltip-text: #FFFFFF;
-    --menu-active-bg: var(--color-primary-light); /* Fondo rosa para items activos */
-    --menu-active-text: var(--color-primary-dark); /* Texto rosa oscuro para items activos */
-    --user-bg-color: var(--color-bg);
+    --menu-active-bg: var(--color-primary-light);
+    --menu-active-text: var(--color-primary-dark);
 }
 
 /* Body */
@@ -44,212 +43,80 @@ body {
     background-color: var(--color-bg);
 }
 
+/* Sidebar */
 .sidebar {
     position: fixed;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    width: 15rem;
-    height: 100%;
-    padding: 0 1rem;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 250px;
     background-color: var(--color-surface);
     box-shadow: var(--shadow-card);
-    transition: width 0.5s ease;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
 }
+
 .sidebar.minimize {
-    width: 4.94rem;
+    width: 70px;
+}
+
+/* Main content */
+#main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--color-bg);
+    transition: all 0.3s ease;
+}
+
+.sidebar.minimize ~ #main-content {
+    margin-left: 70px;
+    width: calc(100% - 70px);
 }
 
 /* Header */
 .header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 2rem;
+    position: relative;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
 }
 
-/* Botón Menú */
+/* Menu button */
 .menu-btn {
     position: absolute;
-    top: 3.5%;
-    right: -0.87rem;
+    top: 20px;
+    right: -15px;
+    background: var(--color-surface);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: 50%;
-    background-color: var(--color-surface);
-    color: var(--color-text-secondary);
-    box-shadow: var(--shadow-card);
     cursor: pointer;
-    transition: right 0.3s ease;
+    box-shadow: var(--shadow-card);
+    z-index: 1001;
+    transition: all 0.3s ease;
 }
+
 .menu-btn i {
     font-size: 1.5rem;
-}
-
-.menu-container {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Menú */
-.menu {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-.menu .menu-item {
-    position: relative;
-    list-style: none;
-    overflow: hidden;
-}
-.menu .menu-link {
-    display: flex;
-    padding: 0.55rem 0;
     color: var(--color-text-secondary);
-    text-decoration: none;
-    border-radius: 0.3rem;
-    transition: background-color 0.3s, color 0.3s;
-}
-.menu-item:hover .menu-link,
-.sub.menu .sub-menu-link:hover,
-.menu-item.active .menu-link {
-    color: var(--menu-active-text);
-    background-color: var(--menu-active-bg);
-}
-.menu-link i {
-    font-size: 1.35rem;
-    padding: 0 0.8rem;
-    color: var(--color-text-secondary);
-}
-.menu-item:hover .menu-link i,
-.menu-item.active .menu-link i {
-    color: var(--menu-active-text);
-}
-.menu-link i:last-child {
-    margin-left: auto;
-    transition: transform 0.3s ease;
-}
-.sidebar.minimize .menu-link i:last-child {
-    display: none;
-}
-.menu-item.sub-menu-toggle .menu-link i:last-child {
-    transform: rotate(180deg);
-}
-.menu-link span {
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-.sidebar.minimize .menu-item:hover,
-.sidebar.minimize .menu-item.sub-menu-toggle {
-    overflow: visible;
-}
-.sidebar.minimize .menu-item:hover span,
-.sidebar.minimize .menu-item.sub-menu-toggle span {
-    position: absolute;
-    left: 4.2rem;
-    padding: 0.5rem;
-    background-color: var(--color-primary-dark);
-    color: white;
-    border-radius: 0.25rem;
     transition: all 0.3s ease;
 }
 
-/* Submenú */
-.sub-menu {
-    height: 0;
-    transition: all 0.3s ease;
-    overflow: hidden;
-    left: 0;
-}
-.sidebar.minimize .sub-menu {
-    position: absolute;
-    left: 4.2rem;
-    top: 3rem;
-    background-color: var(--color-surface);
-    border-radius: 0.2rem;
-    box-shadow: var(--shadow-card);
-}
-.sub-menu .sub-menu-link {
-    display: flex;
-    margin-left: 2.5rem;
-    padding: 0.55rem 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    border-radius: 0.3rem;
-    transition: all 0.3s;
-}
-.sub-menu .sub-menu-link:hover {
-    color: var(--menu-active-text);
-    background-color: var(--menu-active-bg);
-}
-.sub-menu::before {
-    content: "";
-    position: absolute;
-    height: 100%;
-    width: 0.07rem;
-    margin-left: 1.4rem;
-    background-color: var(--color-border);
-}
-.sidebar.minimize .sub-menu::before {
-    width: 0;
-}
-.sidebar.minimize .sub-menu a {
-    margin: 0 0.5rem;
-}
-
-/* Footer */
-.footer {
-    width: 100%;
-    padding: 1rem 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
-    flex-grow: 0;
-    margin-top: auto;
-}
-.sidebar.minimize .menu-btn {
-    right: -2.2rem;
-}
-.sidebar.minimize .menu-btn i {
-    transform: rotate(180deg);
-}
-
-/* Marca */
-.brand {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-}
-.brand img {
-    width: 2rem;
-}
-.brand span {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-}
-
-/* Usuario */
+/* User section */
 .user {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 1.5rem;
 }
+
 .user-img img {
     width: 70px;
     height: 70px;
@@ -257,162 +124,178 @@ body {
     object-fit: cover;
     border: 2px solid var(--color-border);
 }
-.user-date {
+
+.user-tooltip.user-date {
     text-align: center;
     margin-top: 0.5rem;
 }
-.user-date .name {
+
+.user-tooltip.user-date .name {
     display: block;
     font-weight: 600;
     font-size: 1rem;
     color: var(--color-text-primary);
 }
-.user-date .email {
+
+.user-tooltip.user-date .rol {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--color-text-secondary);
 }
 
-/* Enlace a página de inicio del usuario */
-.home-item {
-    display: none;
-}
-.user-home {
-    margin-top: 0.25rem;
-    text-align: center;
-    color: var(--color-text-primary);
-}
-.user-home .menu-link {
-    font-size: 0.75rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    text-decoration: none;
-    padding: 0.2rem 0;
-    color: var(--color-primary-dark);
-    transition: color 0.3s;
-}
-.user-home .menu-link i {
-    font-size: 1rem;
-    color: var(--color-primary-dark);
-}
-.user-home .menu-link:hover {
-    color: var(--color-primary-dark);
-    text-decoration: underline;
+/* Menu container */
+.menu-container {
+    flex: 1;
+    width: 100%;
+    overflow-y: auto;
 }
 
-/* Tooltip para usuario */
-.sidebar.minimize .user {
+/* Menu items */
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item {
+    margin-bottom: 0.5rem;
     position: relative;
 }
-.sidebar.minimize .user-tooltip {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 4.2rem;
-    background-color: var(--color-surface);
-    color: var(--color-text-primary);
-    padding: 0.6rem;
-    border-radius: 0.4rem;
-    white-space: nowrap;
-    z-index: 10;
-    box-shadow: var(--shadow-card);
-}
-.sidebar.minimize .user:hover .user-tooltip {
-    display: block;
-}
-.sidebar.minimize .user-tooltip .name {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 0.2rem;
-}
-.sidebar.minimize .user-tooltip .email {
-    font-size: 0.75rem;
-    display: block;
-    margin-bottom: 0.4rem;
-    color: var(--color-text-secondary);
-}
-.sidebar.minimize .user-tooltip .menu-link {
-    font-size: 0.75rem;
-    color: var(--color-primary-dark);
-    display: inline-flex;
+
+.menu-link {
+    display: flex;
     align-items: center;
-    gap: 0.3rem;
+    padding: 0.75rem 1rem;
+    color: var(--color-text-secondary);
     text-decoration: none;
-}
-.sidebar.minimize .user-tooltip .menu-link:hover {
-    color: var(--color-primary-dark);
-    text-decoration: underline;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
 }
 
-/* Contenido principal */
-#main-content {
-    margin-left: 15rem;
-    width: calc(100% - 15rem);
-    height: 100vh;
-    overflow: hidden;
-    background-color: var(--color-bg);
+.menu-link:hover,
+.menu-item.active .menu-link {
+    color: var(--menu-active-text);
+    background-color: var(--menu-active-bg);
 }
-.sidebar.minimize ~ #main-content {
-    margin-left: 4.94rem;
-    width: calc(100% - 4.94rem);
+
+.menu-link i {
+    font-size: 1.25rem;
+    margin-right: 1rem;
+    color: var(--color-text-secondary);
+}
+
+.menu-link span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Dropdown specific styles */
+.menu-item-dropdown .menu-link {
+    justify-content: space-between;
+}
+
+.dropdown-icon {
+    transition: transform 0.3s ease;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* Submenu */
+.sub-menu {
+    list-style: none;
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.menu-item-dropdown.active .sub-menu {
+    max-height: 500px;
+}
+
+.sub-menu-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.sub-menu-link:hover {
+    color: var(--menu-active-text);
+    background-color: var(--menu-active-bg);
+}
+
+/* Minimized sidebar styles */
+.sidebar.minimize .menu-link span,
+.sidebar.minimize .user-tooltip.user-date,
+.sidebar.minimize .brand span {
+    display: none;
+}
+
+.sidebar.minimize .menu-link {
+    justify-content: center;
+    padding: 0.75rem 0;
+}
+
+.sidebar.minimize .menu-link i {
+    margin-right: 0;
+}
+
+.sidebar.minimize .dropdown-icon {
+    display: none;
+}
+
+/* Footer */
+.footer {
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 0;
+}
+
+.brand img {
+    width: 30px;
+    height: 30px;
+}
+
+.brand span {
+    font-weight: 600;
+    color: var(--color-text-primary);
 }
 
 /* Dark mode */
 body.modo-oscuro .sidebar {
     background-color: #1e1e1e;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-body.modo-oscuro .sidebar .menu-link {
-    color: #aaaaaa;
+body.modo-oscuro .menu-link {
+    color: #aaa;
 }
 
-body.modo-oscuro .sidebar .menu-item:hover .menu-link,
-body.modo-oscuro .sidebar .menu-item.active .menu-link {
-    color: #f1f1f1;
-    background-color: #3a2a3a; /* Fondo morado oscuro para modo oscuro */
+body.modo-oscuro .menu-link:hover,
+body.modo-oscuro .menu-item.active .menu-link {
+    color: #fff;
+    background-color: #3a2a3a;
 }
 
-body.modo-oscuro .sidebar .brand span,
-body.modo-oscuro .sidebar .user-date .name,
-body.modo-oscuro .sidebar .user-home .menu-link {
-    color: #f1f1f1;
+body.modo-oscuro .brand span {
+    color: #fff;
 }
 
-body.modo-oscuro .sidebar .user-date .email {
-    color: #aaaaaa;
-}
-
-body.modo-oscuro .sidebar .menu-btn {
-    background-color: #1e1e1e;
-    color: #aaaaaa;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-body.modo-oscuro .sidebar.minimize .menu-item:hover span,
-body.modo-oscuro .sidebar.minimize .menu-item.sub-menu-toggle span {
-    background-color: var(--color-primary-dark);
-    color: white;
-}
-
-body.modo-oscuro .sidebar.minimize .sub-menu {
-    background-color: #2a2a2a;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-body.modo-oscuro .sidebar.minimize .user-tooltip {
-    background-color: #2a2a2a;
-    color: #f1f1f1;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-body.modo-oscuro .sidebar .user-home .menu-link,
-body.modo-oscuro .sidebar.minimize .user-tooltip .menu-link {
-    color: var(--color-primary-light);
-}
-
-/* Estilos para el botón de añadir clase */
+/* Add class button */
 .add-class-btn {
     display: flex;
     align-items: center;
@@ -434,45 +317,33 @@ body.modo-oscuro .sidebar.minimize .user-tooltip .menu-link {
 
 .add-class-btn i {
     font-size: 16px;
-    line-height: 1;
 }
 
-/* Contenedor para "Mis cursos" y botón añadir */
+/* Courses header */
 .courses-header {
     display: flex;
     align-items: center;
-    margin-left: 2.5rem;
-    padding: 0.55rem 0.5rem;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
 }
 
 .courses-header span {
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: 0.85rem;
     color: var(--color-text-secondary);
 }
 
-/* Animación para el botón de añadir */
+/* Pulse animation */
 @keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(228, 122, 154, 0.4);
-    }
-    70% {
-        box-shadow: 0 0 0 6px rgba(228, 122, 154, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(228, 122, 154, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(228, 122, 154, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(228, 122, 154, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(228, 122, 154, 0); }
 }
 
 .add-class-btn.pulse {
     animation: pulse 1.5s infinite;
 }
 
-/* Estilos para los elementos de clase */
-.class-item {
-    position: relative;
-}
-
+/* Class item indicator */
 .class-item::before {
     content: '';
     display: inline-block;
@@ -482,6 +353,7 @@ body.modo-oscuro .sidebar.minimize .user-tooltip .menu-link {
     border-radius: 50%;
     margin-right: 6px;
 }
+<<<<<<< HEAD
 
 /* Estilos para mostrar permanentemente el nombre y rol del usuario */
 .user {
@@ -577,3 +449,4 @@ body.modo-oscuro .sidebar.minimize .user-tooltip .menu-link {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+

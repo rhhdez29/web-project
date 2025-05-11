@@ -28,29 +28,22 @@ include_once '../includes/verificar_sesion.php';
                         </span>
                     </div>
                 </div>
-                <div class="user-tooltip">
-                    <div class="user-home">
-                        <a href="#" class="menu-link small" onclick="loadContent('home')">
-                            <i class='bx bx-home-smile'></i><span>Inicio</span>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
         
         <div class="menu-container">
             <ul class="menu">
-                <li class="menu-item menu-item-static home-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item menu-item-static">
+                    <a href="#" class="menu-link" onclick="loadContent('home')">
                         <i class='bx bx-home-smile'></i>
                         <span>Home</span>
                     </a>
                 </li>
                 <li class="menu-item menu-item-dropdown">
-                    <a href="#" class="menu-link">
+                    <a href="#" class="menu-link dropdown-toggle">
                         <i class='bx bx-book-reader'></i>
                         <span>Mi Espacio</span>
-                        <i class='bx bx-chevron-down'></i>
+                        <i class='bx bx-chevron-down dropdown-icon'></i>
                     </a>
                     <ul class="sub-menu">
                         <li class="courses-header">
@@ -71,10 +64,10 @@ include_once '../includes/verificar_sesion.php';
                     </ul>
                 </li>
                 <li class="menu-item menu-item-dropdown">
-                    <a href="#" class="menu-link">
+                    <a href="#" class="menu-link dropdown-toggle">
                         <i class='bx bx-chalkboard'></i>
                         <span>Mi Aula Virtual</span>
-                        <i class='bx bx-chevron-down'></i>
+                        <i class='bx bx-chevron-down dropdown-icon'></i>
                     </a>
                     <ul class="sub-menu">
                         <li>
@@ -86,26 +79,17 @@ include_once '../includes/verificar_sesion.php';
                             </div>
                         </li>
                         <li><a href="#" class="sub-menu-link" onclick="loadContent('mis_cursos')">Ver todos mis cursos</a></li>
-                        <!-- Los cursos se insertarán aquí dinámicamente -->
                     </ul>
                 </li>
-                <!--
-                <li class="menu-item menu-item-static">
-                    <a href="#" class="menu-link">
-                        <i class='bx bx-trash'></i>
-                        <span>Papelera</span>
-                    </a>
-                </li>
-                -->
             </ul>
         </div>
         <div class="footer">
             <ul class="menu">
                 <li class="menu-item menu-item-static">
-                <a href="#" class="menu-link" onclick="loadContent('configuracion')">
-                <i class='bx bx-cog'></i>
-                <span>Configuración</span>
-                </a>
+                    <a href="#" class="menu-link" onclick="loadContent('configuracion')">
+                        <i class='bx bx-cog'></i>
+                        <span>Configuración</span>
+                    </a>
                 </li>
                 <li class="menu-item menu-item-static">
                     <a href="#" class="menu-link" onclick="loadContent('ayuda')">
@@ -131,7 +115,6 @@ include_once '../includes/verificar_sesion.php';
         <!-- El contenido del centro se cambiará dinámicamente aquí -->
     </div>
 
-    <script src="../scripts/menu.js"></script>
     <script>
         // Función para cargar contenido dinámicamente
         function loadContent(page, action) {
@@ -164,7 +147,7 @@ include_once '../includes/verificar_sesion.php';
                 content.innerHTML = '<iframe src="ayuda.html" width="100%" height="100%" style="border: none;"></iframe>';
             }
             if (page === 'configuracion') {
-            content.innerHTML = '<iframe src="configuracion.html" width="100%" height="100%" style="border: none;"></iframe>';
+                content.innerHTML = '<iframe src="configuracion.html" width="100%" height="100%" style="border: none;"></iframe>';
             }
         }
 
@@ -205,15 +188,10 @@ include_once '../includes/verificar_sesion.php';
                     }, 500);
                 });
             });
-            
-            // Ajustar altura del submenú si está abierto
-            if (aulaVirtualItem.classList.contains('sub-menu-toggle')) {
-                subMenu.style.height = `${subMenu.scrollHeight}px`;
-            }
         }
 
         // Inicialización
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', function() {
             loadContent('home');
             updateMenuClasses();
             
@@ -221,12 +199,41 @@ include_once '../includes/verificar_sesion.php';
             const menuBtn = document.getElementById('menu-btn');
             const sidebar = document.getElementById('sidebar');
             
-            menuBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('close');
-                menuBtn.querySelector('i').classList.toggle('bx-chevrons-right');
-                menuBtn.querySelector('i').classList.toggle('bx-chevrons-left');
+            menuBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('minimize');
+                
+                // Cambiar el icono
+                const icon = menuBtn.querySelector('i');
+                if (sidebar.classList.contains('minimize')) {
+                    icon.classList.remove('bx-chevrons-left');
+                    icon.classList.add('bx-chevrons-right');
+                } else {
+                    icon.classList.remove('bx-chevrons-right');
+                    icon.classList.add('bx-chevrons-left');
+                }
             });
-        };
+
+            // Manejar clicks en los dropdowns
+            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const parentItem = this.closest('.menu-item-dropdown');
+                    parentItem.classList.toggle('active');
+                    
+                    // Rotar el icono
+                    const icon = this.querySelector('.dropdown-icon');
+                    icon.classList.toggle('rotate-180');
+                    
+                    // Alternar submenú
+                    const subMenu = parentItem.querySelector('.sub-menu');
+                    if (parentItem.classList.contains('active')) {
+                        subMenu.style.maxHeight = subMenu.scrollHeight + 'px';
+                    } else {
+                        subMenu.style.maxHeight = '0';
+                    }
+                });
+            });
+        });
         
         // Escuchar mensajes desde iframes
         window.addEventListener('message', function(event) {
