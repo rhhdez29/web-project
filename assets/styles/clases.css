@@ -665,3 +665,88 @@ h1, h2, h3, h4, h5, h6 {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 2px var(--color-primary-light);
 }
+
+
+/* Añadir al final del archivo clases.css */
+.title-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.course-code {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.course-code::before {
+    content: '\ed6c';  /* Código del icono de etiqueta de Boxicons */
+    font-family: 'boxicons';
+    margin-right: 0.4rem;
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .title-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+
+/* Estilos para el icono de copiar */
+.course-code {
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+.course-code .copy-icon {
+    margin-left: 6px;
+    font-size: 1rem;
+    opacity: 0.7;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.course-code:hover .copy-icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.course-code.copied .copy-icon {
+    color: var(--color-success);
+}
+
+.welcome-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.welcome-message {
+    margin: 0;
+    flex-grow: 1;
+}
+
+/* Diseño responsive */
+@media (max-width: 576px) {
+    .welcome-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .welcome-message {
+        margin-bottom: 0.5rem;
+    }
+}

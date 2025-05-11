@@ -105,12 +105,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (classData) {
             let bannerClass = classData.imagen ? '' : 'no-image';
             let bannerStyle = classData.imagen ? `background-image: url(${classData.imagen})` : '';
+            const fechaActual = new Date();
+            const cursoAbrev = classData.nombre.substring(0, 3).toUpperCase();
+            const idCorto = classData.id.substring(classData.id.length - 4);
+            const timestamp = `${fechaActual.getDate()}${fechaActual.getMonth()+1}${fechaActual.getFullYear().toString().substring(2)}`;
+            const claveCurso = `${cursoAbrev}-${idCorto}-${timestamp}`;
             
             classDetailContent.innerHTML = `
                 <div class="detail-banner ${bannerClass}" style="${bannerStyle}"></div>
                 <div class="class-info">
                     <h1 class="class-title">${classData.nombre}</h1>
-                    <p class="welcome-message">¡Bienvenido/a a tu clase de ${classData.nombre}!</p>
+                      <div class="welcome-container">
+                            <p class="welcome-message">¡Bienvenido/a a tu clase de ${classData.nombre}!</p>
+                            <h4 class="class-code">Código de clase:</h4>
+                            <span class="course-code">
+                                ${claveCurso}
+                                <i class="bx bx-copy copy-icon" title="Copiar código al portapapeles"></i>
+                            </span>
+                        </div>
                     
                     <div class="class-details">
                         <div class="detail-item">
@@ -167,6 +179,37 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             
             setActiveSection(classDetailView);
+            const courseCodeElement = classDetailView.querySelector('.course-code');
+            if (courseCodeElement) {
+                courseCodeElement.addEventListener('click', function() {
+                    // Crear un elemento temporal para copiar el texto
+                    const textToCopy = claveCurso;
+                    const textarea = document.createElement('textarea');
+                    textarea.value = textToCopy;
+                    textarea.setAttribute('readonly', '');
+                    textarea.style.position = 'absolute';
+                    textarea.style.left = '-9999px';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    
+                    // Feedback visual
+                    this.classList.add('copied');
+                    const copyIcon = this.querySelector('.copy-icon');
+                    if (copyIcon) {
+                        copyIcon.classList.remove('bx-copy');
+                        copyIcon.classList.add('bx-check');
+                        
+                        // Restaurar icono después de un tiempo
+                        setTimeout(() => {
+                            copyIcon.classList.remove('bx-check');
+                            copyIcon.classList.add('bx-copy');
+                            this.classList.remove('copied');
+                        }, 1500);
+                    }
+                });
+}
         }
     };
     
