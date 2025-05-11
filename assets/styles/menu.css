@@ -353,3 +353,100 @@ body.modo-oscuro .brand span {
     border-radius: 50%;
     margin-right: 6px;
 }
+<<<<<<< HEAD
+
+/* Estilos para mostrar permanentemente el nombre y rol del usuario */
+.user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.user-img {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.user-tooltip.user-date {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    text-align: center;
+    margin-top: 8px;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    transform: none;
+}
+
+.user-tooltip.user-date .name {
+    display: block;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    margin-bottom: 4px;
+}
+
+.user-tooltip.user-date .rol {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+/* Cuando el sidebar está minimizado */
+.sidebar.close .user-tooltip.user-date {
+    display: none;
+}
+
+.sidebar.close .user-img:hover .user-tooltip.user-date {
+    display: block;
+    position: absolute;
+    left: 70px;
+    top: 0;
+    background: var(--color-surface);
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-card);
+    z-index: 100;
+    min-width: 150px;
+    text-align: left;
+}
+
+/* Ajustes para el tooltip de inicio */
+.user-tooltip:not(.user-date) {
+    display: none;
+}
+
+.sidebar.close .user-tooltip:not(.user-date) {
+    display: block;
+    position: absolute;
+    left: 70px;
+    top: 60px;
+    background: var(--color-surface);
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-card);
+    z-index: 100;
+    min-width: 150px;
+}
+
+/*Apuntes*/
+.apuntes-scrollable {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 5px;
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.apuntes-scrollable li a {
+  display: block;
+  padding: 5px 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+

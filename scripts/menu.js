@@ -160,6 +160,35 @@ function updateMenuClasses() {
     }
 }
 
+let apunteID = 0; // Variable para el ID de apuntes
+
+// Función para agregar un nuevo apunte
+// Esta función se llama desde el iframe de apuntes cuando se crea un nuevo apunte
+function agregarNuevoApunte() {
+  apunteID++;
+
+  const contenedor = document.getElementById('li-contenedor-apuntes');
+  const lista = document.getElementById('lista-apuntes');
+
+  // Mostrar si es la primera vez
+  if (contenedor.style.display === 'none') {
+    contenedor.style.display = 'block';
+  }
+
+  const li = document.createElement('li');
+  const a = document.createElement('a');
+
+  a.href = "#";
+  a.className = "sub-menu-link";
+  a.textContent = `Mis apuntes ${apunteID}`;
+  a.onclick = () => loadContent(`mis_apuntes?id=${apunteID}`);
+
+  li.appendChild(a);
+  lista.appendChild(li);
+}
+
+
+
 // Función para manejar mensajes de iframes
 function manejarMensajes(event) {
     if (!event.data) return;

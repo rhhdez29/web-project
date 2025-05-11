@@ -46,8 +46,21 @@ include_once '../includes/verificar_sesion.php';
                         <i class='bx bx-chevron-down dropdown-icon'></i>
                     </a>
                     <ul class="sub-menu">
-                        <li><a href="#" class="sub-menu-link" onclick="loadContent('mis_apuntes')">Mis apuntes</a></li> 
-                        <li><a href="#" class="sub-menu-link" onclick="loadContent('planificador')">Mi planificador</a></li>
+                        <li class="courses-header">
+                            <span>Mis apuntes</span>
+                            <div class="add-class-btn pulse" onclick="agregarNuevoApunte()">
+                            <i class='bx bx-plus'></i>
+                            </div>
+                        </li>
+
+                        <!-- Este contenedor debe estar dentro de un <li> -->
+                        <li id="li-contenedor-apuntes" style="display: none;">
+                            <ul id="lista-apuntes" class="apuntes-scrollable"></ul>
+                        </li>
+
+                        <li>
+                            <a href="#" class="sub-menu-link" onclick="loadContent('planificador')">Mi planificador</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="menu-item menu-item-dropdown">
@@ -125,7 +138,7 @@ include_once '../includes/verificar_sesion.php';
                 }
             }
             if (page === 'mis_apuntes') {
-                content.innerHTML = '<iframe src="apuntes.php" width="100%" height="100%" style="border: none;"></iframe>';
+                content.innerHTML = `<iframe src="${page.replace('mis_apuntes', 'apuntes.php')}" width="100%" height="100%" style="border: none;"></iframe>`;
             }
             if (page === 'home') {
                 content.innerHTML = '<iframe src="home.php" width="100%" height="100%" style="border: none;"></iframe>';
