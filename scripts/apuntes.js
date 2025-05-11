@@ -26,34 +26,35 @@
     });
   }
 
+  // Manejar arrastre sobre el área de trabajo
   function createNewBlock(type) {
     let element;
   
     switch (type) {
       case "text":
-        element = createTextBlock();
+        element = createTextBlock(); // Bloque de texto
         break;
       case "list":
-        element = createListBlock();
+        element = createListBlock(); // Bloque de lista numerada
         break;
       case "bullet":
-        element = createBulletListBlock();
+        element = createBulletListBlock(); // Bloque de lista con viñetas
         break;
       case "heading":
-        element = createHeadingBlock();
+        element = createHeadingBlock(); // Bloque de encabezado
         break;
       case "hyperText":
-        element = createHyperText();
+        element = createHyperText(); // Bloque de hiperenlace
         break;
       case "table":
-        element = createTableBlock();
+        element = createTableBlock(); // Bloque de tabla
         break;
       default:
         return;
     }
   
     if (element) {
-      if (type !== "image") {
+      if (type !== "image") { // Si no es una imagen, añadir el botón de menú
         const menu = document.createElement("span");
         menu.className = "menu-button";
         menu.textContent = "⋮";
@@ -61,7 +62,7 @@
       }
   
       // Estilo normal, sin posición absoluta
-      element.style.position = "relative";
+      element.style.position = "relative"; 
   
       // Insertar al final (flujo vertical)
       workspace.appendChild(element);
@@ -278,71 +279,69 @@ function createListBlock() {
   const listItemsWrapper = document.createElement("div");
   listItemsWrapper.className = "list-items-wrapper";
 
-  function actualizarNumeracionInterna() {
-    const items = listItemsWrapper.querySelectorAll(".list-item");
-    items.forEach((item, index) => {
-      const label = item.querySelector(".block-number");
-      if (label) label.textContent = `${index + 1}.`;
-    });
-  }
-
-  function createListItem(isFirst = false) {
-    const itemWrapper = document.createElement("div");
-    itemWrapper.className = "content-block text-block-wrapper list-item";
-
-    const bullet = document.createElement("span");
-    bullet.className = "block-number";
-
-    const block = document.createElement("div");
-    block.className = "content-block listBlock";
-    block.contentEditable = true;
-    block.setAttribute("data-placeholder", "Escribe aquí...");
-
-    const buttons = document.createElement("div");
-    buttons.className = "block-buttons";
-
-    const addButton = document.createElement("button");
-    addButton.textContent = "+";
-    addButton.onclick = () => {
-      const newItem = createListItem();
-      listItemsWrapper.insertBefore(newItem, itemWrapper.nextSibling);
-      actualizarNumeracionInterna();
-    };
-
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "×";
-    deleteButton.onclick = () => {
-      const items = listItemsWrapper.querySelectorAll(".list-item");
-      if (items.length > 1 && itemWrapper !== items[0]) {
-        itemWrapper.remove();
-        actualizarNumeracionInterna();
-      }
-    };
-
-    if (isFirst) {
-      deleteButton.disabled = true;
-      deleteButton.style.opacity = 0.3;
-      deleteButton.style.cursor = "not-allowed";
-    }
-
-    buttons.appendChild(addButton);
-    buttons.appendChild(deleteButton);
-
-    itemWrapper.appendChild(bullet);
-    itemWrapper.appendChild(block);
-    itemWrapper.appendChild(buttons);
-
-    return itemWrapper;
-  }
-
   // Agrega el primer ítem
-  listItemsWrapper.appendChild(createListItem(true));
-  actualizarNumeracionInterna(); // Numeración inicial
+  listItemsWrapper.appendChild(createListItem());
+
+  const buttons = document.createElement("div");
+  buttons.className = "block-buttons";
+  buttons.style.flexDirection = "column";
+
+  const addButton = document.createElement("button");
+  addButton.textContent = "+";
+  addButton.onclick = () => {
+    const newItem = createListItem();
+    listItemsWrapper.appendChild(newItem);
+    actualizarNumeracionInterna(listItemsWrapper);
+    return isFirst=false;
+  };
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "×";
+  deleteButton.onclick = () => {
+    const items = listItemsWrapper.querySelectorAll(".list-item");
+    if (items.length > 1) {
+      items[items.length - 1].remove();
+      actualizarNumeracionInterna(listItemsWrapper);
+    }
+  };
+
+  buttons.appendChild(addButton);
+  buttons.appendChild(deleteButton);
 
   container.appendChild(handle);
   container.appendChild(listItemsWrapper);
+  container.appendChild(buttons);
+
+  actualizarNumeracionInterna(listItemsWrapper);
 
   return container;
+}
+
+function createListItem() {
+  const itemWrapper = document.createElement("div");
+  itemWrapper.className = "content-block text-block-wrapper list-item";
+
+  const bullet = document.createElement("span");
+  bullet.className = "block-number";
+
+  const block = document.createElement("div");
+  block.className = "content-block listBlock";
+  block.contentEditable = true;
+  block.setAttribute("data-placeholder", "Escribe aquí...");
+
+  itemWrapper.appendChild(bullet);
+  itemWrapper.appendChild(block);
+
+  return itemWrapper;
+} 
+
+
+function actualizarNumeracionInterna(wrapper) {
+  const items = wrapper.querySelectorAll(".list-item");
+  items.forEach((item, index) => {
+    const label = item.querySelector(".block-number");
+    if (label) label.textContent = `${index + 1}.`;
+  });
 }
 
 
@@ -361,64 +360,61 @@ function createBulletListBlock() {
   const listItemsWrapper = document.createElement("div");
   listItemsWrapper.className = "list-items-wrapper";
 
-  // Función para crear un ítem de lista individual
-  function createListItem(isFirst=false) {
-    const itemWrapper = document.createElement("div");
-    itemWrapper.className = "content-block text-block-wrapper list-item";
+  // Agrega el primer ítem
+  listItemsWrapper.appendChild(createBulletListItem());
 
-    const bullet = document.createElement("span");
-    bullet.className = "block-bullet";
-    bullet.textContent = "•";
+  const buttons = document.createElement("div");
+  buttons.className = "block-buttons";
+  buttons.style.flexDirection = "column";
 
-    const content = document.createElement("div");
-    content.className = "content-block listBlock";
-    content.contentEditable = true;
-    content.setAttribute("data-placeholder", "Escribe aquí...");
+  const addButton = document.createElement("button");
+  addButton.textContent = "+";
+  addButton.onclick = () => {
+    const newItem = createBulletListItem();
+    listItemsWrapper.appendChild(newItem);
+    return isFirst=false;
+  };
 
-    const buttons = document.createElement("div");
-    buttons.className = "block-buttons";
-
-    const addButton = document.createElement("button");
-    addButton.textContent = "+";
-    addButton.onclick = () => {
-      const newItem = createListItem();
-      listItemsWrapper.insertBefore(newItem, itemWrapper.nextSibling);
-    };
-
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "×";
-    deleteButton.onclick = () => {
-      const items = listItemsWrapper.querySelectorAll(".list-item");
-      if (items.length > 1 && itemWrapper !== items[0]) {
-        itemWrapper.remove();
-      }
-    };
-
-    if (isFirst) {
-      deleteButton.disabled = true;
-      deleteButton.style.opacity = 0.3;
-      deleteButton.style.cursor = "not-allowed";
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "×";
+  deleteButton.onclick = () => {
+    const items = listItemsWrapper.querySelectorAll(".list-item");
+    if (items.length > 1) {
+      items[items.length - 1].remove();
     }
+  };
 
-    buttons.appendChild(addButton);
-    buttons.appendChild(deleteButton);
-
-    itemWrapper.appendChild(bullet);
-    itemWrapper.appendChild(content);
-    itemWrapper.appendChild(buttons);
-
-    return itemWrapper;
-  }
-
-  // Crear el primer ítem
-  const firstItem = createListItem(true);
-  listItemsWrapper.appendChild(firstItem);
+  buttons.appendChild(addButton);
+  buttons.appendChild(deleteButton);
 
   container.appendChild(handle);
   container.appendChild(listItemsWrapper);
+  container.appendChild(buttons);
+
+  actualizarNumeracionInterna(listItemsWrapper);
 
   return container;
 }
+
+function createBulletListItem() {
+  const itemWrapper = document.createElement("div");
+  itemWrapper.className = "content-block text-block-wrapper list-item";
+
+  const bullet = document.createElement("span");
+  bullet.className = "block-bullet";
+  bullet.textContent = "•";
+
+  const block = document.createElement("div");
+  block.className = "content-block listBlock";
+  block.contentEditable = true;
+  block.setAttribute("data-placeholder", "Escribe aquí...");
+
+  itemWrapper.appendChild(bullet);
+  itemWrapper.appendChild(block);
+
+  return itemWrapper;
+} 
+
 
 
 function createHyperText() {
@@ -438,10 +434,10 @@ function createHyperText() {
     showContextMenu(block);
   });
 
-  const buttons = document.createElement("div");
+  const buttons = document.createElement("div"); // Contenedor para los botones
   buttons.className = "block-buttons";
 
-  const editButton = document.createElement("button");
+  const editButton = document.createElement("button"); // Botón para editar
   editButton.textContent = "✎";
   editButton.title = "Editar";
   editButton.addEventListener("click", () => {
@@ -454,7 +450,8 @@ function createHyperText() {
   // Detectar URL al salir del bloque
   block.addEventListener("blur", () => {
     const text = block.innerText.trim();
-    if (text.startsWith("http")) {
+    const urlPattern = /^(https?:\/\/)?(www\.)?[\w\-]+\.[a-z]{2,}(\S*)?$/i;
+    if (urlPattern.test(text)) {
       block.classList.add("link");
       block.contentEditable = false;
     } else {
@@ -465,7 +462,11 @@ function createHyperText() {
   // Click para abrir si es link
   block.addEventListener("click", () => {
     if (!block.isContentEditable && block.classList.contains("link")) {
-      window.open(block.innerText.trim(), "_blank");
+      let url = block.innerText.trim();
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+      }
+      window.open(url, "_blank");
     }
   });
 
@@ -525,7 +526,7 @@ function createTableBlock() {
     table.appendChild(newRow);
   };
 
-  const removeRowBtn = document.createElement("button");
+  const removeRowBtn = document.createElement("button"); // Botón para eliminar fila
   removeRowBtn.textContent = "− Fila";
   removeRowBtn.onclick = () => {
     if (table.rows.length > 2) {
@@ -533,15 +534,16 @@ function createTableBlock() {
     }
   };
 
-  const addColBtn = document.createElement("button");
+  const addColBtn = document.createElement("button"); // Botón para añadir columna
   addColBtn.textContent = "+ Columna";
   addColBtn.onclick = () => {
     for (let i = 0; i < table.rows.length; i++) {
       table.rows[i].appendChild(createCell(i === 0));
     }
+    ajustarTamañoTabla(); // Ajustar tamaño de la tabla
   };
 
-  const removeColBtn = document.createElement("button");
+  const removeColBtn = document.createElement("button"); // Botón para eliminar columna
   removeColBtn.textContent = "− Columna";
   removeColBtn.onclick = () => {
     const colCount = table.rows[0].cells.length;
@@ -549,6 +551,7 @@ function createTableBlock() {
       for (let row of table.rows) {
         row.deleteCell(-1);
       }
+      ajustarTamañoTabla(); // Ajustar tamaño de la tabla
     }
   };
 
@@ -565,6 +568,15 @@ function createTableBlock() {
 
   return container;
 }
+
+const ajustarTamañoTabla = () => {
+  const tabla = document.querySelector(".editable-table");
+  const columnas = tabla.rows[0]?.cells.length || 1;
+
+  const nuevoTamaño = Math.max(10, 16 - columnas); // ej: 16px base, mínimo 10px
+  tabla.style.fontSize = `${nuevoTamaño}px`;
+};
+
 
 
 
