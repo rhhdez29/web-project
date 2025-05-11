@@ -72,7 +72,7 @@ include_once '../includes/verificar_sesion.php';
                         <span>Mi Aula Virtual</span>
                         <i class='bx bx-chevron-down dropdown-icon'></i>
                     </a>
-                    <ul class="sub-menu">
+                    <ul class="sub-menu" id="cursos-submenu-container">
                         <li>
                             <div class="courses-header">
                                 <span>Mis cursos</span>
