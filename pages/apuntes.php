@@ -979,27 +979,52 @@ include_once '../includes/verificar_sesion.php';
 
 
   <!-- Menú contextual -->
-  <div id="context-menu">
-    <select id="font-select">
-      <option value="Arial">Arial</option>
-      <option value="Segoe UI">Segoe UI</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Courier New">Courier New</option>
-    </select>
-    <input type="number" id="font-size" placeholder="Tamaño de fuente" min="8" max="72" value="16">
-    <div style="display: flex; gap: 8px;">
-      <div style="flex: 1;">
-        <label style="font-size: 12px; color: #666;">Color texto</label>
-        <input type="color" id="text-color" value="#000000">
-      </div>
-      <div style="flex: 1;">
-        <label style="font-size: 12px; color: #666;">Color fondo</label>
-        <input type="color" id="bg-color" value="#ffffff">
-      </div>
-    </div>
-    <button id="delete-block" style="background: #ff4d4d; color: white; border: none; margin-top: 8px;">🗑️ Eliminar
-      bloque</button>
+  <!-- Menú contextual mejorado -->
+<div id="context-menu">
+  <!-- Fuente -->
+  <label for="font-select">Fuente</label>
+  <select id="font-select">
+    <!-- Opciones dinámicas cargadas desde JS -->
+  </select>
+
+  <!-- Tamaño -->
+  <label for="font-size">Tamaño</label>
+  <input type="number" id="font-size" placeholder="Tamaño de fuente" min="8" max="72" value="16">
+
+  <!-- Estilos de texto -->
+  <div class="text-style-buttons">
+    <button id="bold-btn" title="Negritas"><b>B</b></button>
+    <button id="italic-btn" title="Cursiva"><i>I</i></button>
+    <button id="underline-btn" title="Subrayado"><u>U</u></button>
+    <button id="highlight-btn" title="Resaltar">🔆</button>
   </div>
+
+  <!-- Colores -->
+  <div class="color-pickers">
+    <div>
+      <label>Color texto</label>
+      <input type="color" id="text-color" value="#000000">
+    </div>
+    <div>
+      <label>Color fondo</label>
+      <input type="color" id="bg-color" value="#ffffff">
+    </div>
+  </div>
+
+  <!-- Alineación -->
+  <label>Alineación</label>
+  <div class="align-buttons">
+    <button id="align-left" title="Alinear izquierda">⬅️</button>
+    <button id="align-center" title="Centrar">🔲</button>
+    <button id="align-right" title="Alinear derecha">➡️</button>
+    <button id="align-justify" title="Justificar">📐</button>
+  </div>
+
+  <!-- Eliminar -->
+  <button id="delete-block" class="delete-btn">🗑️ Eliminar bloque</button>
+</div>
+
+
 
   <!-- Ventana flotante para elegir imagen -->
   <div id="image-picker-modal" style="display: none; position: fixed; top: 50%; left: 50%; 

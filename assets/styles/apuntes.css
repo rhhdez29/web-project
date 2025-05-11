@@ -813,6 +813,27 @@ input:checked + .slider:before {
 }
 
 /* Menú contextual */
+.text-style-buttons button,
+.align-buttons button {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.color-pickers {
+  display: flex;
+  justify-content: space-between;
+}
+
+.delete-btn {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
 #context-menu {
     position: absolute;
     background: var(--color-surface);
@@ -827,21 +848,9 @@ input:checked + .slider:before {
     width: 240px;
 }
 
-#context-menu input, 
-#context-menu select, 
-#context-menu button {
-    font-size: 14px;
-    padding: 8px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    background-color: var(--color-surface);
-    color: var(--color-text-primary);
-    transition: all 0.2s ease;
-}
-
-#context-menu button:hover {
-    background-color: var(--color-primary-light);
-    color: var(--color-primary-dark);
+#context-menu button.active {
+  background-color: #333;
+  color: white;
 }
 
 /* Estado seleccionado */
@@ -867,13 +876,15 @@ input:checked + .slider:before {
     justify-content: center;
     opacity: 0;
     transition: all 0.2s ease;
+    z-index: 2;
 }
 
 .block:hover .menu-button {
     opacity: 1;
 }
 
-.menu-button:hover {
+.text-style-buttons button:hover,
+.align-buttons button:hover {
     background: var(--color-primary-light);
     color: var(--color-primary-dark);
 }
