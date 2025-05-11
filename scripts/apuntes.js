@@ -1,92 +1,108 @@
-  // Elementos principales
-  const workspace = document.getElementById("workspace");
-  const contextMenu = document.getElementById("context-menu");
-  const addImageBtn = document.getElementById('add-image-btn');
-  const contenedorPrincipal = document.getElementById("contenedor-bloques");
+// Elementos principales
+const workspace = document.getElementById("workspace");
+const contextMenu = document.getElementById("context-menu");
+const addImageBtn = document.getElementById('add-image-btn');
+const contenedorPrincipal = document.getElementById("contenedor-bloques");
+const fontSize = document.getElementById("font-size");
+const textColor = document.getElementById("text-color");
+const bgColor = document.getElementById("bg-color");
+const fontSelect = document.getElementById("font-select");
 
-  // Variables de estado
-  let selectedBlock = null;
-  
+const boldBtn = document.getElementById("bold-btn");
+const italicBtn = document.getElementById("italic-btn");
+const underlineBtn = document.getElementById("underline-btn");
+const highlightBtn = document.getElementById("highlight-btn");
 
-  // Inicializar arrastre de herramientas
-  function initToolDrag() {
-    document.querySelectorAll(".tool").forEach(tool => {
-      tool.addEventListener("dragstart", e => {
-        e.dataTransfer.setData("text/plain", tool.dataset.type);
-      });
+const alignLeftBtn = document.getElementById("align-left");
+const alignCenterBtn = document.getElementById("align-center");
+const alignRightBtn = document.getElementById("align-right");
+const alignJustifyBtn = document.getElementById("align-justify");
+
+const deleteBtn = document.getElementById("delete-block");
+
+// Variables de estado
+let selectedBlock = null;
+
+
+// Inicializar arrastre de herramientas
+function initToolDrag() {
+  document.querySelectorAll(".tool").forEach(tool => {
+    tool.addEventListener("dragstart", e => {
+      e.dataTransfer.setData("text/plain", tool.dataset.type);
     });
+  });
+}
+
+// Manejar soltar elementos en el área de trabajo
+function initWorkspaceDrop() {
+  workspace.addEventListener("drop", e => {
+    e.preventDefault();
+    const type = e.dataTransfer.getData("text/plain");
+    createNewBlock(type, e.clientX, e.clientY);
+  });
+}
+
+// Manejar arrastre sobre el área de trabajo
+function createNewBlock(type) {
+  let element;
+
+  switch (type) {
+    case "text":
+      element = createTextBlock(); // Bloque de texto
+      break;
+    case "list":
+      element = createListBlock(); // Bloque de lista numerada
+      break;
+    case "bullet":
+      element = createBulletListBlock(); // Bloque de lista con viñetas
+      break;
+    case "heading":
+      element = createHeadingBlock(); // Bloque de encabezado
+      break;
+    case "hyperText":
+      element = createHyperText(); // Bloque de hiperenlace
+      break;
+    case "table":
+      element = createTableBlock(); // Bloque de tabla
+      break;
+    default:
+      return;
   }
 
-  // Manejar soltar elementos en el área de trabajo
-  function initWorkspaceDrop() {
-    workspace.addEventListener("drop", e => {
-      e.preventDefault();
-      const type = e.dataTransfer.getData("text/plain");
-      createNewBlock(type, e.clientX, e.clientY);
-    });
-  }
+  if (element) {
+    if (type !== "image") { // Si no es una imagen, añadir el botón de menú
+      const menu = document.createElement("span");
+      menu.className = "menu-button";
+      menu.textContent = "⋮";
+      element.insertBefore(menu, element.firstChild);
+    }
 
-  // Manejar arrastre sobre el área de trabajo
-  function createNewBlock(type) {
-    let element;
-  
-    switch (type) {
-      case "text":
-        element = createTextBlock(); // Bloque de texto
-        break;
-      case "list":
-        element = createListBlock(); // Bloque de lista numerada
-        break;
-      case "bullet":
-        element = createBulletListBlock(); // Bloque de lista con viñetas
-        break;
-      case "heading":
-        element = createHeadingBlock(); // Bloque de encabezado
-        break;
-      case "hyperText":
-        element = createHyperText(); // Bloque de hiperenlace
-        break;
-      case "table":
-        element = createTableBlock(); // Bloque de tabla
-        break;
-      default:
-        return;
-    }
-  
-    if (element) {
-      if (type !== "image") { // Si no es una imagen, añadir el botón de menú
-        const menu = document.createElement("span");
-        menu.className = "menu-button";
-        menu.textContent = "⋮";
-        element.insertBefore(menu, element.firstChild);
-      }
-  
-      // Estilo normal, sin posición absoluta
-      element.style.position = "relative"; 
-  
-      // Insertar al final (flujo vertical)
-      workspace.appendChild(element);
-    }
+    // Estilo normal, sin posición absoluta
+    element.style.position = "relative";
+
+    // Insertar al final (flujo vertical)
+    workspace.appendChild(element);
   }
-  
-  
+}
+
+
 
 // Función de inicialización
 function initImage() {
   // Configurar event listeners
   function setupEventListeners() {
-      addImageBtn.addEventListener('click', addNewImage);
+    addImageBtn.addEventListener('click', addNewImage);
   }
-  
+
   // Añadir nueva imagen centrada
   function addNewImage() {
-      const workspaceRect = workspace.getBoundingClientRect();
-      const centerX = workspace.scrollLeft + workspaceRect.width / 2 - 150;
-      const centerY = workspace.scrollTop + workspaceRect.height / 2 - 100;
-      
-      createResizableImage(centerX, centerY, workspace);
+    const workspaceRect = workspace.getBoundingClientRect();
+    const centerX = workspace.scrollLeft + workspaceRect.width / 2 - 150;
+    const centerY = workspace.scrollTop + workspaceRect.height / 2 - 100;
+
+    createResizableImage(centerX, centerY, workspace);
   }
-  
+
   // Inicializar
   setupEventListeners();
 }
@@ -98,101 +114,101 @@ function createResizableImage(x, y, container) {
   imageContainer.style.top = `${y}px`;
   imageContainer.style.width = '300px';
   imageContainer.style.height = '200px';
-  
+
   // Crear elemento de imagen
   const img = document.createElement('img');
   img.className = 'resizable-image';
   img.src = '../assets/imagenes/elemento.svg'; // Imagen de ejemplo
   img.draggable = false;
-  
+
   // Crear handles de redimensionamiento
   const handles = ['nw', 'ne', 'sw', 'se'].map(pos => {
-      const handle = document.createElement('div');
-      handle.className = `resize-handle handle-${pos}`;
-      handle.dataset.position = pos;
-      return handle;
+    const handle = document.createElement('div');
+    handle.className = `resize-handle handle-${pos}`;
+    handle.dataset.position = pos;
+    return handle;
   });
-  
+
   // Añadir elementos al contenedor
   imageContainer.appendChild(img);
   handles.forEach(handle => imageContainer.appendChild(handle));
   container.appendChild(imageContainer);
-  
+
   // Variables de estado
   let isDragging = false;
   let isResizing = false;
   let activeHandle = null;
   let startX, startY, startWidth, startHeight, startLeft, startTop;
-  
+
   // Evento para comenzar interacción
   imageContainer.addEventListener('mousedown', (e) => {
-      if (e.target.classList.contains('resize-handle')) {
-          // Redimensionamiento
-          isResizing = true;
-          activeHandle = e.target;
-          imageContainer.style.cursor = e.target.style.cursor;
-      } else {
-          // Arrastre
-          isDragging = true;
-          imageContainer.classList.add('dragging');
-          imageContainer.style.cursor = 'grabbing';
-      }
-      
-      // Guardar estado inicial
-      startX = e.clientX;
-      startY = e.clientY;
-      startWidth = parseInt(imageContainer.style.width);
-      startHeight = parseInt(imageContainer.style.height);
-      startLeft = parseInt(imageContainer.style.left);
-      startTop = parseInt(imageContainer.style.top);
-      
-      e.preventDefault();
+    if (e.target.classList.contains('resize-handle')) {
+      // Redimensionamiento
+      isResizing = true;
+      activeHandle = e.target;
+      imageContainer.style.cursor = e.target.style.cursor;
+    } else {
+      // Arrastre
+      isDragging = true;
+      imageContainer.classList.add('dragging');
+      imageContainer.style.cursor = 'grabbing';
+    }
+
+    // Guardar estado inicial
+    startX = e.clientX;
+    startY = e.clientY;
+    startWidth = parseInt(imageContainer.style.width);
+    startHeight = parseInt(imageContainer.style.height);
+    startLeft = parseInt(imageContainer.style.left);
+    startTop = parseInt(imageContainer.style.top);
+
+    e.preventDefault();
   });
-  
+
   // Evento para mover
   document.addEventListener('mousemove', (e) => {
-      if (!isDragging && !isResizing) return;
-      
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      
-      if (isResizing && activeHandle) {
-          // Lógica de redimensionamiento
-          const position = activeHandle.dataset.position;
-          const newWidth = startWidth + (position.includes('e') ? dx : -dx);
-          const newHeight = startHeight + (position.includes('s') ? dy : -dy);
-          
-          // Aplicar límites mínimos
-          imageContainer.style.width = `${Math.max(100, newWidth)}px`;
-          imageContainer.style.height = `${Math.max(100, newHeight)}px`;
-          
-          // Ajustar posición para handles noroeste y suroeste
-          if (position.includes('w')) {
-              imageContainer.style.left = `${startLeft + dx}px`;
-          }
-          
-          // Ajustar posición para handles noroeste y noreste
-          if (position.includes('n')) {
-              imageContainer.style.top = `${startTop + dy}px`;
-          }
-      } else if (isDragging) {
-          // Lógica de arrastre
-          imageContainer.style.left = `${startLeft + dx}px`;
-          imageContainer.style.top = `${startTop + dy}px`;
+    if (!isDragging && !isResizing) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    if (isResizing && activeHandle) {
+      // Lógica de redimensionamiento
+      const position = activeHandle.dataset.position;
+      const newWidth = startWidth + (position.includes('e') ? dx : -dx);
+      const newHeight = startHeight + (position.includes('s') ? dy : -dy);
+
+      // Aplicar límites mínimos
+      imageContainer.style.width = `${Math.max(100, newWidth)}px`;
+      imageContainer.style.height = `${Math.max(100, newHeight)}px`;
+
+      // Ajustar posición para handles noroeste y suroeste
+      if (position.includes('w')) {
+        imageContainer.style.left = `${startLeft + dx}px`;
       }
+
+      // Ajustar posición para handles noroeste y noreste
+      if (position.includes('n')) {
+        imageContainer.style.top = `${startTop + dy}px`;
+      }
+    } else if (isDragging) {
+      // Lógica de arrastre
+      imageContainer.style.left = `${startLeft + dx}px`;
+      imageContainer.style.top = `${startTop + dy}px`;
+    }
   });
-  
+
   // Evento para finalizar interacción
   document.addEventListener('mouseup', () => {
-      if (isDragging || isResizing) {
-          isDragging = false;
-          isResizing = false;
-          activeHandle = null;
-          imageContainer.classList.remove('dragging');
-          imageContainer.style.cursor = 'grab';
-      }
+    if (isDragging || isResizing) {
+      isDragging = false;
+      isResizing = false;
+      activeHandle = null;
+      imageContainer.classList.remove('dragging');
+      imageContainer.style.cursor = 'grab';
+    }
   });
-  
+
   return imageContainer;
 }
 
@@ -208,48 +224,23 @@ workspace.addEventListener('focusin', (e) => {
 workspace.addEventListener('input', (e) => {
   const block = e.target;
   if (block.classList.contains('block') && block.isContentEditable) {
-  // Si se borra todo y quedan <br>, limpiar para que ::before funcione
-  if (block.innerHTML.trim() === '<br>' || block.innerHTML.trim() === '') {
-    block.innerHTML = '';
+    // Si se borra todo y quedan <br>, limpiar para que ::before funcione
+    if (block.innerHTML.trim() === '<br>' || block.innerHTML.trim() === '') {
+      block.innerHTML = '';
+    }
   }
-}
 });
 
 // Crear bloque de texto
 function createTextBlock() {
-    const container = document.createElement("div");
-    container.className = "block-container";
-    
-    const block = document.createElement("div");
-    block.className = "content-block text-block";
-    block.contentEditable = true;
-    block.setAttribute('data-placeholder', 'Escribe aquí...');
-    
-    const handle = document.createElement("div");
-    handle.className = "block-handle";
-    handle.innerHTML = "⋮";
-    handle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      showContextMenu(block);
-    });
-    
-    // Cambiar orden en el DOM (primero el bloque, luego el handle)
-    container.appendChild(block);
-    container.appendChild(handle);
-    
-    return container;
-}
-
-// Crear bloque de subtítulo
-function createHeadingBlock() {
   const container = document.createElement("div");
   container.className = "block-container";
-    
+
   const block = document.createElement("div");
-  block.className = "content-block heading-block";
+  block.className = "content-block text-block";
   block.contentEditable = true;
-  block.setAttribute('data-placeholder', 'Escribe tu título aquí...');
-    
+  block.setAttribute('data-placeholder', 'Escribe aquí...');
+
   const handle = document.createElement("div");
   handle.className = "block-handle";
   handle.innerHTML = "⋮";
@@ -257,10 +248,35 @@ function createHeadingBlock() {
     e.stopPropagation();
     showContextMenu(block);
   });
-    
+
+  // Cambiar orden en el DOM (primero el bloque, luego el handle)
   container.appendChild(block);
   container.appendChild(handle);
-    
+
+  return container;
+}
+
+// Crear bloque de subtítulo
+function createHeadingBlock() {
+  const container = document.createElement("div");
+  container.className = "block-container";
+
+  const block = document.createElement("div");
+  block.className = "content-block heading-block";
+  block.contentEditable = true;
+  block.setAttribute('data-placeholder', 'Escribe tu título aquí...');
+
+  const handle = document.createElement("div");
+  handle.className = "block-handle";
+  handle.innerHTML = "⋮";
+  handle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showContextMenu(block);
+  });
+
+  container.appendChild(block);
+  container.appendChild(handle);
+
   return container;
 }
 
@@ -292,7 +308,7 @@ function createListBlock() {
     const newItem = createListItem();
     listItemsWrapper.appendChild(newItem);
     actualizarNumeracionInterna(listItemsWrapper);
-    return isFirst=false;
+    return isFirst = false;
   };
 
   const deleteButton = document.createElement("button");
@@ -333,7 +349,7 @@ function createListItem() {
   itemWrapper.appendChild(block);
 
   return itemWrapper;
-} 
+}
 
 
 function actualizarNumeracionInterna(wrapper) {
@@ -372,7 +388,7 @@ function createBulletListBlock() {
   addButton.onclick = () => {
     const newItem = createBulletListItem();
     listItemsWrapper.appendChild(newItem);
-    return isFirst=false;
+    return isFirst = false;
   };
 
   const deleteButton = document.createElement("button");
@@ -413,7 +429,7 @@ function createBulletListItem() {
   itemWrapper.appendChild(block);
 
   return itemWrapper;
-} 
+}
 
 function createHyperText() {
   const container = document.createElement("div");
@@ -580,11 +596,9 @@ const ajustarTamañoTabla = () => {
 
 
 
-
-
 // Mostrar menú contextual
 function showContextMenu(block, clientX = null, clientY = null) {
-  if (!block) return; // Evita errores si no se pasó un bloque válido
+  if (!block) return;
 
   if (selectedBlock) selectedBlock.classList.remove("selected");
 
@@ -594,87 +608,140 @@ function showContextMenu(block, clientX = null, clientY = null) {
   const rect = selectedBlock.getBoundingClientRect();
   const workspaceRect = workspace.getBoundingClientRect();
 
-  // Posicionar el menú contextual
-  contextMenu.style.left = (clientX ? clientX - workspaceRect.left : rect.left - workspaceRect.left + 10) + "px";
-  contextMenu.style.top = (clientY ? clientY - workspaceRect.top : rect.top - workspaceRect.top + selectedBlock.offsetHeight + 10) + "px";
+  contextMenu.style.left = `${clientX ? clientX - workspaceRect.left : rect.left - workspaceRect.left + 10}px`;
+  contextMenu.style.top = `${clientY ? clientY - workspaceRect.top : rect.top - workspaceRect.top + selectedBlock.offsetHeight + 10}px`;
   contextMenu.style.display = "flex";
 
-  // Cargar estilos actuales del bloque
   updateContextMenuWithBlockStyles();
 }
 
-// Actualizar menú contextual con estilos del bloque
+// Inicializar menú contextual de formato
+function initContextMenuFormatting() {
+  const fuentes = ["Arial", "Georgia", "Courier New", "Segoe UI", "Verdana"];
+  fuentes.forEach(fuente => {
+    const option = document.createElement("option");
+    option.value = fuente;
+    option.textContent = fuente;
+    fontSelect.appendChild(option);
+  });
+
+  fontSelect.addEventListener("change", () => applyStyleToSelectionOrBlock("fontFamily", fontSelect.value));
+  fontSize.addEventListener("input", () => applyStyleToSelectionOrBlock("fontSize", fontSize.value + "px"));
+
+  textColor.addEventListener("input", () => applyStyleToSelectionOrBlock("color", textColor.value));
+  bgColor.addEventListener("input", () => applyStyleToSelectionOrBlock("backgroundColor", bgColor.value));
+
+  boldBtn.addEventListener("click", () => toggleStyle("fontWeight", "bold", "normal", boldBtn));
+  italicBtn.addEventListener("click", () => toggleStyle("fontStyle", "italic", "normal", italicBtn));
+  underlineBtn.addEventListener("click", () => toggleStyle("textDecoration", "underline", "none", underlineBtn));
+  highlightBtn.addEventListener("click", () => toggleStyle("backgroundColor", "yellow", "transparent", highlightBtn));
+
+  alignLeftBtn.addEventListener("click", () => applyTextAlign("left", alignLeftBtn));
+  alignCenterBtn.addEventListener("click", () => applyTextAlign("center", alignCenterBtn));
+  alignRightBtn.addEventListener("click", () => applyTextAlign("right", alignRightBtn));
+  alignJustifyBtn.addEventListener("click", () => applyTextAlign("justify", alignJustifyBtn));
+
+  deleteBtn.addEventListener("click", () => {
+    if (selectedBlock) {
+      selectedBlock.remove();
+      closeContextMenu();
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!contextMenu.contains(e.target) && !e.target.classList.contains("block-handle")) {
+      closeContextMenu();
+    }
+  });
+}
+
+// Aplicar alineación de texto
+function applyTextAlign(alignment, activeButton) {
+  if (selectedBlock) {
+    selectedBlock.style.textAlign = alignment;
+  }
+
+  ["align-left", "align-center", "align-right", "align-justify"].forEach(id => {
+    document.getElementById(id).classList.remove("active");
+  });
+  activeButton.classList.add("active");
+}
+
+// Actualizar menú contextual con estilos del bloque seleccionado
 function updateContextMenuWithBlockStyles() {
   if (!selectedBlock) return;
 
-  const computedStyles = getComputedStyle(selectedBlock);
+  const computed = getComputedStyle(selectedBlock);
 
-  document.getElementById("font-select").value = selectedBlock.style.fontFamily || "Segoe UI";
-  document.getElementById("font-size").value = parseInt(selectedBlock.style.fontSize) || 16;
-  document.getElementById("text-color").value = rgbToHex(computedStyles.color);
-  document.getElementById("bg-color").value = rgbToHex(computedStyles.backgroundColor);
+  document.getElementById("font-select").value = selectedBlock.style.fontFamily || computed.fontFamily;
+  document.getElementById("font-size").value = parseInt(computed.fontSize) || 16;
+  document.getElementById("text-color").value = rgbToHex(computed.color);
+  document.getElementById("bg-color").value = rgbToHex(computed.backgroundColor);
+
+  setButtonState(boldBtn, computed.fontWeight === "bold" || selectedBlock.style.fontWeight === "bold");
+  setButtonState(italicBtn, computed.fontStyle === "italic" || selectedBlock.style.fontStyle === "italic");
+  setButtonState(underlineBtn, computed.textDecoration.includes("underline") || selectedBlock.style.textDecoration === "underline");
+  setButtonState(highlightBtn, computed.backgroundColor === "rgb(255, 255, 0)" || selectedBlock.style.backgroundColor === "yellow");
+
+  setButtonState(alignLeftBtn, computed.textAlign === "left" || selectedBlock.style.textAlign === "left");
+  setButtonState(alignCenterBtn, computed.textAlign === "center" || selectedBlock.style.textAlign === "center");
+  setButtonState(alignRightBtn, computed.textAlign === "right" || selectedBlock.style.textAlign === "right");
+  setButtonState(alignJustifyBtn, computed.textAlign === "justify" || selectedBlock.style.textAlign === "justify");
 }
 
-// Inicializar interacción con bloques
-function initBlockInteractions() {
-  workspace.addEventListener("click", (e) => {
-    let target = e.target;
+// Establecer estado del botón
+function setButtonState(button, isActive) {
+  button.classList.toggle("active", isActive);
+}
 
-    // Clic en los botones del menú o el handle del bloque
-    if (target.classList.contains("menu-button") || target.classList.contains("block-handle")) {
-      e.stopPropagation();
-      const block = target.closest(".block");
-      if (block) showContextMenu(block, e.clientX, e.clientY);
-      return;
+// Aplicar estilo a la selección o bloque
+function applyStyleToSelectionOrBlock(style, value) {
+  const sel = window.getSelection();
+
+  if (sel.rangeCount && !sel.isCollapsed) {
+    const range = sel.getRangeAt(0);
+    const span = document.createElement("span");
+    span.style[style] = value;
+    span.appendChild(range.extractContents());
+    range.deleteContents();
+    range.insertNode(span);
+  } else if (selectedBlock) {
+    applyStyleRecursively(selectedBlock, style, value);
+  }
+}
+
+// Aplicar estilo recursivamente a los elementos hijos
+function applyStyleRecursively(element, style, value) {
+  if (!element) return;
+
+  if (element.nodeType === Node.ELEMENT_NODE) {
+    if (["P", "DIV", "SPAN"].includes(element.tagName) || element.classList.contains("content-block")) {
+      element.style[style] = value;
     }
+    Array.from(element.childNodes).forEach(child => applyStyleRecursively(child, style, value));
+  }
+}
 
-    // Clic en cualquier bloque
-    const block = target.closest(".block");
-    if (block) {
-      e.stopPropagation();
-      showContextMenu(block, e.clientX, e.clientY);
-    } else {
-      // Clic fuera: cerrar menú
-      closeContextMenu();
-    }
-  });
+// Alternar estilo
+function toggleStyle(property, activeValue, inactiveValue, button) {
+  const sel = window.getSelection();
 
-  // Cerrar menú si se hace clic fuera
-  document.addEventListener("click", (e) => {
-    if (!contextMenu.contains(e.target)) {
-      closeContextMenu();
-    }
-  });
+  if (sel.rangeCount && !sel.isCollapsed) {
+    const range = sel.getRangeAt(0);
+    const span = document.createElement("span");
+    span.style[property] = activeValue;
+    span.appendChild(range.extractContents());
+    range.deleteContents();
+    range.insertNode(span);
+  } else if (selectedBlock) {
+    const current = selectedBlock.style[property];
+    const newValue = current === activeValue ? inactiveValue : activeValue;
+    selectedBlock.style[property] = newValue;
+  }
 
-  // Estilos desde menú contextual
-  document.getElementById("font-select").addEventListener("change", (e) => {
-    if (selectedBlock) selectedBlock.style.fontFamily = e.target.value;
-  });
-
-  document.getElementById("font-size").addEventListener("input", (e) => {
-    if (selectedBlock) selectedBlock.style.fontSize = e.target.value + "px";
-  });
-
-  document.getElementById("text-color").addEventListener("input", (e) => {
-    if (selectedBlock) selectedBlock.style.color = e.target.value;
-  });
-
-  document.getElementById("bg-color").addEventListener("input", (e) => {
-    if (selectedBlock) selectedBlock.style.backgroundColor = e.target.value;
-  });
-
-  // Eliminar bloque
-  document.getElementById("delete-block").addEventListener("click", () => {
-    if (selectedBlock) {
-      const container = selectedBlock.closest(".block-container");
-      if (container) {
-        container.remove();
-      } else {
-        selectedBlock.remove();
-      }
-      closeContextMenu();
-    }
-  });
+  if (button) {
+    button.classList.toggle("active");
+  }
 }
 
 // Cerrar menú contextual
@@ -684,71 +751,69 @@ function closeContextMenu() {
   selectedBlock = null;
 }
 
+// Convertir color RGB a HEX
+function rgbToHex(rgb) {
+  if (!rgb) return "#000000";
 
-  // Convertir color RGB a HEX
-  function rgbToHex(rgb) {
-    if (!rgb) return "#000000";
-    
-    // Manejar diferentes formatos (rgb(), rgba(), nombre de color)
-    const tempElem = document.createElement("div");
-    tempElem.style.color = rgb;
-    document.body.appendChild(tempElem);
-    const computedColor = getComputedStyle(tempElem).color;
-    document.body.removeChild(tempElem);
-    
-    const result = computedColor.match(/\d+/g);
-    if (!result || result.length < 3) return "#000000";
-    
-    return "#" + result.slice(0, 3)
-      .map(x => (+x).toString(16).padStart(2, "0"))
-      .join("");
-  }
+  const tempElem = document.createElement("div");
+  tempElem.style.color = rgb;
+  document.body.appendChild(tempElem);
+  const computedColor = getComputedStyle(tempElem).color;
+  document.body.removeChild(tempElem);
 
-  function openImagePicker(imgElement) {
-    const modal = document.getElementById("image-picker-modal");
-    const overlay = document.getElementById("modal-overlay");
-    const optionsContainer = document.getElementById("image-picker-options");
-  
-    // Lista de imágenes disponibles
-    const images = [
-      "../assets/imagenes/fondo2.jpg",
-      "../assets/imagenes/elemento.svg",
-      "../assets/imagenes/otro1.svg",
-      "../assets/imagenes/otro2.svg"
-    ];
-  
-    // Limpiar opciones anteriores
-    optionsContainer.innerHTML = "";
-  
-    // Crear miniaturas de imágenes
-    images.forEach(src => {
-      const img = document.createElement("img");
-      img.src = src;
-      img.style.width = "80px";
-      img.style.height = "80px";
-      img.style.objectFit = "cover";
-      img.style.cursor = "pointer";
-      img.style.borderRadius = "6px";
-      img.style.border = "2px solid transparent";
-      
-      // Evento al hacer clic en una miniatura
-      img.addEventListener("click", () => {
-        imgElement.src = src;
-        closeImagePicker();
-      });
-  
-      optionsContainer.appendChild(img);
+  const result = computedColor.match(/\d+/g);
+  if (!result || result.length < 3) return "#000000";
+
+  return "#" + result.slice(0, 3).map(x => (+x).toString(16).padStart(2, "0")).join("");
+}
+
+
+
+function openImagePicker(imgElement) {
+  const modal = document.getElementById("image-picker-modal");
+  const overlay = document.getElementById("modal-overlay");
+  const optionsContainer = document.getElementById("image-picker-options");
+
+  // Lista de imágenes disponibles
+  const images = [
+    "../assets/imagenes/fondo2.jpg",
+    "../assets/imagenes/elemento.svg",
+    "../assets/imagenes/otro1.svg",
+    "../assets/imagenes/otro2.svg"
+  ];
+
+  // Limpiar opciones anteriores
+  optionsContainer.innerHTML = "";
+
+  // Crear miniaturas de imágenes
+  images.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.style.width = "80px";
+    img.style.height = "80px";
+    img.style.objectFit = "cover";
+    img.style.cursor = "pointer";
+    img.style.borderRadius = "6px";
+    img.style.border = "2px solid transparent";
+
+    // Evento al hacer clic en una miniatura
+    img.addEventListener("click", () => {
+      imgElement.src = src;
+      closeImagePicker();
     });
-  
-    // Mostrar el modal y overlay
-    modal.style.display = "block";
-    overlay.style.display = "block";
-  
-    // Botón para cerrar
-    document.getElementById("close-image-picker").onclick = closeImagePicker;
-  }
-  
-  // Función para cerrar el modal
+
+    optionsContainer.appendChild(img);
+  });
+
+  // Mostrar el modal y overlay
+  modal.style.display = "block";
+  overlay.style.display = "block";
+
+  // Botón para cerrar
+  document.getElementById("close-image-picker").onclick = closeImagePicker;
+}
+
+// Función para cerrar el modal
 function closeImagePicker() {
   document.getElementById("image-picker-modal").style.display = "none";
   document.getElementById("modal-overlay").style.display = "none";
@@ -761,7 +826,7 @@ function initModal() {
   if (closeButton) {
     closeButton.addEventListener("click", closeImagePicker);
   }
-  
+
   // Opcional: Cerrar con tecla Escape
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
@@ -769,44 +834,44 @@ function initModal() {
     }
   });
 }
-  
 
-  function initImageClick(selector, callback) {
-    document.querySelectorAll(selector).forEach(img => {
-      img.addEventListener('click', (e) => {
-        e.stopPropagation(); 
-        callback(img);
-      });
-    });
-  }
 
-  document.querySelectorAll('.editable-h1').forEach(editable => {
-    // Limpiar placeholder al enfocar
-    editable.addEventListener('focus', () => {
-      if (editable.textContent.trim() === '') {
-        editable.innerHTML = '';
-      }
-    });
-    
-    // Restaurar placeholder si está vacío al perder foco
-    editable.addEventListener('blur', () => {
-      if (editable.textContent.trim() === '') {
-        editable.innerHTML = '';
-      }
+function initImageClick(selector, callback) {
+  document.querySelectorAll(selector).forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      callback(img);
     });
   });
-  
-  
-  // Inicializar la aplicación
-  function init() {
-    initToolDrag();
-    initWorkspaceDrop();
-    initBlockInteractions();
-    initImageClick('.portada', openImagePicker);
-    initImageClick('.icono', openImagePicker);
-    initModal();
-    initImage();
-  }
+}
 
-  // Iniciar cuando el DOM esté listo
-  document.addEventListener("DOMContentLoaded", init);
+document.querySelectorAll('.editable-h1').forEach(editable => {
+  // Limpiar placeholder al enfocar
+  editable.addEventListener('focus', () => {
+    if (editable.textContent.trim() === '') {
+      editable.innerHTML = '';
+    }
+  });
+
+  // Restaurar placeholder si está vacío al perder foco
+  editable.addEventListener('blur', () => {
+    if (editable.textContent.trim() === '') {
+      editable.innerHTML = '';
+    }
+  });
+});
+
+
+// Inicializar la aplicación
+function init() {
+  initToolDrag();
+  initWorkspaceDrop();
+  initContextMenuFormatting();
+  initImageClick('.portada', openImagePicker);
+  initImageClick('.icono', openImagePicker);
+  initModal();
+  initImage();
+}
+
+// Iniciar cuando el DOM esté listo
+document.addEventListener("DOMContentLoaded", init);
