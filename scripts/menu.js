@@ -169,12 +169,6 @@ function agregarNuevoApunte() {
 
   const contenedor = document.getElementById('li-contenedor-apuntes');
   const lista = document.getElementById('lista-apuntes');
-
-  // Mostrar si es la primera vez
-  if (contenedor.style.display === 'none') {
-    contenedor.style.display = 'block';
-  }
-
   const li = document.createElement('li');
   const a = document.createElement('a');
 

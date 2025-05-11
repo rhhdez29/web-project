@@ -433,20 +433,8 @@ body.modo-oscuro .brand span {
 }
 
 /*Apuntes*/
-.apuntes-scrollable {
-  max-height: 250px;
+#sub-menu-apuntes {
+  max-height: 200px;
   overflow-y: auto;
-  padding-right: 5px;
-  list-style: none;
-  margin: 0;
-  padding-left: 0;
-}
-
-.apuntes-scrollable li a {
-  display: block;
-  padding: 5px 10px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 

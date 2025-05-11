@@ -46,18 +46,21 @@ include_once '../includes/verificar_sesion.php';
                         <i class='bx bx-chevron-down dropdown-icon'></i>
                     </a>
                     <ul class="sub-menu">
-                        <li class="courses-header">
-                            <span>Mis apuntes</span>
-                            <div class="add-class-btn pulse" onclick="agregarNuevoApunte()">
-                            <i class='bx bx-plus'></i>
-                            </div>
+                        <li class="menu-item menu-item-dropdown">
+                            <a href="#" class="menu-link dropdown-toggle">
+                                <i class='bx bx-book-reader'></i>
+                                <span>Mis apuntes</span>
+                                <i class='bx bx-chevron-down dropdown-icon'></i>
+                            </a>
+                            <ul class="sub-menu" id="sub-menu-apuntes">
+                            <li class="courses-header">
+                                <span>Nuevo</span>
+                                <div class="add-class-btn pulse" onclick="agregarNuevoApunte()">
+                                    <i class='bx bx-plus'></i>
+                                </div>
+                            </li>
+                            </ul>
                         </li>
-
-                        <!-- Este contenedor debe estar dentro de un <li> -->
-                        <li id="li-contenedor-apuntes" style="display: none;">
-                            <ul id="lista-apuntes" class="apuntes-scrollable"></ul>
-                        </li>
-
                         <li>
                             <a href="#" class="sub-menu-link" onclick="loadContent('planificador')">Mi planificador</a>
                         </li>
@@ -137,7 +140,7 @@ include_once '../includes/verificar_sesion.php';
                     }, 500);
                 }
             }
-            if (page === 'mis_apuntes') {
+            if (page.startsWith('mis_apuntes')) {
                 content.innerHTML = `<iframe src="${page.replace('mis_apuntes', 'apuntes.php')}" width="100%" height="100%" style="border: none;"></iframe>`;
             }
             if (page === 'home') {
@@ -241,6 +244,25 @@ include_once '../includes/verificar_sesion.php';
                 updateMenuClasses();
             }
         });
+
+        let apunteID = 0; // Variable para el ID de apuntes
+
+        // Función para agregar un5 nuevo apunte
+        // Esta función se llama desde el iframe de apuntes cuando se crea un nuevo apunte
+        function agregarNuevoApunte() {
+        apunteID++;
+        const subMenu = document.getElementById("sub-menu-apuntes");
+        // Crear nuevo li
+        const nuevoLi = document.createElement("li");
+        const enlace = document.createElement("a");
+        enlace.href = "#";
+        enlace.className = "sub-menu-link";
+        enlace.textContent = `Mis apuntes ${apunteID}`;
+        enlace.onclick = () => loadContent(`mis_apuntes?id=${apunteID}`);
+
+        nuevoLi.appendChild(enlace);
+        subMenu.appendChild(nuevoLi);
+        }
     </script>
 </body>
 </html>
