@@ -415,8 +415,6 @@ function createBulletListItem() {
   return itemWrapper;
 } 
 
-
-
 function createHyperText() {
   const container = document.createElement("div");
   container.className = "block-container";

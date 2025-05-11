@@ -295,6 +295,8 @@ header {
     background-color: var(--color-surface);
     border-radius: 8px;
     transition: all 0.2s ease;
+    margin-bottom: 4px;
+    padding: 5px;
 }
 
 .tool:hover {
@@ -317,15 +319,19 @@ header {
     border-radius: 4px;
 }
   
-.tool img {
+.tool .bx {
     max-width: 100%;
-    max-height: 60%;
+    max-height: 100%;
     object-fit: contain;
+}
+
+.cls-1 {
+    fill: var(--color-text-primary);
 }
   
 .tool p {
     margin: 0;
-    font-size: 12px;
+    font-size: 11px;
     line-height: 1;
     color: var(--color-text-primary);
 }
@@ -349,7 +355,13 @@ header {
     flex-shrink: 0;
 }
 
-.pdf-tool img {
+.pdf-tool:hover {
+    background-color: var(--color-surface-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+
+.pdf-tool .bx {
     max-width: 100%;
     max-height: 50%;
     object-fit: contain;
@@ -376,7 +388,7 @@ header {
     outline: 2px solid var(--color-primary-light);
 }
 
-#add-image-btn img {
+#add-image-btn svg {
     max-height: 60%;
 }
 
