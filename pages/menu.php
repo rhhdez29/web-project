@@ -47,7 +47,7 @@ include_once '../includes/verificar_sesion.php';
                     </a>
                     <ul class="sub-menu">
                         <li class="menu-item menu-item-dropdown">
-                            <a href="#" class="menu-link dropdown-toggle">
+                            <a href="#" class="menu-link dropdown-toggle" id="mis-apuntes-toggle">
                                 <i class='bx bx-book-reader'></i>
                                 <span>Mis apuntes</span>
                                 <i class='bx bx-chevron-down dropdown-icon'></i>
@@ -118,9 +118,19 @@ include_once '../includes/verificar_sesion.php';
         <!-- El contenido del centro se cambiará dinámicamente aquí -->
     </div>
 
+    <script src="../assets/scripts/menu.js"></script>
     <script>
         // Función para cargar contenido dinámicamente
         function loadContent(page, action) {
+            const sidebar = document.getElementById('sidebar');
+            // Expandir el menú si está minimizado
+            if (sidebar.classList.contains('minimize')) {
+                sidebar.classList.remove('minimize');
+                const icon = document.querySelector('#menu-btn i');
+                icon.classList.remove('bx-chevrons-right');
+                icon.classList.add('bx-chevrons-left');
+            }
+
             const content = document.getElementById('main-content');
             
             if (page === 'planificador') {
@@ -193,6 +203,19 @@ include_once '../includes/verificar_sesion.php';
             });
         }
 
+        // Función para cerrar todos los submenús excepto el especificado
+        function closeOtherSubmenus(exceptItem) {
+            document.querySelectorAll('.menu-item-dropdown').forEach(item => {
+                if (item !== exceptItem && !item.contains(exceptItem)) {
+                    item.classList.remove('active');
+                    const icon = item.querySelector('.dropdown-icon');
+                    if (icon) icon.classList.remove('rotate-180');
+                    const subMenu = item.querySelector('.sub-menu');
+                    if (subMenu) subMenu.style.maxHeight = '0';
+                }
+            });
+        }
+
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             loadContent('home');
@@ -220,7 +243,38 @@ include_once '../includes/verificar_sesion.php';
             document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
                 toggle.addEventListener('click', function(e) {
                     e.preventDefault();
+                    const sidebar = document.getElementById('sidebar');
+                    
+                    // Si el menú está minimizado, solo expandirlo
+                    if (sidebar.classList.contains('minimize')) {
+                        sidebar.classList.remove('minimize');
+                        const icon = document.querySelector('#menu-btn i');
+                        icon.classList.remove('bx-chevrons-right');
+                        icon.classList.add('bx-chevrons-left');
+                        return;
+                    }
+                    
+                    // Si no está minimizado, proceder con el comportamiento normal
                     const parentItem = this.closest('.menu-item-dropdown');
+                    
+                    // Si es el toggle de "Mis apuntes", comportamiento específico
+                    if (this.id === 'mis-apuntes-toggle') {
+                        parentItem.classList.toggle('active');
+                        const icon = this.querySelector('.dropdown-icon');
+                        icon.classList.toggle('rotate-180');
+                        const subMenu = parentItem.querySelector('.sub-menu');
+                        if (parentItem.classList.contains('active')) {
+                            subMenu.style.maxHeight = subMenu.scrollHeight + 'px';
+                        } else {
+                            subMenu.style.maxHeight = '0';
+                        }
+                        return;
+                    }
+                    
+                    // Cerrar otros submenús
+                    closeOtherSubmenus(parentItem);
+                    
+                    // Alternar el estado del submenú actual
                     parentItem.classList.toggle('active');
                     
                     // Rotar el icono
@@ -236,6 +290,19 @@ include_once '../includes/verificar_sesion.php';
                     }
                 });
             });
+            
+            // Manejar clicks en los enlaces de submenú
+            document.querySelectorAll('.sub-menu-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar.classList.contains('minimize')) {
+                        sidebar.classList.remove('minimize');
+                        const icon = document.querySelector('#menu-btn i');
+                        icon.classList.remove('bx-chevrons-right');
+                        icon.classList.add('bx-chevrons-left');
+                    }
+                });
+            });
         });
         
         // Escuchar mensajes desde iframes
@@ -247,21 +314,26 @@ include_once '../includes/verificar_sesion.php';
 
         let apunteID = 0; // Variable para el ID de apuntes
 
-        // Función para agregar un5 nuevo apunte
-        // Esta función se llama desde el iframe de apuntes cuando se crea un nuevo apunte
+        // Función para agregar un nuevo apunte
         function agregarNuevoApunte() {
-        apunteID++;
-        const subMenu = document.getElementById("sub-menu-apuntes");
-        // Crear nuevo li
-        const nuevoLi = document.createElement("li");
-        const enlace = document.createElement("a");
-        enlace.href = "#";
-        enlace.className = "sub-menu-link";
-        enlace.textContent = `Mis apuntes ${apunteID}`;
-        enlace.onclick = () => loadContent(`mis_apuntes?id=${apunteID}`);
+            apunteID++;
+            const subMenu = document.getElementById("sub-menu-apuntes");
+            // Crear nuevo li
+            const nuevoLi = document.createElement("li");
+            const enlace = document.createElement("a");
+            enlace.href = "#";
+            enlace.className = "sub-menu-link";
+            enlace.textContent = `Mis apuntes ${apunteID}`;
+            enlace.onclick = () => loadContent(`mis_apuntes?id=${apunteID}`);
 
-        nuevoLi.appendChild(enlace);
-        subMenu.appendChild(nuevoLi);
+            nuevoLi.appendChild(enlace);
+            subMenu.appendChild(nuevoLi);
+            
+            // Ajustar la altura del submenú si está abierto
+            const parentItem = subMenu.closest('.menu-item-dropdown');
+            if (parentItem && parentItem.classList.contains('active')) {
+                subMenu.style.maxHeight = subMenu.scrollHeight + 'px';
+            }
         }
     </script>
 </body>

@@ -150,6 +150,24 @@ body {
     overflow-y: auto;
 }
 
+/* Custom scrollbar for menu container */
+.menu-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.menu-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.menu-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.menu-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
 /* Menu items */
 .menu {
     list-style: none;
@@ -215,6 +233,25 @@ body {
 
 .menu-item-dropdown.active .sub-menu {
     max-height: 500px;
+    overflow-y: auto;
+}
+
+/* Custom scrollbar for sub-menus */
+.sub-menu::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sub-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sub-menu::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+}
+
+.sub-menu::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .sub-menu-link {
@@ -353,7 +390,6 @@ body.modo-oscuro .brand span {
     border-radius: 50%;
     margin-right: 6px;
 }
-<<<<<<< HEAD
 
 /* Estilos para mostrar permanentemente el nombre y rol del usuario */
 .user {
@@ -396,22 +432,8 @@ body.modo-oscuro .brand span {
 }
 
 /* Cuando el sidebar está minimizado */
-.sidebar.close .user-tooltip.user-date {
+.sidebar.minimize .user-tooltip.user-date {
     display: none;
-}
-
-.sidebar.close .user-img:hover .user-tooltip.user-date {
-    display: block;
-    position: absolute;
-    left: 70px;
-    top: 0;
-    background: var(--color-surface);
-    padding: 10px 15px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-card);
-    z-index: 100;
-    min-width: 150px;
-    text-align: left;
 }
 
 /* Ajustes para el tooltip de inicio */
@@ -419,22 +441,9 @@ body.modo-oscuro .brand span {
     display: none;
 }
 
-.sidebar.close .user-tooltip:not(.user-date) {
-    display: block;
-    position: absolute;
-    left: 70px;
-    top: 60px;
-    background: var(--color-surface);
-    padding: 10px 15px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-card);
-    z-index: 100;
-    min-width: 150px;
-}
-
 /*Apuntes*/
 #sub-menu-apuntes {
   max-height: 200px;
   overflow-y: auto;
+  padding-right: 4px; /* Espacio para el scrollbar */
 }
-
