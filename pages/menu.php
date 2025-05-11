@@ -1,355 +1,233 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+<?php 
+include_once '../includes/verificar_sesion.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="../assets/styles/menu.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="header">
+            <div class="menu-btn" id="menu-btn">
+                <i class='bx bx-chevrons-left'></i>
+            </div>
+            <div class="user">
+                <div class="user-img">
+                    <img src="../assets/imagenes/perfil.png" alt="user">
+                    <div class="user-tooltip user-date">
+                        <span class="name" id="username">
+                            <?php echo isset($_SESSION['userName']) ? htmlspecialchars($_SESSION['userName']) : 'Invitado'; ?>
+                        </span>
+                        <span class="rol" id="rol">
+                            <?php echo isset($_SESSION['rol']) ? htmlspecialchars($_SESSION['rol']) : 'Uknown'; ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="menu-container">
+            <ul class="menu">
+                <li class="menu-item menu-item-static">
+                    <a href="#" class="menu-link" onclick="loadContent('home')">
+                        <i class='bx bx-home-smile'></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="menu-item menu-item-dropdown">
+                    <a href="#" class="menu-link dropdown-toggle">
+                        <i class='bx bx-book-reader'></i>
+                        <span>Mi Espacio</span>
+                        <i class='bx bx-chevron-down dropdown-icon'></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a href="#" class="sub-menu-link" onclick="loadContent('mis_apuntes')">Mis apuntes</a></li> 
+                        <li><a href="#" class="sub-menu-link" onclick="loadContent('planificador')">Mi planificador</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item menu-item-dropdown">
+                    <a href="#" class="menu-link dropdown-toggle">
+                        <i class='bx bx-chalkboard'></i>
+                        <span>Mi Aula Virtual</span>
+                        <i class='bx bx-chevron-down dropdown-icon'></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <div class="courses-header">
+                                <span>Mis cursos</span>
+                                <div class="add-class-btn pulse" onclick="loadContent('mis_cursos', 'showForm')">
+                                    <i class='bx bx-plus'></i>
+                                </div>
+                            </div>
+                        </li>
+                        <li><a href="#" class="sub-menu-link" onclick="loadContent('mis_cursos')">Ver todos mis cursos</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="footer">
+            <ul class="menu">
+                <li class="menu-item menu-item-static">
+                    <a href="#" class="menu-link" onclick="loadContent('configuracion')">
+                        <i class='bx bx-cog'></i>
+                        <span>Configuración</span>
+                    </a>
+                </li>
+                <li class="menu-item menu-item-static">
+                    <a href="#" class="menu-link" onclick="loadContent('ayuda')">
+                        <i class='bx bx-help-circle'></i>
+                        <span>Ayuda</span>
+                    </a>
+                </li>
+                <li class="menu-item menu-item-static">
+                    <a href="../includes/cerrar_sesion.php" class="menu-link">
+                        <i class='bx bx-log-out'></i>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="brand">
+                <img src="../assets/imagenes/logoepa.png" alt="logo">
+                <span>EPA!</span>
+            </div>
+        </div>
+    </div>
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: "Poppins", sans-serif;
-}
+    <div id="main-content">
+        <!-- El contenido del centro se cambiará dinámicamente aquí -->
+    </div>
 
-:root {
-    /* Main colors */
-    --color-primary: #f4b5c5;
-    --color-primary-light: #f8d5e0;
-    --color-primary-dark: #e47a9a;
-    --color-accent: #8B5CF6;
-    --color-accent-light: #EDE9FE;
-    
-    /* Background colors */
-    --color-bg: #F8FAFC;
-    --color-surface: #FFFFFF;
-    --color-surface-hover: #F7F9FC;
-    
-    /* Text colors */
-    --color-text-primary: #334155;
-    --color-text-secondary: #64748B;
-    
-    /* Border and shadow */
-    --color-border: #D1D9E6;
-    --shadow-border: rgba(148, 163, 184, 0.15);
-    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
-    
-    /* Functional colors */
-    --color-tooltip-bg: #475569;
-    --color-tooltip-text: #FFFFFF;
-    --menu-active-bg: var(--color-primary-light);
-    --menu-active-text: var(--color-primary-dark);
-}
+    <script>
+        // Función para cargar contenido dinámicamente
+        function loadContent(page, action) {
+            const content = document.getElementById('main-content');
+            
+            if (page === 'planificador') {
+                content.innerHTML = '<iframe src="planificador.php" width="100%" height="100%" style="border: none;"></iframe>';
+            } 
+            if (page === 'mis_cursos') {
+                content.innerHTML = '<iframe src="clases.php" width="100%" height="100%" style="border: none;"></iframe>';
+                
+                if (action === 'showForm') {
+                    setTimeout(() => {
+                        const iframe = document.querySelector('#main-content iframe');
+                        if (iframe) {
+                            iframe.contentWindow.postMessage({
+                                type: 'showAddForm'
+                            }, '*');
+                        }
+                    }, 500);
+                }
+            }
+            if (page === 'mis_apuntes') {
+                content.innerHTML = '<iframe src="apuntes.php" width="100%" height="100%" style="border: none;"></iframe>';
+            }
+            if (page === 'home') {
+                content.innerHTML = '<iframe src="home.php" width="100%" height="100%" style="border: none;"></iframe>';
+            }
+            if (page === 'ayuda') {
+                content.innerHTML = '<iframe src="ayuda.html" width="100%" height="100%" style="border: none;"></iframe>';
+            }
+            if (page === 'configuracion') {
+                content.innerHTML = '<iframe src="configuracion.html" width="100%" height="100%" style="border: none;"></iframe>';
+            }
+        }
 
-/* Body */
-body {
-    width: 100%;
-    height: 100vh;
-    background-color: var(--color-bg);
-}
+        // Función para actualizar las clases en el menú
+        function updateMenuClasses() {
+            const classes = JSON.parse(localStorage.getItem('userClasses')) || [];
+            const aulaVirtualItem = document.querySelector('.menu-item-dropdown:nth-child(3)');
+            const subMenu = aulaVirtualItem.querySelector('.sub-menu');
+            
+            // Eliminar solo los elementos de clase, manteniendo los primeros 2 elementos
+            const existingClasses = subMenu.querySelectorAll('.class-item');
+            existingClasses.forEach(item => {
+                item.parentElement.remove();
+            });
+            
+            // Añadir las clases actualizadas
+            classes.forEach(classData => {
+                const classItem = document.createElement('li');
+                classItem.innerHTML = `<a href="#" class="sub-menu-link class-item" data-id="${classData.id}">${classData.nombre}</a>`;
+                
+                // Insertar antes del último elemento ("Ver todos mis cursos")
+                subMenu.insertBefore(classItem, subMenu.children[2]);
+                
+                // Añadir evento click
+                classItem.querySelector('a').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const classId = e.target.getAttribute('data-id');
+                    loadContent('mis_cursos');
+                    
+                    setTimeout(() => {
+                        const iframe = document.querySelector('#main-content iframe');
+                        if (iframe) {
+                            iframe.contentWindow.postMessage({
+                                type: 'loadClass',
+                                classId: classId
+                            }, '*');
+                        }
+                    }, 500);
+                });
+            });
+        }
 
-/* Sidebar */
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    width: 250px;
-    background-color: var(--color-surface);
-    box-shadow: var(--shadow-card);
-    transition: all 0.3s ease;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-}
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            loadContent('home');
+            updateMenuClasses();
+            
+            // Configurar el botón de menú
+            const menuBtn = document.getElementById('menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            
+            menuBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('minimize');
+                
+                // Cambiar el icono
+                const icon = menuBtn.querySelector('i');
+                if (sidebar.classList.contains('minimize')) {
+                    icon.classList.remove('bx-chevrons-left');
+                    icon.classList.add('bx-chevrons-right');
+                } else {
+                    icon.classList.remove('bx-chevrons-right');
+                    icon.classList.add('bx-chevrons-left');
+                }
+            });
 
-.sidebar.minimize {
-    width: 70px;
-}
-
-/* Main content */
-#main-content {
-    margin-left: 250px;
-    width: calc(100% - 250px);
-    height: 100vh;
-    overflow: hidden;
-    background-color: var(--color-bg);
-    transition: all 0.3s ease;
-}
-
-.sidebar.minimize ~ #main-content {
-    margin-left: 70px;
-    width: calc(100% - 70px);
-}
-
-/* Header */
-.header {
-    position: relative;
-    padding: 1rem 0;
-    margin-bottom: 1rem;
-}
-
-/* Menu button */
-.menu-btn {
-    position: absolute;
-    top: 20px;
-    right: -15px;
-    background: var(--color-surface);
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: var(--shadow-card);
-    z-index: 1001;
-    transition: all 0.3s ease;
-}
-
-.menu-btn i {
-    font-size: 1.5rem;
-    color: var(--color-text-secondary);
-    transition: all 0.3s ease;
-}
-
-/* User section */
-.user {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.user-img img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--color-border);
-}
-
-.user-tooltip.user-date {
-    text-align: center;
-    margin-top: 0.5rem;
-}
-
-.user-tooltip.user-date .name {
-    display: block;
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--color-text-primary);
-}
-
-.user-tooltip.user-date .rol {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--color-text-secondary);
-}
-
-/* Menu container */
-.menu-container {
-    flex: 1;
-    width: 100%;
-    overflow-y: auto;
-}
-
-/* Menu items */
-.menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.menu-item {
-    margin-bottom: 0.5rem;
-    position: relative;
-}
-
-.menu-link {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
-}
-
-.menu-link:hover,
-.menu-item.active .menu-link {
-    color: var(--menu-active-text);
-    background-color: var(--menu-active-bg);
-}
-
-.menu-link i {
-    font-size: 1.25rem;
-    margin-right: 1rem;
-    color: var(--color-text-secondary);
-}
-
-.menu-link span {
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-/* Dropdown specific styles */
-.menu-item-dropdown .menu-link {
-    justify-content: space-between;
-}
-
-.dropdown-icon {
-    transition: transform 0.3s ease;
-}
-
-.rotate-180 {
-    transform: rotate(180deg);
-}
-
-/* Submenu */
-.sub-menu {
-    list-style: none;
-    padding-left: 1rem;
-    margin-top: 0.5rem;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-}
-
-.menu-item-dropdown.active .sub-menu {
-    max-height: 500px;
-}
-
-.sub-menu-link {
-    display: block;
-    padding: 0.5rem 1rem;
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    border-radius: 0.5rem;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
-}
-
-.sub-menu-link:hover {
-    color: var(--menu-active-text);
-    background-color: var(--menu-active-bg);
-}
-
-/* Minimized sidebar styles */
-.sidebar.minimize .menu-link span,
-.sidebar.minimize .user-tooltip.user-date,
-.sidebar.minimize .brand span {
-    display: none;
-}
-
-.sidebar.minimize .menu-link {
-    justify-content: center;
-    padding: 0.75rem 0;
-}
-
-.sidebar.minimize .menu-link i {
-    margin-right: 0;
-}
-
-.sidebar.minimize .dropdown-icon {
-    display: none;
-}
-
-/* Footer */
-.footer {
-    margin-top: auto;
-    padding-top: 1rem;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem 0;
-}
-
-.brand img {
-    width: 30px;
-    height: 30px;
-}
-
-.brand span {
-    font-weight: 600;
-    color: var(--color-text-primary);
-}
-
-/* Dark mode */
-body.modo-oscuro .sidebar {
-    background-color: #1e1e1e;
-}
-
-body.modo-oscuro .menu-link {
-    color: #aaa;
-}
-
-body.modo-oscuro .menu-link:hover,
-body.modo-oscuro .menu-item.active .menu-link {
-    color: #fff;
-    background-color: #3a2a3a;
-}
-
-body.modo-oscuro .brand span {
-    color: #fff;
-}
-
-/* Add class button */
-.add-class-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    background-color: var(--color-primary);
-    color: white;
-    border-radius: 50%;
-    margin-left: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.add-class-btn:hover {
-    background-color: var(--color-primary-dark);
-    transform: scale(1.1);
-}
-
-.add-class-btn i {
-    font-size: 16px;
-}
-
-/* Courses header */
-.courses-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 1rem;
-}
-
-.courses-header span {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-}
-
-/* Pulse animation */
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(228, 122, 154, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(228, 122, 154, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(228, 122, 154, 0); }
-}
-
-.add-class-btn.pulse {
-    animation: pulse 1.5s infinite;
-}
-
-/* Class item indicator */
-.class-item::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background-color: var(--color-primary);
-    border-radius: 50%;
-    margin-right: 6px;
-}
+            // Manejar clicks en los dropdowns
+            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const parentItem = this.closest('.menu-item-dropdown');
+                    parentItem.classList.toggle('active');
+                    
+                    // Rotar el icono
+                    const icon = this.querySelector('.dropdown-icon');
+                    icon.classList.toggle('rotate-180');
+                    
+                    // Alternar submenú
+                    const subMenu = parentItem.querySelector('.sub-menu');
+                    if (parentItem.classList.contains('active')) {
+                        subMenu.style.maxHeight = subMenu.scrollHeight + 'px';
+                    } else {
+                        subMenu.style.maxHeight = '0';
+                    }
+                });
+            });
+        });
+        
+        // Escuchar mensajes desde iframes
+        window.addEventListener('message', function(event) {
+            if (event.data && (event.data.type === 'addClass' || event.data.type === 'updateMenu')) {
+                updateMenuClasses();
+            }
+        });
+    </script>
+</body>
+</html>
