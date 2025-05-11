@@ -60,6 +60,66 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     }
 
+    function initTrabajosRecientes() { // Inicializa los trabajos recientes
+        // Esta función simula la carga de trabajos recientes
+        // En un caso real, aquí se haría una llamada a la base de datos
+         const trabajos = [
+            { titulo: "Apunte de Álgebra", icono: "#icon-papel" },
+            { titulo: "Resumen de Historia", icono: "#icon-papel" },
+            { titulo: "Práctica de Física", icono: "#icon-papel" },
+             { titulo: "Apunte de Álgebra", icono: "#icon-papel" },
+            { titulo: "Resumen de Historia", icono: "#icon-papel" },
+            { titulo: "Práctica de Física", icono: "#icon-papel" },
+             { titulo: "Apunte de Álgebra", icono: "#icon-papel" },
+            { titulo: "Resumen de Historia", icono: "#icon-papel" },
+            { titulo: "Práctica de Física", icono: "#icon-papel" },
+             { titulo: "Apunte de Álgebra", icono: "#icon-papel" },
+            { titulo: "Resumen de Historia", icono: "#icon-papel" },
+            { titulo: "Práctica de Física", icono: "#icon-papel" }
+        ];
+
+        cargarTarjetas(trabajos);
+    }
+
+    // Cargar tarjetas de trabajos recientes
+    // Esta función crea y carga las tarjetas en el contenedor
+    function cargarTarjetas(trabajos) {
+        const contenedor = document.querySelector(".tarjetas"); // ✅ Usar clase real del HTML
+
+        if (!contenedor) {
+            console.error("Contenedor .tarjetas no encontrado");
+            return;
+        }
+
+        // Mantener la primera tarjeta existente ("¿Creamos algo nuevo?")
+        const primeraTarjeta = contenedor.querySelector(".tarjeta");
+        contenedor.innerHTML = '';
+        contenedor.appendChild(primeraTarjeta);
+
+        trabajos.forEach(trabajo => {
+            const tarjeta = document.createElement("div");
+            tarjeta.className = "tarjeta";
+
+            const p = document.createElement("p");
+            p.textContent = trabajo.titulo;
+
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("width", "60");
+            svg.setAttribute("height", "70");
+
+            const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+            use.setAttributeNS("http://www.w3.org/1999/xlink", "href", trabajo.icono);
+
+            svg.appendChild(use);
+            tarjeta.appendChild(p);
+            tarjeta.appendChild(svg);
+            contenedor.appendChild(tarjeta);
+        });
+    }
+
+
+
+
     // Renderizar el calendario
     function renderCalendar() {
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
@@ -289,6 +349,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Inicializar
-    renderCalendar();
+    renderCalendar(); // Renderizar el calendario al cargar
+    mostrarTareasDelDia(selectedDate); // Mostrar tareas del día actual
+    // Cargar tareas del planificador
     loadPlannerItems(); // Cargar las tareas al iniciar
+    initTrabajosRecientes(); // Inicializar trabajos recientes
 });
