@@ -1,4 +1,3 @@
-/* General - Updated to match menu.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -43,6 +42,21 @@
     /* Borders and shadows */
     --border-radius: 8px;
     --transition: all 0.2s ease;
+    
+    /* Dark mode colors - defined here but only applied in dark mode */
+    --dark-color-bg: #0d0d0d;
+    --dark-color-surface: #1e1e1e;
+    --dark-color-surface-hover: #2a2a2a;
+    --dark-color-text-primary: #f2f2f2;
+    --dark-color-text-secondary: #737272;
+    --dark-color-border: #333333;
+    --dark-shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --dark-menu-active-bg: #3a2a3a;
+    --dark-menu-active-border: #8c52ff;
+    --dark-color-accent: #8c52ff;
+    --dark-color-primary: #8c6bb3;
+    --dark-gradient-start: #2a2a2a;
+    --dark-gradient-end: #3a2a3a;
 }
 
 * {
@@ -56,6 +70,7 @@ body {
     background-color: var(--color-bg);
     color: var(--color-text-primary);
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 header {
@@ -64,6 +79,7 @@ header {
     position: relative;
     background-color: var(--color-surface);
     box-shadow: var(--shadow-card);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .D {
@@ -77,6 +93,7 @@ header {
     text-align: center;
     color: var(--color-text-primary);
     font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 /* ------------------------------------ */
@@ -168,6 +185,7 @@ input:checked + .slider:before {
     color: var(--color-text-primary);
     font-weight: 500;
     margin-bottom: 16px;
+    transition: color 0.3s ease;
 }
 
 .tarjetas {
@@ -219,10 +237,12 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.3s ease;
 }
 
 .cls-1 {
     fill: var(--color-text-primary);
+    transition: fill 0.3s ease;
 }
 
 /* Pendientes */
@@ -235,6 +255,7 @@ input:checked + .slider:before {
     color: var(--color-text-primary);
     font-weight: 500;
     margin-bottom: 16px;
+    transition: color 0.3s ease;
 }
 
 .contenido-pendientes {
@@ -264,12 +285,14 @@ input:checked + .slider:before {
     overflow-y: auto;
     box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
     right: 20px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .tarea {
     border-bottom: 1px solid var(--color-border);
     padding: 20px 0;
     color: var(--color-text-primary);
+    transition: border-color 0.3s ease, color 0.3s ease;
 }
 
 .tarjeta-tarea {
@@ -295,6 +318,7 @@ input:checked + .slider:before {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-card);
     padding: 16px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .calendar-header {
@@ -308,6 +332,7 @@ input:checked + .slider:before {
     font-size: 1.2rem;
     color: var(--color-text-primary);
     font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 .calendar-nav-btn {
@@ -337,6 +362,7 @@ input:checked + .slider:before {
     color: var(--color-text-secondary);
     margin-bottom: 8px;
     font-size: 0.85rem;
+    transition: color 0.3s ease;
 }
 
 .calendar-days {
@@ -399,6 +425,7 @@ input:checked + .slider:before {
     color: var(--color-text-primary);
     font-weight: 500;
     margin-bottom: 16px;
+    transition: color 0.3s ease;
 }
 
 .contenedor-tutoriales {
@@ -433,6 +460,7 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.3s ease;
 }
 
 /* Responsive */
@@ -458,8 +486,9 @@ input:checked + .slider:before {
     margin: 0 auto;
     padding: 15px;
     border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-card);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Contenedor para las tarjetas de tareas */
@@ -470,7 +499,7 @@ input:checked + .slider:before {
     width: 100%;
 }
 
-/* Estilos generales para todas las tarjetas */
+/* Estilos generales para todas las tareas */
 .tarea {
     width: 100%;
     max-width: 500px;
@@ -479,26 +508,27 @@ input:checked + .slider:before {
 
 /* Reemplazar la definición de tarjeta-tarea */
 .tarjeta-tarea {
-    background-color: #fff;
+    background-color: var(--color-surface);
     border-radius: 16px;
     padding: 16px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-card);
     margin-bottom: 16px;
-    text-align: center; /* Cambiado de center a left */
-    transition: transform 0.2s ease;
-    width: 70%; /* Cambiado de 250px a 100% */
-    max-width: 500px; /* Añadido */
-    margin-left: auto; /* Para centrado */
-    margin-right: auto; /* Para centrado */
+    text-align: center;
+    transition: var(--transition);
+    width: 70%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Mensaje cuando no hay tareas */
 .no-tareas {
     text-align: center;
     padding: 20px;
-    color: #777;
+    color: var(--color-text-secondary);
     font-style: italic;
     margin: 0;
+    transition: color 0.3s ease;
 }
 
 /* Título de la fecha */
@@ -506,7 +536,8 @@ input:checked + .slider:before {
     text-align: center;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
 }
 
 /* Add class button */
@@ -533,9 +564,149 @@ input:checked + .slider:before {
     font-size: 16px;
 }
 
-
-/* Dark mode */
+/* Dark mode styles */
 body.modo-oscuro {
-    background-color: #121212;
-    color: #f1f1f1;
+    background-color: var(--dark-color-bg);
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro header {
+    background-color: var(--dark-color-surface);
+    box-shadow: var(--dark-shadow-card);
+}
+
+body.modo-oscuro .titulo {
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro .slider {
+    background-color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .slider:before {
+    background-color: var(--dark-color-surface);
+}
+
+body.modo-oscuro .slider .icon {
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro input:checked + .slider {
+    background-color: var(--dark-color-accent);
+}
+
+body.modo-oscuro .trabajos-recientes h2,
+body.modo-oscuro .pendientes h2,
+body.modo-oscuro .tutoriales h2,
+body.modo-oscuro .calendar-header h2 {
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro .tarjeta {
+    background: linear-gradient(to bottom, var(--dark-gradient-start), var(--dark-gradient-end));
+    box-shadow: var(--dark-shadow-card);
+}
+
+body.modo-oscuro .tarjeta:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.modo-oscuro .tarjeta .icono {
+    background-color: var(--dark-color-surface);
+}
+
+body.modo-oscuro .cls-1 {
+    fill: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro .lista-tareas {
+    background-color: var(--dark-color-surface);
+    box-shadow: var(--dark-shadow-card);
+}
+
+body.modo-oscuro .tarea {
+    border-bottom-color: var(--dark-color-border);
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro .tarjeta-tarea {
+    background-color: var(--dark-color-surface);
+    box-shadow: var(--dark-shadow-card);
+}
+
+body.modo-oscuro .tarjeta-tarea:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.modo-oscuro .calendar-container {
+    background: var(--dark-color-surface);
+    box-shadow: var(--dark-shadow-card);
+}
+
+body.modo-oscuro .calendar-nav-btn {
+    color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .calendar-nav-btn:hover {
+    background-color: var(--dark-color-surface-hover);
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro .weekdays {
+    color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .calendar-day {
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro .calendar-day:hover:not(.inactive) {
+    background-color: var(--dark-color-surface-hover);
+}
+
+body.modo-oscuro .calendar-day.today {
+    background-color: var(--dark-color-accent);
+}
+
+body.modo-oscuro .calendar-day.selected {
+    background-color: var(--dark-color-accent-light);
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro .calendar-day.inactive {
+    color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .tutorial {
+    background: linear-gradient(to bottom, var(--dark-gradient-start), var(--dark-gradient-end));
+    box-shadow: var(--dark-shadow-card);
+}
+
+body.modo-oscuro .tutorial:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.modo-oscuro .tutorial .icono {
+    background-color: var(--dark-color-surface);
+}
+
+body.modo-oscuro #contenedor-tareas {
+    background-color: var(--dark-color-surface);
+    box-shadow: var(--dark-shadow-card);
+}
+
+body.modo-oscuro .no-tareas {
+    color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .titulo-fecha {
+    border-bottom-color: var(--dark-color-border);
+}
+
+body.modo-oscuro .add-class-btn {
+    background-color: var(--dark-color-accent);
+}
+
+body.modo-oscuro .add-class-btn:hover {
+    background-color: var(--dark-color-accent-light);
 }

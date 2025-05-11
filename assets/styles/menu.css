@@ -34,6 +34,22 @@
     --color-tooltip-text: #FFFFFF;
     --menu-active-bg: var(--color-primary-light);
     --menu-active-text: var(--color-primary-dark);
+    
+    /* Dark mode colors - defined here but only applied in dark mode */
+    --dark-color-bg: #0d0d0d;
+    --dark-color-surface: #1e1e1e;
+    --dark-color-surface-hover: #2a2a2a;
+    --dark-color-text-primary: #f2f2f2;
+    --dark-color-text-secondary: #737272;
+    --dark-color-border: #333333;
+    --dark-color-shadow: rgba(0, 0, 0, 0.2);
+    --dark-menu-active-bg: #3a2a3a;
+    --dark-menu-active-text: #ffffff;
+    --dark-color-accent: #8c52ff;
+    --dark-color-accent-light: #462c9a;
+    
+    /* Transition */
+    --transition-speed: 0.3s;
 }
 
 /* Body */
@@ -41,6 +57,7 @@ body {
     width: 100%;
     height: 100vh;
     background-color: var(--color-bg);
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
 /* Sidebar */
@@ -52,7 +69,7 @@ body {
     width: 250px;
     background-color: var(--color-surface);
     box-shadow: var(--shadow-card);
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -70,7 +87,7 @@ body {
     height: 100vh;
     overflow: hidden;
     background-color: var(--color-bg);
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
 }
 
 .sidebar.minimize ~ #main-content {
@@ -100,13 +117,13 @@ body {
     cursor: pointer;
     box-shadow: var(--shadow-card);
     z-index: 1001;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
 }
 
 .menu-btn i {
     font-size: 1.5rem;
     color: var(--color-text-secondary);
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
 }
 
 /* User section */
@@ -115,6 +132,12 @@ body {
     flex-direction: column;
     align-items: center;
     margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.user-img {
+    position: relative;
+    margin-bottom: 10px;
 }
 
 .user-img img {
@@ -123,11 +146,19 @@ body {
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--color-border);
+    transition: border-color var(--transition-speed) ease;
 }
 
 .user-tooltip.user-date {
+    position: static;
+    opacity: 1;
+    visibility: visible;
     text-align: center;
-    margin-top: 0.5rem;
+    margin-top: 8px;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    transform: none;
 }
 
 .user-tooltip.user-date .name {
@@ -135,12 +166,25 @@ body {
     font-weight: 600;
     font-size: 1rem;
     color: var(--color-text-primary);
+    margin-bottom: 4px;
+    transition: color var(--transition-speed) ease;
 }
 
 .user-tooltip.user-date .rol {
     display: block;
     font-size: 0.8rem;
     color: var(--color-text-secondary);
+    transition: color var(--transition-speed) ease;
+}
+
+/* Cuando el sidebar está minimizado */
+.sidebar.minimize .user-tooltip.user-date {
+    display: none;
+}
+
+/* Ajustes para el tooltip de inicio */
+.user-tooltip:not(.user-date) {
+    display: none;
 }
 
 /* Menu container */
@@ -187,7 +231,7 @@ body {
     color: var(--color-text-secondary);
     text-decoration: none;
     border-radius: 0.5rem;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
 }
 
 .menu-link:hover,
@@ -200,12 +244,13 @@ body {
     font-size: 1.25rem;
     margin-right: 1rem;
     color: var(--color-text-secondary);
+    transition: color var(--transition-speed) ease;
 }
 
 .menu-link span {
     font-size: 0.9rem;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: color var(--transition-speed) ease;
 }
 
 /* Dropdown specific styles */
@@ -214,7 +259,7 @@ body {
 }
 
 .dropdown-icon {
-    transition: transform 0.3s ease;
+    transition: transform var(--transition-speed) ease;
 }
 
 .rotate-180 {
@@ -228,7 +273,7 @@ body {
     margin-top: 0.5rem;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: max-height var(--transition-speed) ease;
 }
 
 .menu-item-dropdown.active .sub-menu {
@@ -261,7 +306,7 @@ body {
     text-decoration: none;
     border-radius: 0.5rem;
     font-size: 0.85rem;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
 }
 
 .sub-menu-link:hover {
@@ -306,30 +351,13 @@ body {
 .brand img {
     width: 30px;
     height: 30px;
+    transition: filter var(--transition-speed) ease;
 }
 
 .brand span {
     font-weight: 600;
     color: var(--color-text-primary);
-}
-
-/* Dark mode */
-body.modo-oscuro .sidebar {
-    background-color: #1e1e1e;
-}
-
-body.modo-oscuro .menu-link {
-    color: #aaa;
-}
-
-body.modo-oscuro .menu-link:hover,
-body.modo-oscuro .menu-item.active .menu-link {
-    color: #fff;
-    background-color: #3a2a3a;
-}
-
-body.modo-oscuro .brand span {
-    color: #fff;
+    transition: color var(--transition-speed) ease;
 }
 
 /* Add class button */
@@ -367,6 +395,7 @@ body.modo-oscuro .brand span {
 .courses-header span {
     font-size: 0.85rem;
     color: var(--color-text-secondary);
+    transition: color var(--transition-speed) ease;
 }
 
 /* Pulse animation */
@@ -389,56 +418,7 @@ body.modo-oscuro .brand span {
     background-color: var(--color-primary);
     border-radius: 50%;
     margin-right: 6px;
-}
-
-/* Estilos para mostrar permanentemente el nombre y rol del usuario */
-.user {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    position: relative;
-}
-
-.user-img {
-    position: relative;
-    margin-bottom: 10px;
-}
-
-.user-tooltip.user-date {
-    position: static;
-    opacity: 1;
-    visibility: visible;
-    text-align: center;
-    margin-top: 8px;
-    background: transparent;
-    box-shadow: none;
-    padding: 0;
-    transform: none;
-}
-
-.user-tooltip.user-date .name {
-    display: block;
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--color-text-primary);
-    margin-bottom: 4px;
-}
-
-.user-tooltip.user-date .rol {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--color-text-secondary);
-}
-
-/* Cuando el sidebar está minimizado */
-.sidebar.minimize .user-tooltip.user-date {
-    display: none;
-}
-
-/* Ajustes para el tooltip de inicio */
-.user-tooltip:not(.user-date) {
-    display: none;
+    transition: background-color var(--transition-speed) ease;
 }
 
 /*Apuntes*/
@@ -446,4 +426,151 @@ body.modo-oscuro .brand span {
   max-height: 200px;
   overflow-y: auto;
   padding-right: 4px; /* Espacio para el scrollbar */
+}
+
+/* ------------------------------------ */
+/* Estilos del interruptor deslizable */
+/* ------------------------------------ */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-border);
+    transition: var(--transition-speed);
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--color-surface);
+    transition: var(--transition-speed);
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--color-accent);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Dark mode styles */
+body.modo-oscuro {
+    background-color: var(--dark-color-bg);
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro .sidebar {
+    background-color: var(--dark-color-surface);
+    box-shadow: 0 4px 6px var(--dark-color-shadow);
+}
+
+body.modo-oscuro #main-content {
+    background-color: var(--dark-color-bg);
+}
+
+body.modo-oscuro .menu-btn {
+    background-color: var(--dark-color-surface);
+}
+
+body.modo-oscuro .menu-btn i {
+    color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .user-img img {
+    border-color: var(--dark-color-border);
+}
+
+body.modo-oscuro .user-tooltip.user-date .name {
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro .user-tooltip.user-date .rol {
+    color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .menu-link {
+    color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .menu-link:hover,
+body.modo-oscuro .menu-item.active .menu-link {
+    color: var(--dark-menu-active-text);
+    background-color: var(--dark-menu-active-bg);
+}
+
+body.modo-oscuro .menu-link i {
+    color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .sub-menu-link {
+    color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .sub-menu-link:hover {
+    color: var(--dark-menu-active-text);
+    background-color: var(--dark-menu-active-bg);
+}
+
+body.modo-oscuro .brand span {
+    color: var(--dark-color-text-primary);
+}
+
+body.modo-oscuro .courses-header span {
+    color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .add-class-btn {
+    background-color: var(--dark-color-accent);
+}
+
+body.modo-oscuro .add-class-btn:hover {
+    background-color: var(--dark-color-accent-light);
+}
+
+body.modo-oscuro .class-item::before {
+    background-color: var(--dark-color-accent);
+}
+
+body.modo-oscuro .menu-container::-webkit-scrollbar-thumb {
+    background-color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .sub-menu::-webkit-scrollbar-thumb {
+    background-color: var(--dark-color-text-secondary);
+}
+
+/* Dark mode switch styles */
+body.modo-oscuro .slider {
+    background-color: var(--dark-color-text-secondary);
+}
+
+body.modo-oscuro .slider:before {
+    background-color: var(--dark-color-surface);
+}
+
+body.modo-oscuro input:checked + .slider {
+    background-color: var(--dark-color-accent);
 }
