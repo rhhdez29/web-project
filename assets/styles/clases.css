@@ -667,7 +667,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-/* Añadir al final del archivo clases.css */
+
 .title-container {
     display: flex;
     align-items: center;
@@ -724,6 +724,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .course-code.copied .copy-icon {
     color: var(--color-success);
+}
+.class-title{
+    margin-right: 35%;
 }
 
 .welcome-container {

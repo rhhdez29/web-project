@@ -219,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="class-info">
                 <div class="title-container">
                      <h2 class="class-title">${course.nombre}</h2>
+                     <h4>Clave del curso:</h4>
                      <span class="course-code" title="Copiar clave del curso">${course.id} <i class='bx bx-copy copy-icon'></i></span>
                 </div>
                 <div class="welcome-message">
