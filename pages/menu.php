@@ -105,7 +105,7 @@ include_once '../includes/verificar_sesion.php';
                 </li>
             </ul>
             <div class="brand">
-                <img src="../assets/imagenes/logoepa.png" alt="logo">
+                <img src="../assets/imagenes/idea.svg" alt="logo">
                 <span>EPA!</span>
             </div>
         </div>
