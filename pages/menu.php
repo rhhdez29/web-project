@@ -81,7 +81,7 @@ include_once '../includes/verificar_sesion.php';
                                 </div>
                             </div>
                         </li>
-                        <li><a href="#" class="sub-menu-link" onclick="loadContent('mis_cursos')">Ver todos mis cursos</a></li>
+                        <li><a id="ver-todos-mis-cursos" href="#" class="sub-menu-link" onclick="loadContent('mis_cursos')">Ver todos mis cursos</a></li>
                     </ul>
                 </li>
             </ul>
