@@ -49,8 +49,9 @@ body {
     margin-bottom: 2rem;
 }
 
+/* Reemplaza esto en ayuda.css */
 .help-header h1 {
-    color: var(--color-primary-dark);
+    color: var(--color-text-primary); /* Usa el mismo color de texto primario que home.css */
     display: flex;
     align-items: center;
     justify-content: center;

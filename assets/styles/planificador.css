@@ -78,11 +78,10 @@ body {
 }
 
 .planificador-header h1 {
-    color: var(--color-primary-dark);
+    color: #334155; /* Color gris exacto que usa home.css */
     font-size: 1.75rem;
     font-weight: 600;
 }
-
 .add-btn {
     display: flex;
     align-items: center;
