@@ -373,6 +373,15 @@ document.addEventListener('DOMContentLoaded', () => {
             formFeedback.textContent = '';
             formFeedback.className = 'message-feedback';
         }
+
+        // AUTOCOMPLETAR NOMBRE Y CORREO DEL MAESTRO
+        if (currentUserRole === 'Maestro') {
+            const instructorInput = classForm.querySelector('[name="instructor"]');
+            const contactoInput = classForm.querySelector('[name="contacto"]');
+            if (instructorInput && typeof currentUserName !== 'undefined') instructorInput.value = currentUserName;
+            if (contactoInput && typeof currentUserEmail !== 'undefined') contactoInput.value = currentUserEmail;
+        }
+
     };
 
     const populateFormForEdit = (courseId) => {
@@ -413,7 +422,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const saveCourse = async (event) => {
         event.preventDefault();
-        if (!classForm || !formFeedback) return;
+        if (!currentEditingClassId && courseIdFormInput && !courseIdFormInput.value) {
+            const nombreInput = classForm.querySelector('[name="nombre"]');
+            const matriculaProfesor = currentUserId || 'PROF';
+            courseIdFormInput.value = generarIdCurso(nombreInput.value, matriculaProfesor);
+        }
 
         const formData = new FormData(classForm);
         const action = currentEditingClassId ? 'actualizarCurso' : 'crearCurso';
@@ -510,6 +523,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
     };
 
+    // Función para limpiar y generar el ID
+    function generarIdCurso(nombreCurso, matriculaProfesor) {
+        if (!nombreCurso || !matriculaProfesor) return '';
+        // Toma las primeras 3 letras del nombre (sin espacios, en mayúsculas)
+        const nombre = nombreCurso.replace(/\s+/g, '').substring(0, 3).toUpperCase();
+        // Fecha en formato yymmdd
+        const fecha = new Date();
+        const fechaStr = `${fecha.getFullYear().toString().slice(-2)}${(fecha.getMonth()+1).toString().padStart(2,'0')}${fecha.getDate().toString().padStart(2,'0')}`;
+        // Números aleatorios de 4 dígitos
+        const randomNum = Math.floor(1000 + Math.random() * 9000);
+        return `${nombre}_${matriculaProfesor}_${fechaStr}_${randomNum}`;
+    }
     // --- MANEJO DE EVENTOS ---
     if (currentUserRole === 'Maestro') {
         if (imagePreview && classImageInput && classImageBase64Input) {
@@ -533,6 +558,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     reader.readAsDataURL(file);
                 }
             });
+        }
+
+        // Al escribir el nombre del curso, genera el ID automáticamente (solo en modo crear)
+        if (classForm) {
+            const nombreInput = classForm.querySelector('[name="nombre"]');
+            if (nombreInput) {
+                nombreInput.addEventListener('input', function() {
+                    if (!currentEditingClassId) {
+                        const matriculaProfesor = currentUserId || 'PROF';
+                        const nuevoId = generarIdCurso(nombreInput.value, matriculaProfesor);
+                        courseIdFormInput.value = nuevoId;
+                    }
+                });
+            }
         }
 
         if (mainAddClassBtn) mainAddClassBtn.addEventListener('click', openAddForm);

@@ -62,8 +62,7 @@ $currentUserId = $_SESSION['idUsuario'] ?? null; // Obtener el ID del usuario
                 <input type="hidden" id="edit-course-id" name="edit_course_id">
 
                 <div class="form-group">
-                    <label for="course_id_form">ID del Curso (Clave Única)</label> <!-- ID del input cambiado -->
-                    <input type="text" id="course_id_form" name="id" required placeholder="Ej. MAT101, PROG22">
+                    <input type="hidden" id="course_id_form" name="id">
                 </div>
                 <div class="form-group">
                     <label for="nombre">Nombre de la clase</label>
@@ -162,7 +161,10 @@ $currentUserId = $_SESSION['idUsuario'] ?? null; // Obtener el ID del usuario
     <script>
         // Pasar el rol y el ID del usuario a JavaScript
         const currentUserRole = "<?php echo htmlspecialchars($currentUserRole, ENT_QUOTES, 'UTF-8'); ?>";
-        const currentUserId = <?php echo json_encode($currentUserId); ?>; // json_encode para null o int
+        const currentUserId = <?php echo json_encode($currentUserId); ?>; 
+         // datos del maestro
+        const currentUserName = <?php echo json_encode($_SESSION['nombreCompleto'] ?? ''); ?>;
+        const currentUserEmail = <?php echo json_encode($_SESSION['correo'] ?? ''); ?>;
     </script>
 
     <script>
