@@ -605,3 +605,46 @@ form {
         flex-direction: column;
     }
 }
+
+/* Dark mode */
+body.modo-oscuro {
+    --color-bg: #121212;
+    --color-surface: #1e1e1e;
+    --color-surface-hover: #2a2a2a;
+    --color-text-primary: #f1f1f1;
+    --color-text-secondary: #aaaaaa;
+    --color-border: #333333;
+    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
+    
+    .slider {
+        background-color: #444;
+    }
+    
+    .slider:before {
+        background-color: #ddd;
+    }
+    
+    input:checked + .slider {
+        background-color: var(--color-primary-dark);
+    }
+    
+    .cls-1 {
+        fill: #f1f1f1;
+    }
+    
+    .heading-block {
+        color: var(--color-primary-light) !important;
+    }
+    
+    .block-bullet {
+        color: var(--color-primary-light) !important;
+    }
+    
+    .block-number {
+        color: var(--color-primary-light) !important;
+    }
+    
+    .close-handle {
+        background-color: #b02a37;
+    }
+}
