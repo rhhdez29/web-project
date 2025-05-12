@@ -323,6 +323,38 @@ include_once '../includes/verificar_sesion.php';
             </div>
         </div>
     </section>
+
+<script>
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('toggle-mode');
+
+// Función para guardar el estado y recargar
+function toggleDarkMode() {
+    const isDark = darkModeToggle.checked;
+    
+    // Guardar en localStorage y cookie
+    localStorage.setItem('darkMode', isDark);
+    document.cookie = `darkMode=${isDark}; path=/; max-age=${60*60*24*365}`;
+    
+    // Recargar la página para aplicar los cambios
+    window.location.reload();
+}
+
+// Configurar el evento
+darkModeToggle.addEventListener('change', toggleDarkMode);
+
+// Aplicar modo oscuro al cargar (si es necesario)
+document.addEventListener('DOMContentLoaded', () => {
+    const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                    document.cookie.includes('darkMode=true');
+    
+    if (darkMode) {
+        document.body.classList.add('modo-oscuro');
+    }
+});
+</script>
+
     <script src="../scripts/home.js"></script>
+    <script src="../scripts/dark-mode.js"></script>
 </body>
 </html>
