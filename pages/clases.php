@@ -164,6 +164,30 @@ $currentUserId = $_SESSION['idUsuario'] ?? null; // Obtener el ID del usuario
         const currentUserRole = "<?php echo htmlspecialchars($currentUserRole, ENT_QUOTES, 'UTF-8'); ?>";
         const currentUserId = <?php echo json_encode($currentUserId); ?>; // json_encode para null o int
     </script>
+
+    <script>
+        // Función para sincronizar el modo oscuro
+        function syncDarkMode() {
+            const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                            document.cookie.includes('darkMode=true');
+            
+            if (darkMode) {
+                document.body.classList.add('modo-oscuro');
+            } else {
+                document.body.classList.remove('modo-oscuro');
+            }
+        }
+
+        // Escuchar cambios en el modo oscuro
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'darkMode') {
+                syncDarkMode();
+            }
+        });
+
+        // Sincronizar al cargar
+        document.addEventListener('DOMContentLoaded', syncDarkMode);
+    </script>
     <script src="../scripts/clases.js"></script>
 </body>
 </html>
