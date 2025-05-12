@@ -276,6 +276,10 @@ input:checked + .slider:before {
 }
 
 .lista-tareas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* Centra horizontalmente los hijos */
+    justify-content: center; /* Centra verticalmente los hijos (opcional) */
     background-color: var(--color-surface);
     padding: 20px;
     border-radius: 20px;
