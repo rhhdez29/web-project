@@ -145,14 +145,14 @@ include_once '../includes/verificar_sesion.php';
     <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Cargar foto de perfil desde localStorage si existe
-    const savedPhoto = localStorage.getItem('profilePictureUpdated');
+    const savedPhoto = localStorage.getItem('userProfileImage');
     if (savedPhoto) {
         document.getElementById('menu-profile-picture').src = savedPhoto;
     }
     
-    // Escuchar cambios
+    // Escuchar cambios en otras pestañas
     window.addEventListener('storage', function(e) {
-        if (e.key === 'profilePictureUpdated' && e.newValue) {
+        if (e.key === 'userProfileImage' && e.newValue) {
             document.getElementById('menu-profile-picture').src = e.newValue;
         }
     });
