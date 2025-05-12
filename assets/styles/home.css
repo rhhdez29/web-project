@@ -1,35 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-    /* Main colors */
+    /* Colores principales */
     --color-primary: #f4b5c5;
     --color-primary-light: #f8d5e0;
     --color-primary-dark: #e47a9a; 
     --color-accent: #8B5CF6;
     --color-accent-light: #EDE9FE;
     
-    /* Background colors */
+    /* Colores de fondo */
     --color-bg: #F8FAFC;
     --color-surface: #FFFFFF;
     --color-surface-hover: #F7F9FC;
     
-    /* Text colors */
+    /* Colores de texto */
     --color-text-primary: #334155;
     --color-text-secondary: #64748B;
     
-    /* Border and shadow */
+    /* Bordes y texto */
     --color-border: #D1D9E6;
     --shadow-border: rgba(148, 163, 184, 0.15);
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
     
-    /* Functional colors */
+    /* Funciones de colores */
     --color-tooltip-bg: #475569;
     --color-tooltip-text: #FFFFFF;
     --menu-active-bg: var(--color-primary-light);
     --menu-active-border: var(--color-primary-dark);
     --user-bg-color: var(--color-bg);
     
-    /* Calendar specific */
+    /* Calendario especifico */
     --task-color: #ff8a3d;
     --task-light: #fff1e6;
     --appointment-color: #3d9eff;
@@ -39,11 +39,11 @@
     --important-color: #dc3545;
     --important-light: #fff5f5;
     
-    /* Borders and shadows */
+    /* Borde y sombras */
     --border-radius: 8px;
     --transition: all 0.2s ease;
     
-    /* Dark mode colors - defined here but only applied in dark mode */
+    /* Modo oscuro */
     --dark-color-bg: #0d0d0d;
     --dark-color-surface: #1e1e1e;
     --dark-color-surface-hover: #2a2a2a;
@@ -540,7 +540,7 @@ input:checked + .slider:before {
     transition: border-color 0.3s ease;
 }
 
-/* Add class button */
+/* Añadir boton a clase */
 .add-class-btn {
     display: flex;
     align-items: center;
@@ -564,7 +564,7 @@ input:checked + .slider:before {
     font-size: 16px;
 }
 
-/* Dark mode styles */
+/* Estilo oscuro */
 body.modo-oscuro {
     background-color: var(--dark-color-bg);
     color: var(--dark-color-text-primary);
@@ -732,7 +732,7 @@ body.modo-oscuro .sub-menu-link:hover {
     color: #ffffff;
 }
 
-/* Dark Mode - Glamorous Purple Edition (Soft Gradient Version) */
+/* Modo oscuro version final */
 body.modo-oscuro {
     /* Base colors */
     --color-bg: #0d0d0d;
@@ -743,21 +743,21 @@ body.modo-oscuro {
     --color-border: #333333;
     --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.6);
     
-    /* Updated primary colors */
+    /* Colores primarios */
     --color-primary: #8c52ff;
     --color-primary-light: #a47dff;
-    --color-primary-dark: #5d3dbb; /* Hice este color un poco más claro */
+    --color-primary-dark: #5d3dbb;
     --color-accent: #8c52ff;
-    --color-accent-light: #3a2960; /* Aclaré este color también */
+    --color-accent-light: #3a2960; 
     
-    /* Special effects */
+    /* Efectos especiales */
     --glow-effect: 0 0 15px rgba(140, 82, 255, 0.4);
     --hover-glow: 0 0 20px rgba(140, 82, 255, 0.6);
     
     background-color: var(--color-bg);
     color: var(--color-text-primary);
     
-    /* Header */
+    
     header {
         background-color: var(--color-surface);
         box-shadow: var(--glow-effect);
@@ -769,7 +769,7 @@ body.modo-oscuro {
         text-shadow: 0 0 8px rgba(140, 82, 255, 0.3);
     }
     
-    /* Switch toggle */
+    
     .slider {
         background-color: #333;
     }
@@ -779,7 +779,7 @@ body.modo-oscuro {
         box-shadow: 0 0 10px rgba(140, 82, 255, 0.5);
     }
     
-    /* Cards section */
+    
     .tarjetas {
         scrollbar-color: var(--color-primary-dark) #252525;
     }
@@ -800,7 +800,7 @@ body.modo-oscuro {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
     
-    /* Tasks section */
+    /* Seccion de tareas */
     .lista-tareas {
         background-color: #1e1e1e;
         border: 1px solid var(--color-primary);
@@ -822,7 +822,7 @@ body.modo-oscuro {
         box-shadow: var(--hover-glow);
     }
     
-    /* Calendar */
+    /* Calendario */
     .calendar-container {
         background-color: #1e1e1e;
         border: 1px solid #333;
@@ -839,7 +839,7 @@ body.modo-oscuro {
         color: white;
     }
     
-    /* Tutorials section */
+    /* Seccion de tutorial */
     .tutorial {
         background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-accent-light) 100%);
         border: 1px solid var(--color-primary);
@@ -855,14 +855,14 @@ body.modo-oscuro {
         background-color: #252525;
     }
     
-    /* General containers */
+    /* Contenedores generales */
     #contenedor-tareas {
         background-color: #1e1e1e;
         border: 1px solid #333;
         box-shadow: var(--glow-effect);
     }
     
-    /* Scrollbar styling */
+    
     ::-webkit-scrollbar {
         width: 10px;
     }
@@ -880,7 +880,7 @@ body.modo-oscuro {
         background: var(--color-primary);
     }
     
-    /* Special buttons */
+    /* Botones especiales */
     .add-class-btn {
         background-color: var(--color-primary);
         box-shadow: 0 2px 8px rgba(140, 82, 255, 0.3);
@@ -891,7 +891,7 @@ body.modo-oscuro {
         box-shadow: var(--hover-glow);
     }
     
-    /* Animations */
+    /* Animacion */
     @keyframes pulse {
         0% { box-shadow: var(--glow-effect); }
         50% { box-shadow: var(--hover-glow); }
@@ -911,7 +911,6 @@ body.modo-oscuro {
     }
 }
 
-/* Smooth transitions for all elements */
 body.modo-oscuro * {
     transition: background-color 0.3s ease, 
                 color 0.3s ease, 
