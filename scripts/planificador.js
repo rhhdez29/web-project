@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cargar elementos del planificador desde la base de datos
     loadPlannerItems();
 
-    // Clean up expired items every minute
     setInterval(cleanupExpiredItems, 60000);
 
     // Event listeners
@@ -375,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const content = document.createElement('div');
         content.classList.add('day-card-content');
         
-        // Tasks section
+        // Seccion de tareas
         const tasksSection = document.createElement('div');
         tasksSection.classList.add('tasks-section');
         tasksSection.innerHTML = `
@@ -395,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-        // Appointments section
+        // Seccion de citas
         const appointmentsSection = document.createElement('div');
         appointmentsSection.classList.add('appointments-section');
         appointmentsSection.innerHTML = `
@@ -418,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dayCard.appendChild(header);
         dayCard.appendChild(content);
 
-        // Add click handlers for checkboxes
+        // Agregar checkboxes
         const checkboxes = dayCard.querySelectorAll('.task-checkbox');
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('click', (e) => {
@@ -446,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
             : '<p class="no-items">No hay recordatorios importantes</p>';
     }
 
-    // Utility functions
+    // Funciones de utilidad
     function isDateToday(date) {
         const today = new Date();
         return isSameDay(date, today);
@@ -474,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return plannerItems.some(item => isSameDay(item.date, date));
     }
 
-    // Task completion handler - modificado para eliminar de la base de datos
+    
     async function completeTask(taskId) {
         try {
             // Eliminar de la base de datos
@@ -497,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Make functions available globally
+    
     window.showTaskDescription = function(taskId) {
         const task = plannerItems.find(item => item.id === taskId);
         if (task && task.description) {
