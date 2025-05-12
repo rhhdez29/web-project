@@ -7,16 +7,16 @@
     --color-accent: #8B5CF6;
     --color-accent-light: #EDE9FE;
     
-    /* Background colors */
+    /* Background colors (light mode) */
     --color-bg: #F8FAFC;
     --color-surface: #FFFFFF;
     --color-surface-hover: #F7F9FC;
     
-    /* Text colors */
+    /* Text colors (light mode) */
     --color-text-primary: #334155;
     --color-text-secondary: #64748B;
     
-    /* Border and shadow */
+    /* Border and shadow (light mode) */
     --color-border: #D1D9E6;
     --shadow-border: rgba(148, 163, 184, 0.15);
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -32,6 +32,27 @@
     --transition: all 0.2s ease;
 }
 
+/* Dark mode variables */
+body.modo-oscuro {
+    /* Background colors (dark mode) */
+    --color-bg: #121212;
+    --color-surface: #1e1e1e;
+    --color-surface-hover: #2a2a2a;
+    
+    /* Text colors (dark mode) */
+    --color-text-primary: #f1f1f1;
+    --color-text-secondary: #aaaaaa;
+    
+    /* Border and shadow (dark mode) */
+    --color-border: #333333;
+    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
+    
+    /* Primary colors adjustments for dark mode */
+    --color-primary: #e47a9a;
+    --color-primary-light: #f4b5c5;
+    --color-primary-dark: #d45a80;
+}
+
 /* Estilos base */
 body {
     font-family: 'Poppins', sans-serif;
@@ -40,6 +61,7 @@ body {
     padding: 0;
     color: var(--color-text-primary);
     line-height: 1.6;
+    transition: var(--transition);
 }
 
 /* Contenedor principal */
@@ -50,6 +72,7 @@ body {
     background-color: var(--color-surface);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-card);
+    transition: var(--transition);
 }
 
 .configuracion-container h1 {
@@ -70,6 +93,7 @@ body {
     background-color: var(--color-surface);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-card);
+    transition: var(--transition);
 }
 
 .config-section h2 {
@@ -157,6 +181,7 @@ body {
     align-items: center;
     padding: 15px 0;
     border-bottom: 1px solid var(--color-border);
+    transition: var(--transition);
 }
 
 .option:last-child {
@@ -265,35 +290,6 @@ input[type="checkbox"] {
     box-shadow: 0 0 0 2px var(--color-primary-light);
 }
 
-/* Tema oscuro */
-body.dark-mode {
-    background-color: #1a1a1a;
-    color: #f0f0f0;
-}
-
-body.dark-mode .configuracion-container,
-body.dark-mode .config-section {
-    background-color: #2c3e50;
-    color: #fff;
-}
-
-body.dark-mode .detail label {
-    color: #bbb;
-}
-
-body.dark-mode select, 
-body.dark-mode input[type="text"],
-body.dark-mode input[type="email"],
-body.dark-mode input[type="password"] {
-    background-color: #34495e;
-    color: #fff;
-    border-color: #2c3e50;
-}
-
-body.dark-mode .option label {
-    color: #ddd;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
     .profile-info {
@@ -340,3 +336,99 @@ body.dark-mode .option label {
 .config-section:nth-child(3) { animation-delay: 0.2s; }
 .config-section:nth-child(4) { animation-delay: 0.3s; }
 .config-section:nth-child(5) { animation-delay: 0.4s; }
+
+/* Elementos específicos del modo oscuro */
+body.modo-oscuro .slider {
+    background-color: #444;
+}
+
+body.modo-oscuro .slider:before {
+    background-color: #ddd;
+}
+
+body.modo-oscuro input:checked + .slider {
+    background-color: var(--color-primary-dark);
+}
+
+body.modo-oscuro .cls-1 {
+    fill: #f1f1f1;
+}
+
+body.modo-oscuro .heading-block {
+    color: var(--color-primary-light) !important;
+}
+
+body.modo-oscuro .block-bullet {
+    color: var(--color-primary-light) !important;
+}
+
+body.modo-oscuro .block-number {
+    color: var(--color-primary-light) !important;
+}
+
+body.modo-oscuro .close-handle {
+    background-color: #b02a37;
+}
+
+/* Variables para modo oscuro */
+body.modo-oscuro {
+    --color-bg: #121212;
+    --color-surface: #1e1e1e;
+    --color-surface-hover: #2a2a2a;
+    --color-text-primary: #f1f1f1;
+    --color-text-secondary: #aaaaaa;
+    --color-border: #333333;
+    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Transición suave */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Asegurar que los selectores usen variables */
+.configuracion-container,
+.config-section {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+}
+/* Estilos para fotos de perfil */
+.imagen-wrapper {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    margin: 0 auto;
+    border: 3px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.imagen-wrapper:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.imagen-texto {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    padding: 5px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.imagen-wrapper:hover .imagen-texto {
+    transform: translateY(0);
+}
