@@ -111,46 +111,68 @@
         </div>
     </div>
 
+    <!-- Cargar dark-mode.js primero -->
+    <script src="../scripts/dark-mode.js"></script>
+    
     <script>
-        // Funcionalidad para los acordeones FAQ
-        document.querySelectorAll('.faq-question').forEach(question => {
-            question.addEventListener('click', () => {
-                const item = question.parentElement;
-                item.classList.toggle('active');
+        // Inicializar el modo oscuro
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar si DarkMode está cargado
+            if (window.DarkMode) {
+                console.log('[Ayuda] DarkMode inicializado correctamente');
                 
-                // Cerrar otros items abiertos
-                document.querySelectorAll('.faq-item').forEach(otherItem => {
-                    if (otherItem !== item && otherItem.classList.contains('active')) {
-                        otherItem.classList.remove('active');
+                // Aplicar el estado actual inmediatamente
+                const isDarkMode = window.DarkMode.getCurrentState();
+                document.body.classList.toggle('modo-oscuro', isDarkMode);
+                
+                // Escuchar cambios futuros
+                document.addEventListener('darkModeChange', function(e) {
+                    document.body.classList.toggle('modo-oscuro', e.detail.isDarkMode);
+                });
+            } else {
+                console.error('[Ayuda] DarkMode no se cargó correctamente');
+            }
+
+            // Funcionalidad para los acordeones FAQ
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', () => {
+                    const item = question.parentElement;
+                    item.classList.toggle('active');
+                    
+                    // Cerrar otros items abiertos
+                    document.querySelectorAll('.faq-item').forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Funcionalidad para el buscador
+            document.getElementById('help-search').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                    const answer = item.querySelector('.faq-answer p').textContent.toLowerCase();
+                    
+                    if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
                     }
                 });
             });
-        });
 
-        // Funcionalidad para el buscador
-        document.getElementById('help-search').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            document.querySelectorAll('.faq-item').forEach(item => {
-                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
-                const answer = item.querySelector('.faq-answer p').textContent.toLowerCase();
-                
-                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
+            // Mostrar/ocultar información de contacto
+            document.getElementById('show-email').addEventListener('mouseenter', () => {
+                document.getElementById('email-info').style.opacity = '1';
+                document.getElementById('email-info').style.visibility = 'visible';
             });
-        });
 
-        // Mostrar/ocultar información de contacto
-        document.getElementById('show-email').addEventListener('mouseenter', () => {
-            document.getElementById('email-info').style.opacity = '1';
-            document.getElementById('email-info').style.visibility = 'visible';
-        });
-
-        document.getElementById('show-phone').addEventListener('mouseenter', () => {
-            document.getElementById('phone-info').style.opacity = '1';
-            document.getElementById('phone-info').style.visibility = 'visible';
+            document.getElementById('show-phone').addEventListener('mouseenter', () => {
+                document.getElementById('phone-info').style.opacity = '1';
+                document.getElementById('phone-info').style.visibility = 'visible';
+            });
         });
     </script>
 </body>
