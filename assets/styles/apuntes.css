@@ -1189,3 +1189,172 @@ body.modo-oscuro {
 .imagen-wrapper.portada-wrapper:hover img {
     transform: scale(1.02);
 }
+
+/* Dark Mode Styles with Elegant Color Palette */
+:root.modo-oscuro {
+    /* Main colors */
+    --color-primary: #8c52ff;       /* Morado vibrante */
+    --color-primary-light: #b28cff; /* Morado claro */
+    --color-primary-dark: #462c9a;  /* Morado oscuro */
+    --color-accent: #8c52ff;       /* Morado vibrante */
+    --color-accent-light: #2a1a4a;  /* Morado muy oscuro */
+    
+    /* Background colors */
+    --color-bg: #121212;           /* Fondo oscuro base */
+    --color-surface: #1e1e1e;      /* Superficie oscura */
+    --color-surface-hover: #2a2a2a; /* Hover de superficie */
+    
+    /* Text colors */
+    --color-text-primary: #f2f2f2;  /* Texto principal blanco */
+    --color-text-secondary: #737272; /* Texto secundario gris */
+    
+    /* Border and shadow */
+    --color-border: #333333;       /* Bordes oscuros */
+    --shadow-border: rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 4px 15px rgba(140, 82, 255, 0.15); /* Sombra con tono morado */
+    
+    /* Functional colors */
+    --color-tooltip-bg: #2a1a4a;   /* Fondo de tooltip morado oscuro */
+    --color-tooltip-text: #f2f2f2;
+    --menu-active-bg: rgba(140, 82, 255, 0.2); /* Fondo activo semitransparente */
+    --menu-active-border: #8c52ff;
+    --user-bg-color: #1a1a1a;
+    
+    /* Scrollbar colors */
+    scrollbar-color: #737272 #1e1e1e;
+}
+
+body.modo-oscuro {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+}
+
+/* Ajustes específicos para elementos en modo oscuro */
+body.modo-oscuro .slider {
+    background-color: #737272;
+}
+
+body.modo-oscuro .slider:before {
+    background-color: #f2f2f2;
+}
+
+body.modo-oscuro input:checked + .slider {
+    background-color: var(--color-primary);
+}
+
+body.modo-oscuro .cls-1 {
+    fill: var(--color-text-primary);
+}
+
+body.modo-oscuro .heading-block {
+    color: var(--color-primary-light) !important;
+    text-shadow: 0 2px 4px rgba(140, 82, 255, 0.3);
+}
+
+body.modo-oscuro .block-bullet, 
+body.modo-oscuro .block-number {
+    color: var(--color-primary-light);
+}
+
+body.modo-oscuro .note-container {
+    background: #1a1a1a;
+    border: 1px solid #8c52ff;
+    box-shadow: 0 4px 15px rgba(140, 82, 255, 0.1);
+}
+
+body.modo-oscuro .note-title {
+    color: #8c52ff;
+    border-bottom: 1px solid #737272;
+}
+
+body.modo-oscuro .note-content {
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 23px,
+        rgba(115, 114, 114, 0.3) 24px
+    );
+}
+
+body.modo-oscuro .content-block {
+    background: var(--color-surface);
+    border: 1px solid #333;
+    box-shadow: var(--shadow-card);
+}
+
+body.modo-oscuro .content-block:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 15px rgba(140, 82, 255, 0.2);
+}
+
+body.modo-oscuro .tool {
+    background: #252525;
+}
+
+body.modo-oscuro .tool:hover {
+    background: rgba(140, 82, 255, 0.1);
+}
+
+body.modo-oscuro #toolbar {
+    background: #1a1a1a;
+    border-right: 1px solid #333;
+}
+
+body.modo-oscuro .editable-table {
+    background: #252525;
+}
+
+body.modo-oscuro .editable-table th,
+body.modo-oscuro .editable-table td {
+    border: 1px solid #333;
+}
+
+body.modo-oscuro .file-block a {
+    color: #b28cff;
+}
+
+body.modo-oscuro .hyperText {
+    color: var(--color-primary-light);
+}
+
+body.modo-oscuro ::-webkit-scrollbar-thumb {
+    background-color: #737272;
+}
+
+body.modo-oscuro ::-webkit-scrollbar-thumb:hover {
+    background-color: #8c52ff;
+}
+
+/* Efectos especiales "mamones" */
+body.modo-oscuro .imagen-wrapper {
+    border: 2px solid #8c52ff;
+    box-shadow: 0 4px 20px rgba(140, 82, 255, 0.2);
+}
+
+body.modo-oscuro .imagen-wrapper:hover {
+    box-shadow: 0 8px 25px rgba(140, 82, 255, 0.3);
+}
+
+body.modo-oscuro .D button {
+    background: linear-gradient(135deg, #8c52ff, #462c9a);
+    box-shadow: 0 4px 15px rgba(140, 82, 255, 0.3);
+}
+
+body.modo-oscuro .D button:hover {
+    background: linear-gradient(135deg, #9d6bff, #5634b8);
+    transform: translateY(-2px) scale(1.02);
+}
+
+body.modo-oscuro .menu-button {
+    background: rgba(140, 82, 255, 0.2);
+    color: #8c52ff;
+}
+
+body.modo-oscuro .menu-button:hover {
+    background: rgba(140, 82, 255, 0.3);
+}
+
+body.modo-oscuro .selected {
+    outline: 2px solid #8c52ff;
+    box-shadow: 0 0 0 4px rgba(140, 82, 255, 0.2);
+}
