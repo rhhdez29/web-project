@@ -1,40 +1,40 @@
-/* Estilos para todos los elementos con scroll - Updated to match menu.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-    /* Main colors */
+    /* Colores principales */
     --color-primary: #f4b5c5;
     --color-primary-light: #f8d5e0;
     --color-primary-dark: #e47a9a; 
     --color-accent: #8B5CF6;
     --color-accent-light: #EDE9FE;
     
-    /* Background colors */
+    /* Colores de fondo */
     --color-bg: #F5F9FF;
     --color-surface: #FFFFFF;
     --color-surface-hover: #E6F0FF;
     
-    /* Text colors */
+    /* Color de texto */
     --color-text-primary: #1F2D3D;
     --color-text-secondary: #5C6B77;
     
-    /* Border and shadow */
+    /* Bordes y sombras */
     --color-border: #D0D8E8;
     --shadow-border: rgba(0, 0, 0, 0.05);
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
     
-    /* Functional colors */
+    /* Funcion de colores */
     --color-tooltip-bg: #4A5A6A;
     --color-tooltip-text: #FFFFFF;
     --menu-active-bg: var(--color-primary-light);
     --menu-active-border: var(--color-primary-dark);
     --user-bg-color: var(--color-bg);
     
-    /* Scrollbar colors */
-    scrollbar-color: var(--color-border) var(--color-bg); /* Firefox */
-    scrollbar-width: thin; /* Firefox */
+    /* Scrollbar colores */
+    scrollbar-color: var(--color-border) var(--color-bg); 
+    scrollbar-width: thin; 
 
-    /* Borders and shadows */
+    
     --border-radius: 8px;
     --transition: all 0.2s ease;
 }
@@ -76,7 +76,7 @@
     border-radius: 50%;
 }
 
-/* WebKit (Chrome, Safari, Edge) */
+
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
