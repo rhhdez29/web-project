@@ -118,6 +118,32 @@ include_once '../includes/verificar_sesion.php';
             </form>
         </div>
     </div>
+    
+    <script>
+        // Función para sincronizar el modo oscuro
+        function syncDarkMode() {
+            const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                            document.cookie.includes('darkMode=true');
+            
+            if (darkMode) {
+                document.body.classList.add('modo-oscuro');
+            } else {
+                document.body.classList.remove('modo-oscuro');
+            }
+        }
+
+        // Escuchar cambios en el modo oscuro
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'darkMode') {
+                syncDarkMode();
+            }
+        });
+
+        // Sincronizar al cargar
+        document.addEventListener('DOMContentLoaded', syncDarkMode);
+    </script>
+    
+    <script src="../scripts/dark-mode.js"></script>
 
     <script src="../scripts/planificador.js"></script>
 </body>
