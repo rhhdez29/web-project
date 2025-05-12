@@ -169,37 +169,47 @@ if (isset($_SESSION['userName'])) {
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const profileWrapper = document.querySelector('.imagen-wrapper.redonda');
-            const profilePicture = document.getElementById('profile-picture');
-            const profileUpload = document.getElementById('profile-upload');
+document.addEventListener('DOMContentLoaded', function() {
+    const profileWrapper = document.querySelector('.imagen-wrapper.redonda');
+    const profilePicture = document.getElementById('profile-picture');
+    const profileUpload = document.getElementById('profile-upload');
+    
+    // Cargar imagen guardada en localStorage si existe
+    const savedImage = localStorage.getItem('userProfileImage');
+    if (savedImage) {
+        profilePicture.src = savedImage;
+    }
+    
+    profileWrapper.addEventListener('click', function() {
+        profileUpload.click();
+    });
+    
+    profileUpload.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
             
-            // Cargar imagen guardada en localStorage si existe
-            const savedImage = localStorage.getItem('userProfileImage');
-            if (savedImage) {
-                profilePicture.src = savedImage;
+            reader.onload = function(e) {
+                // Mostrar vista previa
+                profilePicture.src = e.target.result;
+                
+                // Guardar en localStorage para persistencia
+                localStorage.setItem('userProfileImage', e.target.result);
+                
+                // Notificar a otras pestañas/ventanas del cambio
+                localStorage.setItem('profilePictureUpdated', e.target.result);
             }
             
-            profileWrapper.addEventListener('click', function() {
-                profileUpload.click();
-            });
-            
-            profileUpload.addEventListener('change', function(e) {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        // Mostrar vista previa
-                        profilePicture.src = e.target.result;
-                        
-                        // Guardar en localStorage para persistencia
-                        localStorage.setItem('userProfileImage', e.target.result);
-                    }
-                    
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-        });
-    </script>
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    
+    // Escuchar cambios en otras pestañas
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'profilePictureUpdated' && e.newValue) {
+            profilePicture.src = e.newValue;
+        }
+    });
+});
+</script>
 </body>
 </html>
