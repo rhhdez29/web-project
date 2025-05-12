@@ -475,10 +475,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await apiCall('eliminarCurso', 'POST', formData);
             
             if (result.success) {
-                alert(result.message || 'Curso eliminado exitosamente.');
-                fetchCourses();
+                console.log('Eliminado, cerrando modal...');
                 closeDeleteModal();
                 showView(coursesView);
+                fetchCourses();
                 if (window.parent && window.parent !== window) {
                     window.parent.postMessage({ type: 'updateCourseListInMenu' }, '*');
                 }
@@ -495,6 +495,21 @@ document.addEventListener('DOMContentLoaded', () => {
             resetForm();
             showView(addFormView);
     };
+
+    function closeAndResetForm() {
+    resetForm();
+    showView(coursesView);
+    }
+
+    function closeDeleteModal() {
+            classToDeleteId = null;
+            if (deleteModal) {
+                deleteModal.classList.remove('active');
+                deleteModal.style.opacity = '0';
+                deleteModal.style.visibility = 'hidden';
+            }
+    };
+
     // --- MANEJO DE EVENTOS ---
     if (currentUserRole === 'Maestro') {
         if (imagePreview && classImageInput && classImageBase64Input) {
@@ -520,11 +535,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        const closeAndResetForm = () => {
-            resetForm();
-            showView(coursesView);
-        };
-
         if (mainAddClassBtn) mainAddClassBtn.addEventListener('click', openAddForm);
         if (classForm) classForm.addEventListener('submit', saveCourse);
         if (cancelFormBtn) cancelFormBtn.addEventListener('click', closeAndResetForm);
@@ -546,10 +556,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const openDeleteModal = (courseId) => {
             classToDeleteId = courseId;
             if (deleteModal) deleteModal.classList.add('active');
-        };
-        const closeDeleteModal = () => {
-            classToDeleteId = null;
-            if (deleteModal) deleteModal.classList.remove('active');
         };
 
         if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', closeDeleteModal);
