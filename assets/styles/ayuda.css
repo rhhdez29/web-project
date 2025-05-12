@@ -365,3 +365,42 @@ body {
         max-width: 100%;
     }
 }
+
+/* Modo oscuro */
+body.modo-oscuro {
+    background-color: #121212;
+    color: #f1f1f1;
+}
+
+body.modo-oscuro .help-container {
+    background-color: #1e1e1e;
+}
+
+body.modo-oscuro .faq-item {
+    background-color: #252525;
+    border-color: #333;
+}
+
+body.modo-oscuro .faq-question {
+    background-color: #2a2a2a;
+}
+
+body.modo-oscuro .search-container input {
+    background-color: #333;
+    color: #fff;
+    border-color: #444;
+}
+
+body.modo-oscuro .contact-btn {
+    background-color: #333;
+    color: #fff;
+}
+
+body.modo-oscuro .happiness-section {
+    background-color: #252525;
+}
+
+/* Transiciones suaves */
+body, .faq-item, .search-container input {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
