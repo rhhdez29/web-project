@@ -35,7 +35,9 @@ $currentUserId = $_SESSION['idUsuario'] ?? null; // Obtener el ID del usuario
                 <h2>Inscribirse a un Curso por Código</h2>
                 <div class="enroll-form">
                     <input type="text" id="input-enroll-course-id" placeholder="Introduce el ID del curso">
-                    <button id="btn-enroll-by-code" class="btn-primary"><i class='bx bx-log-in-circle'></i> Inscribirse</button>
+                    <button id="btn-enroll-by-code" class="btn-primary">
+                        <i class='bx bx-search'></i> Buscar curso
+                    </button>
                 </div>
                 <p id="enroll-by-code-message" class="message-feedback"></p>
             </div>

@@ -338,18 +338,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleEnrollByCode() {
-        if (!inputEnrollCourseId || !enrollByCodeMessage) return;
-        const courseIdToEnroll = inputEnrollCourseId.value.trim();
-        if (!courseIdToEnroll) {
-            enrollByCodeMessage.textContent = 'Por favor, introduce un ID de curso.';
-            enrollByCodeMessage.className = 'message-feedback error';
-            setTimeout(() => { enrollByCodeMessage.textContent = ''; enrollByCodeMessage.className = 'message-feedback'; }, 3000);
-            return;
-        }
-        handleEnrollmentAction(courseIdToEnroll, 'inscribir');
-        inputEnrollCourseId.value = '';
+    if (!inputEnrollCourseId || !enrollByCodeMessage) return;
+    const courseIdToSearch = inputEnrollCourseId.value.trim();
+    if (!courseIdToSearch) {
+        enrollByCodeMessage.textContent = 'Por favor, introduce un ID de curso.';
+        enrollByCodeMessage.className = 'message-feedback error';
+        setTimeout(() => { enrollByCodeMessage.textContent = ''; enrollByCodeMessage.className = 'message-feedback'; }, 3000);
+        return;
     }
-
+    // Filtrar los cursos por el ID ingresado
+    const filteredCourses = allCoursesData.filter(c => c.id === courseIdToSearch);
+    if (filteredCourses.length === 0) {
+        enrollByCodeMessage.textContent = 'No se encontró ningún curso con esa clave.';
+        enrollByCodeMessage.className = 'message-feedback error';
+        renderCourses([]); // Limpia la vista
+    } else {
+        enrollByCodeMessage.textContent = '';
+        renderCourses(filteredCourses);
+    }
+    inputEnrollCourseId.value = '';
+}
     // --- FUNCIONES DE MAESTRO ---
     const resetForm = () => {
         if (!classForm) return;
