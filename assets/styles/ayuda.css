@@ -404,3 +404,216 @@ body.modo-oscuro .happiness-section {
 body, .faq-item, .search-container input {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
+
+/* Dark Mode - Glamorous Purple Edition */
+body.modo-oscuro {
+    /* Base colors */
+    --color-bg: #121212;
+    --color-surface: #1e1e1e;
+    --color-surface-hover: #282828;
+    --color-text-primary: #f2f2f2;
+    --color-text-secondary: #737272;
+    --color-border: #333333;
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.6);
+    
+    /* Updated primary colors */
+    --color-primary: #8c52ff;
+    --color-primary-light: #a47dff;
+    --color-primary-dark: #462c9a;
+    --color-accent: #8c52ff;
+    --color-accent-light: #2a1a4a;
+    
+    /* Special effects */
+    --glow-effect: 0 0 15px rgba(140, 82, 255, 0.4);
+    --hover-glow: 0 0 20px rgba(140, 82, 255, 0.6);
+    
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    
+    .help-container {
+        background-color: #1a1a1a;
+        border: 1px solid var(--color-primary);
+        box-shadow: var(--glow-effect);
+    }
+    
+    .help-header h1 {
+        color: var(--color-primary-light);
+        text-shadow: 0 0 10px rgba(140, 82, 255, 0.5);
+    }
+    
+    .help-header p {
+        color: var(--color-text-secondary);
+    }
+    
+    /* FAQ Section */
+    .faq-section h2 {
+        color: var(--color-primary-light);
+        border-bottom: 1px solid var(--color-primary-dark);
+    }
+    
+    .faq-item {
+        background-color: #222;
+        border: 1px solid #333;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .faq-item:hover {
+        box-shadow: var(--hover-glow);
+        transform: translateY(-2px);
+    }
+    
+    .faq-question {
+        background-color: #252525;
+    }
+    
+    .faq-question:hover {
+        background-color: #2a2a2a;
+    }
+    
+    .faq-item.active .faq-question {
+        background-color: var(--color-primary-dark);
+        color: white;
+    }
+    
+    .faq-answer {
+        color: var(--color-text-secondary);
+    }
+    
+    /* Search Bar */
+    .search-container input {
+        background-color: #252525;
+        border: 1px solid #444;
+        color: var(--color-text-primary);
+    }
+    
+    .search-container input:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 2px var(--color-primary-dark);
+    }
+    
+    .search-container button {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+        box-shadow: 0 2px 10px rgba(140, 82, 255, 0.3);
+    }
+    
+    .search-container button:hover {
+        background: var(--color-primary-dark);
+        box-shadow: var(--hover-glow);
+    }
+    
+    /* Video Section */
+    .video-preview {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+    
+    .video-preview:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: var(--hover-glow);
+    }
+    
+    .play-button {
+        background: rgba(140, 82, 255, 0.8);
+    }
+    
+    /* Happiness Section */
+    .happiness-section {
+        background: linear-gradient(135deg, var(--color-primary-dark) 0%, #2a1a4a 100%);
+        box-shadow: var(--glow-effect);
+    }
+    
+    .happiness-content i {
+        color: var(--color-primary-light);
+    }
+    
+    .happiness-content h2 {
+        color: white;
+    }
+    
+    /* Contact Section */
+    .contact-btn {
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .email-btn {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    }
+    
+    .phone-btn {
+        background: linear-gradient(135deg, #6a3dbb 0%, #462c9a 100%);
+    }
+    
+    .contact-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--hover-glow);
+    }
+    
+    .contact-btn::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            to bottom right,
+            rgba(255, 255, 255, 0.3) 0%,
+            rgba(255, 255, 255, 0) 60%
+        );
+        transform: rotate(30deg);
+        transition: all 0.3s ease;
+    }
+    
+    .contact-btn:hover::before {
+        animation: shine 1.5s infinite;
+    }
+    
+    .contact-info {
+        background: #252525;
+        border: 1px solid var(--color-primary);
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-primary-dark);
+        border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-primary);
+    }
+    
+    /* Animations */
+    @keyframes shine {
+        0% { left: -50%; }
+        100% { left: 150%; }
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: var(--glow-effect); }
+        50% { box-shadow: var(--hover-glow); }
+        100% { box-shadow: var(--glow-effect); }
+    }
+    
+    .help-container {
+        animation: pulse 8s infinite alternate;
+    }
+}
+
+/* Smooth transitions for all elements */
+body.modo-oscuro * {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease, 
+                box-shadow 0.3s ease, 
+                transform 0.3s ease;
+}
