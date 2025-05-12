@@ -574,3 +574,181 @@ body.modo-oscuro .slider:before {
 body.modo-oscuro input:checked + .slider {
     background-color: var(--dark-color-accent);
 }
+
+body.modo-oscuro {
+    --color-bg: #0d0d0d;
+    --color-surface: #1a1a1a;
+    --color-surface-hover: #2a2a2a;
+    --color-text-primary: #f2f2f2;
+    --color-text-secondary: #737272;
+    --color-border: #333333;
+    --shadow-border: rgba(0, 0, 0, 0.3);
+    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.2);
+    --color-tooltip-bg: #2a2a2a;
+    --color-tooltip-text: #ffffff;
+    --menu-active-bg: #462c9a;
+    --menu-active-text: #ffffff;
+    --color-primary: #8c52ff;
+    --color-primary-dark: #8c6bb3;
+}
+
+body.modo-oscuro .sidebar {
+    background-color: var(--color-surface);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+body.modo-oscuro .menu-link {
+    color: var(--color-text-secondary);
+}
+
+body.modo-oscuro .menu-link:hover,
+body.modo-oscuro .menu-item.active .menu-link {
+    background-color: var(--menu-active-bg);
+    color: var(--menu-active-text);
+}
+
+body.modo-oscuro .menu-link i {
+    color: var(--color-text-secondary);
+}
+
+body.modo-oscuro .sub-menu-link {
+    color: var(--color-text-secondary);
+}
+
+body.modo-oscuro .sub-menu-link:hover {
+    color: var(--menu-active-text);
+    background-color: var(--menu-active-bg);
+}
+
+body.modo-oscuro .user-img img {
+    border-color: var(--color-border);
+}
+
+body.modo-oscuro .user-tooltip.user-date .name {
+    color: var(--color-text-primary);
+}
+
+body.modo-oscuro .user-tooltip.user-date .rol {
+    color: var(--color-text-secondary);
+}
+
+body.modo-oscuro .brand span {
+    color: var(--color-text-primary);
+}
+
+body.modo-oscuro .menu-btn {
+    background-color: var(--color-surface);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+body.modo-oscuro .menu-btn i {
+    color: var(--color-text-secondary);
+}
+
+body.modo-oscuro .add-class-btn {
+    background-color: #8c52ff;
+}
+
+body.modo-oscuro .add-class-btn:hover {
+    background-color: #462c9a;
+}
+
+body.modo-oscuro .courses-header span {
+    color: var(--color-text-secondary);
+}
+
+/* Transiciones suaves */
+.sidebar, .menu-link, .sub-menu-link, .user-img img, 
+.user-tooltip.user-date .name, .user-tooltip.user-date .rol,
+.brand span, .menu-btn, .menu-btn i, .add-class-btn,
+.courses-header span {
+    transition: all 0.3s ease;
+}
+
+body.modo-oscuro {
+    background-color: #0d0d0d;
+    color: #f2f2f2;
+}
+
+body.modo-oscuro .sidebar {
+    background-color: #1a1a1a;
+    color: #f2f2f2;
+}
+
+body.modo-oscuro .menu-link,
+body.modo-oscuro .sub-menu-link {
+    color: #f2f2f2;
+}
+
+body.modo-oscuro .menu-link:hover,
+body.modo-oscuro .sub-menu-link:hover {
+    background-color: #462c9a;
+    color: #ffffff;
+}
+
+/* Estilos para el modo oscuro del menú */
+body.modo-oscuro .sidebar {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+}
+
+body.modo-oscuro .menu-link {
+    color: #e0e0e0;
+}
+
+body.modo-oscuro .menu-link:hover {
+    background-color: #333333;
+}
+
+body.modo-oscuro .sub-menu {
+    background-color: #252525;
+}
+
+body.modo-oscuro .brand {
+    color: #f1f1f1;
+}
+
+/* Transiciones suaves */
+.sidebar, .menu-link, .sub-menu {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+/* Estilos para fotos de perfil */
+.imagen-wrapper {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    margin: 0 auto;
+    border: 3px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.imagen-wrapper:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.imagen-texto {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    padding: 5px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.imagen-wrapper:hover .imagen-texto {
+    transform: translateY(0);
+}
