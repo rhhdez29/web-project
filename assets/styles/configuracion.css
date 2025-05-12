@@ -1,53 +1,52 @@
-/* configuracion.css - Con paleta de colores de ayuda.css */
 :root {
-    /* Main colors */
+    /* Colores principales */
     --color-primary: #f4b5c5;
     --color-primary-light: #f8d5e0;
     --color-primary-dark: #e47a9a; 
     --color-accent: #8B5CF6;
     --color-accent-light: #EDE9FE;
     
-    /* Background colors (light mode) */
+    /* Colores de fondo claros */
     --color-bg: #F8FAFC;
     --color-surface: #FFFFFF;
     --color-surface-hover: #F7F9FC;
     
-    /* Text colors (light mode) */
+    /* Texto de colores claros */
     --color-text-primary: #334155;
     --color-text-secondary: #64748B;
     
-    /* Border and shadow (light mode) */
+    /* Bordes y sombras claras */
     --color-border: #D1D9E6;
     --shadow-border: rgba(148, 163, 184, 0.15);
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
     
-    /* Functional colors */
+    /* Colores funcionales */
     --color-tooltip-bg: #475569;
     --color-tooltip-text: #FFFFFF;
     --menu-active-bg: var(--color-primary-light);
     --menu-active-border: var(--color-primary-dark);
     
-    /* Borders and shadows */
+    /* Bordes claros */
     --border-radius: 8px;
     --transition: all 0.2s ease;
 }
 
-/* Dark mode variables */
+/* Modo oscuro */
 body.modo-oscuro {
-    /* Background colors (dark mode) */
+    /* Fondo */
     --color-bg: #121212;
     --color-surface: #1e1e1e;
     --color-surface-hover: #2a2a2a;
     
-    /* Text colors (dark mode) */
+    /* Texto */
     --color-text-primary: #f1f1f1;
     --color-text-secondary: #aaaaaa;
     
-    /* Border and shadow (dark mode) */
+    /* Bordes y sombras */
     --color-border: #333333;
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
     
-    /* Primary colors adjustments for dark mode */
+    /* Colores primarios en modo oscuro */
     --color-primary: #e47a9a;
     --color-primary-light: #f4b5c5;
     --color-primary-dark: #d45a80;
@@ -290,7 +289,7 @@ input[type="checkbox"] {
     box-shadow: 0 0 0 2px var(--color-primary-light);
 }
 
-/* Responsive */
+/* Responsivo */
 @media (max-width: 768px) {
     .profile-info {
         flex-direction: column;
@@ -432,9 +431,9 @@ body {
 .imagen-wrapper:hover .imagen-texto {
     transform: translateY(0);
 }
-/* Dark mode - Glamorous Purple Edition */
+/* Modo oscuor para la edicion del morado */
 body.modo-oscuro {
-    /* Base colors */
+    /* Colores base */
     --color-bg: #121212;
     --color-surface: #1e1e1e;
     --color-surface-hover: #282828;
@@ -443,18 +442,18 @@ body.modo-oscuro {
     --color-border: #333333;
     --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.5);
     
-    /* Updated primary colors with glamorous purple */
+    /* actualizacion de colores primarios morado */
     --color-primary: #8c52ff;
     --color-primary-light: #a47dff;
     --color-primary-dark: #462c9a;
     --color-accent: #8c52ff;
     --color-accent-light: #2a1a4a;
     
-    /* Special effects */
+    /* Efectos especiales */
     --glow-effect: 0 0 12px rgba(140, 82, 255, 0.4);
     --hover-glow: 0 0 15px rgba(140, 82, 255, 0.6);
     
-    /* Config container styling */
+    /* Configuracion de contenedores */
     .configuracion-container {
         border: 1px solid var(--color-primary);
         box-shadow: var(--glow-effect);
@@ -466,7 +465,7 @@ body.modo-oscuro {
         text-shadow: 0 0 8px rgba(140, 82, 255, 0.5);
     }
     
-    /* Config sections */
+    /* Configuracion de contenedores */
     .config-section {
         background-color: #222222;
         border: 1px solid #333;
@@ -484,7 +483,7 @@ body.modo-oscuro {
         border-bottom: 1px solid var(--color-primary-dark);
     }
     
-    /* Profile picture */
+    /* Imagen de perfil */
     #profile-picture {
         border-color: var(--color-primary);
         box-shadow: var(--glow-effect);
@@ -500,7 +499,7 @@ body.modo-oscuro {
         box-shadow: var(--hover-glow);
     }
     
-    /* Buttons */
+    /* Botones */
     .btn {
         background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
         box-shadow: var(--glow-effect);
@@ -542,7 +541,7 @@ body.modo-oscuro {
         background: linear-gradient(135deg, #6a3dbb 0%, #462c9a 100%);
     }
     
-    /* Form elements */
+    /* Elementos del form */
     select, 
     input:not([type="checkbox"]), 
     textarea {
@@ -561,7 +560,7 @@ body.modo-oscuro {
         accent-color: var(--color-primary);
     }
     
-    /* Profile image hover effect */
+    /* Efecto de imagen */
     .imagen-wrapper {
         border-color: var(--color-primary);
     }
@@ -574,7 +573,6 @@ body.modo-oscuro {
         background: rgba(70, 44, 154, 0.9);
     }
     
-    /* Scrollbar styling */
     ::-webkit-scrollbar {
         width: 10px;
     }
@@ -592,7 +590,7 @@ body.modo-oscuro {
         background: var(--color-primary);
     }
     
-    /* Special animations */
+    /* Animacion especial */
     @keyframes pulse {
         0% { box-shadow: var(--glow-effect); }
         50% { box-shadow: var(--hover-glow); }
@@ -604,7 +602,7 @@ body.modo-oscuro {
     }
 }
 
-/* Smooth transitions for all elements */
+
 body.modo-oscuro * {
     transition: background-color 0.3s ease, 
                 color 0.3s ease, 
