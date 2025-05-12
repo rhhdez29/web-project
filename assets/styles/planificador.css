@@ -1,36 +1,35 @@
-/* Base styles and variables - Updated to match menu.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-    /* Main colors */
+    /* Colores principales */
     --color-primary: #f4b5c5;
     --color-primary-light: #f8d5e0;
     --color-primary-dark: #e47a9a; 
     --color-accent: #8B5CF6;
     --color-accent-light: #EDE9FE;
     
-    /* Background colors */
+    /* Color de fondo */
     --color-bg: #F8FAFC;
     --color-surface: #FFFFFF;
     --color-surface-hover: #F7F9FC;
     
-    /* Text colors */
+    /* Color de texto */
     --color-text-primary: #334155;
     --color-text-secondary: #64748B;
     
-    /* Border and shadow */
+    /* Bordes y sombras */
     --color-border: #D1D9E6;
     --shadow-border: rgba(148, 163, 184, 0.15);
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
     
-    /* Functional colors */
+    /* Colores funcionales */
     --color-tooltip-bg: #475569;
     --color-tooltip-text: #FFFFFF;
     --menu-active-bg: var(--color-primary-light);
     --menu-active-border: var(--color-primary-dark);
     --user-bg-color: var(--color-bg);
     
-    /* Planner specific colors */
+    /* Planer */
     --task-color: #ff8a3d;
     --task-light: #fff1e6;
     --appointment-color: #3d9eff;
@@ -40,7 +39,7 @@
     --important-color: #dc3545;
     --important-light: #fff5f5;
     
-    /* Borders and shadows */
+    /* Bordes y sombras */
     --border-radius: 8px;
     --transition: all 0.2s ease;
 }
@@ -57,7 +56,6 @@ body {
     color: var(--color-text-primary);
 }
 
-/* Container for the entire planner */
 .planificador-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -68,7 +66,6 @@ body {
     min-height: 100vh;
 }
 
-/* Header styles */
 .planificador-header {
     display: flex;
     justify-content: space-between;
@@ -103,14 +100,12 @@ body {
     box-shadow: var(--shadow-card);
 }
 
-/* Main content layout */
 .planificador-content {
     display: flex;
     gap: 24px;
     flex: 1;
 }
 
-/* Left sidebar styles */
 .left-sidebar {
     flex: 0 0 300px;
     display: flex;
@@ -118,7 +113,6 @@ body {
     gap: 24px;
 }
 
-/* Calendar styles */
 .calendar-container {
     background: var(--color-surface);
     border-radius: var(--border-radius);
@@ -218,7 +212,6 @@ body {
     border-radius: 50%;
 }
 
-/* Important reminders section */
 .important-reminders {
     background: var(--color-surface);
     border-radius: var(--border-radius);
@@ -260,7 +253,6 @@ body {
     color: var(--color-text-secondary);
 }
 
-/* Weekly container styles */
 .weekly-container {
     flex: 1;
     display: flex;
@@ -268,7 +260,6 @@ body {
     gap: 24px;
 }
 
-/* Weekly goal section */
 .weekly-goal-section {
     background: var(--color-surface);
     border-radius: var(--border-radius);
@@ -293,7 +284,6 @@ body {
     border-left: 3px solid var(--goal-color);
 }
 
-/* Weekly items grid */
 .weekly-items {
     background: var(--color-surface);
     border-radius: var(--border-radius);
@@ -428,7 +418,6 @@ body {
     font-weight: 500;
 }
 
-/* Modal styles */
 .modal {
     display: none;
     position: fixed;
@@ -498,7 +487,6 @@ body {
     color: var(--color-text-primary);
 }
 
-/* Form styles */
 form {
     padding: 16px;
     display: flex;
@@ -589,7 +577,6 @@ form {
     background-color: var(--color-primary-dark);
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
     .planificador-content {
         flex-direction: column;
@@ -614,14 +601,12 @@ body.modo-oscuro {
     --color-border: #333333;
     --shadow-card: 0 4px 10px rgba(0, 0, 0, 0.4);
     
-    /* Updated primary colors with purple accent */
     --color-primary: #8c52ff;
     --color-primary-light: #a47dff;
     --color-primary-dark: #462c9a;
     --color-accent: #8c52ff;
     --color-accent-light: #2a1a4a;
     
-    /* Planner specific colors - dark variants */
     --task-color: #ff9e5e;
     --task-light: #332211;
     --appointment-color: #5d9eff;
@@ -631,7 +616,6 @@ body.modo-oscuro {
     --important-color: #ff5252;
     --important-light: #2a1a1a;
     
-    /* Special glamorous effects */
     --glow-effect: 0 0 8px rgba(140, 82, 255, 0.3);
     
     .planificador-header h1 {
@@ -683,7 +667,6 @@ body.modo-oscuro {
         box-shadow: 0 4px 12px rgba(140, 82, 255, 0.4);
     }
     
-    /* Special scrollbar for dark mode */
     ::-webkit-scrollbar {
         width: 8px;
     }
@@ -701,7 +684,6 @@ body.modo-oscuro {
         background: var(--color-primary-light);
     }
     
-    /* Checkbox styling */
     .task-checkbox {
         border-color: var(--task-color);
     }
@@ -711,19 +693,16 @@ body.modo-oscuro {
         opacity: 0.3;
     }
     
-    /* Special hover effects for cards */
     .day-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
         border-color: var(--color-primary);
     }
     
-    /* Tooltip styling */
     --color-tooltip-bg: var(--color-primary-dark);
     --color-tooltip-text: #ffffff;
 }
 
-/* Additional dark mode transitions */
 body.modo-oscuro * {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }

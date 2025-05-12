@@ -1,3 +1,5 @@
+let showOnlyEnrolled = false; // NUEVO: controla si solo se muestran cursos inscritos
+
 document.addEventListener('DOMContentLoaded', () => {
     // Vistas principales
     const coursesView = document.getElementById('courses-view');
@@ -91,18 +93,31 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const fetchCourses = async () => {
-        try {
-            const result = await apiCall('obtenerCursos', 'GET');
-            if (result.success) {
-                allCoursesData = result.data || [];
-                renderCourses(allCoursesData);
+    try {
+        const result = await apiCall('obtenerCursos', 'GET');
+        if (result.success) {
+            allCoursesData = result.data || [];
+            let coursesToShow = allCoursesData;
+            if (showOnlyEnrolled && currentUserRole === 'Estudiante') {
+                coursesToShow = allCoursesData.filter(c => c.esta_inscrito === true);
+                if (enrollByCodeSection) enrollByCodeSection.style.display = 'none';
             } else {
-                if(coursesContainer) coursesContainer.innerHTML = `<div class="empty-state"><p>Error al cargar cursos: ${result.message}</p></div>`;
+                if (currentUserRole === 'Estudiante' && enrollByCodeSection) {
+                    enrollByCodeSection.style.display = '';
+                }
             }
-        } catch (error) {
-            if(coursesContainer) coursesContainer.innerHTML = `<div class="empty-state"><p>No se pudieron cargar los cursos. Intenta de nuevo más tarde.</p></div>`;
+            renderCourses(coursesToShow);
+            // Mostrar el contenedor después de renderizar
+            if (coursesContainer) coursesContainer.style.visibility = 'visible';
+        } else {
+            if(coursesContainer) coursesContainer.innerHTML = `<div class="empty-state"><p>Error al cargar cursos: ${result.message}</p></div>`;
+            if (coursesContainer) coursesContainer.style.visibility = 'visible';
         }
-    };
+    } catch (error) {
+        if(coursesContainer) coursesContainer.innerHTML = `<div class="empty-state"><p>No se pudieron cargar los cursos. Intenta de nuevo más tarde.</p></div>`;
+        if (coursesContainer) coursesContainer.style.visibility = 'visible';
+    }
+};
 
     // --- FUNCIONES DE RENDERIZADO Y UI ---
     const generateUniqueId = () => `curso_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -553,7 +568,39 @@ document.addEventListener('DOMContentLoaded', () => {
         backToCoursesBtn.addEventListener('click', () => showView(coursesView));
     }
 
+    // --- ESCUCHAR MENSAJES DESDE EL PARENT (SIDEBAR) ---
+window.addEventListener('message', function(event) {
+    // Por seguridad, podrías validar event.origin aquí si lo necesitas
+    if (event.data && event.data.type === 'loadClassDetail' && event.data.classId) {
+        // Esperar a que los cursos estén cargados si es necesario
+        const showDetail = () => {
+            const courseExists = allCoursesData.some(c => c.id === event.data.classId);
+            if (courseExists) {
+                renderClassDetail(event.data.classId);
+                showView(classDetailView);
+            } else {
+                // Si aún no se han cargado los cursos, esperar y volver a intentar
+                setTimeout(showDetail, 200);
+            }
+        };
+        showDetail();
+    }
+    // Opcional: para mostrar el formulario de añadir clase desde el menú
+    if (event.data && event.data.type === 'showAddForm') {
+        if (typeof openAddForm === 'function') openAddForm();
+    }
+        // Mostrar solo cursos inscritos (para estudiantes)
+    if (event.data && event.data.type === 'showEnrolledCoursesOnly' && currentUserRole === 'Estudiante') {
+        showOnlyEnrolled = true;
+        // Oculta antes de cargar para evitar parpadeo
+        if (coursesContainer) coursesContainer.style.visibility = 'hidden';
+        if (enrollByCodeSection) enrollByCodeSection.style.display = 'none';
+        fetchCourses();
+    }
+});
+
     // --- INICIALIZACIÓN ---
     fetchCourses();
     showView(coursesView);
 });
+
