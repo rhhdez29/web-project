@@ -752,3 +752,151 @@ body.modo-oscuro .brand {
 .imagen-wrapper:hover .imagen-texto {
     transform: translateY(0);
 }
+
+/* Dark Mode - Glamorous Purple Edition */
+body.modo-oscuro {
+    /* Base colors */
+    --color-bg: #0d0d0d;
+    --color-surface: #1a1a1a;
+    --color-surface-hover: #252525;
+    --color-text-primary: #f2f2f2;
+    --color-text-secondary: #737272;
+    --color-border: #333333;
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.6);
+    
+    /* Updated primary colors */
+    --color-primary: #8c52ff;
+    --color-primary-light: #a47dff;
+    --color-primary-dark: #462c9a;
+    --color-accent: #8c52ff;
+    --color-accent-light: #2a1a4a;
+    
+    /* Special effects */
+    --glow-effect: 0 0 15px rgba(140, 82, 255, 0.4);
+    --hover-glow: 0 0 20px rgba(140, 82, 255, 0.6);
+    
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    
+    /* Sidebar */
+    .sidebar {
+        background-color: #1a1a1a;
+        border-right: 1px solid var(--color-primary);
+        box-shadow: var(--glow-effect);
+    }
+    
+    /* Menu items */
+    .menu-link {
+        color: var(--color-text-secondary);
+    }
+    
+    .menu-link:hover,
+    .menu-item.active .menu-link {
+        background-color: var(--color-primary-dark);
+        color: white;
+        box-shadow: 0 4px 10px rgba(140, 82, 255, 0.3);
+    }
+    
+    .menu-link i {
+        color: var(--color-text-secondary);
+    }
+    
+    .menu-item.active .menu-link i {
+        color: white;
+    }
+    
+    /* Submenu */
+    .sub-menu-link {
+        color: var(--color-text-secondary);
+    }
+    
+    .sub-menu-link:hover {
+        background-color: var(--color-primary-dark);
+        color: white;
+    }
+    
+    /* User section */
+    .user-img img {
+        border: 2px solid var(--color-primary);
+        box-shadow: 0 0 10px rgba(140, 82, 255, 0.3);
+    }
+    
+    .user-tooltip.user-date .name {
+        color: var(--color-primary-light);
+    }
+    
+    /* Toggle button */
+    .menu-btn {
+        background-color: var(--color-primary-dark);
+        color: white;
+        box-shadow: 0 2px 10px rgba(140, 82, 255, 0.4);
+    }
+    
+    .menu-btn:hover {
+        background-color: var(--color-primary);
+        transform: rotate(180deg);
+    }
+    
+    /* Add class button */
+    .add-class-btn {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+        box-shadow: 0 2px 8px rgba(140, 82, 255, 0.3);
+    }
+    
+    .add-class-btn:hover {
+        background: var(--color-primary-dark);
+        box-shadow: var(--hover-glow);
+        transform: scale(1.1);
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-primary-dark);
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-primary);
+    }
+    
+    /* Profile image hover effect */
+    .imagen-wrapper {
+        border-color: var(--color-primary);
+    }
+    
+    .imagen-wrapper:hover {
+        box-shadow: var(--hover-glow);
+    }
+    
+    .imagen-texto {
+        background: rgba(70, 44, 154, 0.9);
+    }
+    
+    /* Animations */
+    @keyframes pulse {
+        0% { box-shadow: var(--glow-effect); }
+        50% { box-shadow: var(--hover-glow); }
+        100% { box-shadow: var(--glow-effect); }
+    }
+    
+    .add-class-btn.pulse {
+        animation: pulse 2s infinite;
+    }
+}
+
+/* Smooth transitions for all elements */
+body.modo-oscuro * {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease, 
+                box-shadow 0.3s ease, 
+                transform 0.3s ease;
+}
