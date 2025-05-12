@@ -8,7 +8,7 @@ session_start();
 require_once __DIR__ . '/../includes/conexion.php';
 
 // Definir página de redirección (home)
-$redirectTo = '../pages/home.php'; // Ajusta según tu estructura
+$redirectTo = '../pages/configuracion.php';
 
 // Verificar solicitud POST y archivo subido
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_FILES['profile-upload'])) {
