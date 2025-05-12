@@ -1,27 +1,27 @@
-/* ayuda.css - Estilos completos para la página de ayuda */
+
 :root {
-    /* Main colors */
+    /* Colores principales */
     --color-primary: #f4b5c5;
     --color-primary-light: #f8d5e0;
     --color-primary-dark: #e47a9a; 
     --color-accent: #8B5CF6;
     --color-accent-light: #EDE9FE;
     
-    /* Background colors */
+    /* Fondo  */
     --color-bg: #F8FAFC;
     --color-surface: #FFFFFF;
     --color-surface-hover: #F7F9FC;
     
-    /* Text colors */
+    /* Texto de colores */
     --color-text-primary: #334155;
     --color-text-secondary: #64748B;
     
-    /* Border and shadow */
+    /* Bordes y sombras */
     --color-border: #D1D9E6;
     --shadow-border: rgba(148, 163, 184, 0.15);
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
     
-    /* Borders and shadows */
+
     --border-radius: 8px;
     --transition: all 0.2s ease;
 }
@@ -97,7 +97,7 @@ body {
     background: var(--color-primary-dark);
 }
 
-/* FAQ Section */
+
 .faq-section h2 {
     color: var(--color-primary-dark);
     margin-bottom: 1.5rem;
@@ -163,7 +163,7 @@ body {
     padding: 0 20px 20px;
 }
 
-/* Video Tutorial Styles */
+
 .video-tutorial-trigger {
     margin: 20px 0;
     width: 100%;
@@ -273,7 +273,7 @@ body {
     font-size: 1rem;
 }
 
-/* Contact Section */
+
 .contact-section {
     margin-top: 3rem;
     text-align: center;
@@ -349,7 +349,7 @@ body {
     bottom: -45px;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .help-container {
         padding: 20px 15px;
@@ -405,9 +405,8 @@ body, .faq-item, .search-container input {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Dark Mode - Glamorous Purple Edition */
 body.modo-oscuro {
-    /* Base colors */
+    
     --color-bg: #121212;
     --color-surface: #1e1e1e;
     --color-surface-hover: #282828;
@@ -416,14 +415,14 @@ body.modo-oscuro {
     --color-border: #333333;
     --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.6);
     
-    /* Updated primary colors */
+    
     --color-primary: #8c52ff;
     --color-primary-light: #a47dff;
     --color-primary-dark: #462c9a;
     --color-accent: #8c52ff;
     --color-accent-light: #2a1a4a;
     
-    /* Special effects */
+    
     --glow-effect: 0 0 15px rgba(140, 82, 255, 0.4);
     --hover-glow: 0 0 20px rgba(140, 82, 255, 0.6);
     
@@ -445,7 +444,7 @@ body.modo-oscuro {
         color: var(--color-text-secondary);
     }
     
-    /* FAQ Section */
+    
     .faq-section h2 {
         color: var(--color-primary-light);
         border-bottom: 1px solid var(--color-primary-dark);
@@ -479,7 +478,7 @@ body.modo-oscuro {
         color: var(--color-text-secondary);
     }
     
-    /* Search Bar */
+
     .search-container input {
         background-color: #252525;
         border: 1px solid #444;
@@ -501,7 +500,7 @@ body.modo-oscuro {
         box-shadow: var(--hover-glow);
     }
     
-    /* Video Section */
+
     .video-preview {
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     }
@@ -515,7 +514,7 @@ body.modo-oscuro {
         background: rgba(140, 82, 255, 0.8);
     }
     
-    /* Happiness Section */
+   
     .happiness-section {
         background: linear-gradient(135deg, var(--color-primary-dark) 0%, #2a1a4a 100%);
         box-shadow: var(--glow-effect);
@@ -529,7 +528,6 @@ body.modo-oscuro {
         color: white;
     }
     
-    /* Contact Section */
     .contact-btn {
         position: relative;
         overflow: hidden;
@@ -574,7 +572,7 @@ body.modo-oscuro {
         border: 1px solid var(--color-primary);
     }
     
-    /* Scrollbar */
+
     ::-webkit-scrollbar {
         width: 10px;
     }
@@ -592,7 +590,7 @@ body.modo-oscuro {
         background: var(--color-primary);
     }
     
-    /* Animations */
+
     @keyframes shine {
         0% { left: -50%; }
         100% { left: 150%; }
@@ -609,7 +607,7 @@ body.modo-oscuro {
     }
 }
 
-/* Smooth transitions for all elements */
+
 body.modo-oscuro * {
     transition: background-color 0.3s ease, 
                 color 0.3s ease, 
