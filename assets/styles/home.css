@@ -731,3 +731,191 @@ body.modo-oscuro .sub-menu-link:hover {
     background-color: #462c9a;
     color: #ffffff;
 }
+
+/* Dark Mode - Glamorous Purple Edition */
+body.modo-oscuro {
+    /* Base colors */
+    --color-bg: #0d0d0d;
+    --color-surface: #1a1a1a;
+    --color-surface-hover: #252525;
+    --color-text-primary: #f2f2f2;
+    --color-text-secondary: #737272;
+    --color-border: #333333;
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.6);
+    
+    /* Updated primary colors */
+    --color-primary: #8c52ff;
+    --color-primary-light: #a47dff;
+    --color-primary-dark: #462c9a;
+    --color-accent: #8c52ff;
+    --color-accent-light: #2a1a4a;
+    
+    /* Special effects */
+    --glow-effect: 0 0 15px rgba(140, 82, 255, 0.4);
+    --hover-glow: 0 0 20px rgba(140, 82, 255, 0.6);
+    
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    
+    /* Header */
+    header {
+        background-color: var(--color-surface);
+        box-shadow: var(--glow-effect);
+        border-bottom: 1px solid var(--color-primary);
+    }
+    
+    .titulo {
+        color: var(--color-primary-light);
+        text-shadow: 0 0 8px rgba(140, 82, 255, 0.3);
+    }
+    
+    /* Switch toggle */
+    .slider {
+        background-color: #333;
+    }
+    
+    input:checked + .slider {
+        background-color: var(--color-primary);
+        box-shadow: 0 0 10px rgba(140, 82, 255, 0.5);
+    }
+    
+    /* Cards section */
+    .tarjetas {
+        scrollbar-color: var(--color-primary-dark) #252525;
+    }
+    
+    .tarjeta {
+        background: linear-gradient(135deg, var(--color-primary-dark) 0%, #2a1a4a 100%);
+        box-shadow: var(--glow-effect);
+        border: 1px solid var(--color-primary);
+    }
+    
+    .tarjeta:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: var(--hover-glow);
+    }
+    
+    .tarjeta .icono {
+        background-color: #252525;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Tasks section */
+    .lista-tareas {
+        background-color: #1e1e1e;
+        border: 1px solid var(--color-primary);
+        box-shadow: var(--glow-effect);
+    }
+    
+    .tarea {
+        border-bottom-color: #333;
+    }
+    
+    .tarjeta-tarea {
+        background-color: #252525;
+        border: 1px solid #333;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .tarjeta-tarea:hover {
+        border-color: var(--color-primary);
+        box-shadow: var(--hover-glow);
+    }
+    
+    /* Calendar */
+    .calendar-container {
+        background-color: #1e1e1e;
+        border: 1px solid #333;
+        box-shadow: var(--glow-effect);
+    }
+    
+    .calendar-day.today {
+        background-color: var(--color-primary);
+        box-shadow: 0 0 8px rgba(140, 82, 255, 0.5);
+    }
+    
+    .calendar-day.selected {
+        background-color: var(--color-primary-dark);
+        color: white;
+    }
+    
+    /* Tutorials section */
+    .tutorial {
+        background: linear-gradient(135deg, var(--color-primary-dark) 0%, #2a1a4a 100%);
+        border: 1px solid var(--color-primary);
+        box-shadow: var(--glow-effect);
+    }
+    
+    .tutorial:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: var(--hover-glow);
+    }
+    
+    .tutorial .icono {
+        background-color: #252525;
+    }
+    
+    /* General containers */
+    #contenedor-tareas {
+        background-color: #1e1e1e;
+        border: 1px solid #333;
+        box-shadow: var(--glow-effect);
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-primary-dark);
+        border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-primary);
+    }
+    
+    /* Special buttons */
+    .add-class-btn {
+        background-color: var(--color-primary);
+        box-shadow: 0 2px 8px rgba(140, 82, 255, 0.3);
+    }
+    
+    .add-class-btn:hover {
+        background-color: var(--color-primary-light);
+        box-shadow: var(--hover-glow);
+    }
+    
+    /* Animations */
+    @keyframes pulse {
+        0% { box-shadow: var(--glow-effect); }
+        50% { box-shadow: var(--hover-glow); }
+        100% { box-shadow: var(--glow-effect); }
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .tarjeta:hover, 
+    .tutorial:hover,
+    .tarjeta-tarea:hover {
+        animation: float 3s ease-in-out infinite;
+    }
+}
+
+/* Smooth transitions for all elements */
+body.modo-oscuro * {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease, 
+                box-shadow 0.3s ease, 
+                transform 0.3s ease;
+}
