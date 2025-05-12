@@ -18,8 +18,8 @@ include_once '../includes/verificar_sesion.php';
             </div>
             <div class="user">
                 <div class="user-img">
-                    <img src="../assets/imagenes/perfil.png" alt="user">
-                    <div class="user-tooltip user-date">
+    <img id="menu-profile-picture" class="profile-photo" src="../assets/imagenes/perfil.png" alt="user">
+    <div class="user-tooltip user-date">
                         <span class="name" id="username">
                             <?php echo isset($_SESSION['userName']) ? htmlspecialchars($_SESSION['userName']) : 'Invitado'; ?>
                         </span>
@@ -117,7 +117,48 @@ include_once '../includes/verificar_sesion.php';
     <div id="main-content">
         <!-- El contenido del centro se cambiará dinámicamente aquí -->
     </div>
+    <script src="../scripts/dark-mode.js"></script>
+    <script>
+    // Integración con el sistema DarkMode principal
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar el modo oscuro
+        if (window.DarkMode) {
+            // Sincronizar el menú con el estado actual
+            window.DarkMode.syncAllElements();
+            
+            // Escuchar cambios para actualizar el menú
+            document.addEventListener('darkModeChange', function(e) {
+                const isDarkMode = e.detail.isDarkMode;
+                // Asegurar que el menú responda a los cambios
+                document.body.classList.toggle('modo-oscuro', isDarkMode);
+                
+                // Actualizar estilos específicos del menú si es necesario
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) {
+                    sidebar.classList.toggle('modo-oscuro', isDarkMode);
+                }
+            });
+        }
+    });
+    </script>
 
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Cargar foto de perfil desde localStorage si existe
+    const savedPhoto = localStorage.getItem('profilePictureUpdated');
+    if (savedPhoto) {
+        document.getElementById('menu-profile-picture').src = savedPhoto;
+    }
+    
+    // Escuchar cambios
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'profilePictureUpdated' && e.newValue) {
+            document.getElementById('menu-profile-picture').src = e.newValue;
+        }
+    });
+});
+</script>
+    
     <script src="../scripts/menu.js"></script>
 </body>
 </html>
