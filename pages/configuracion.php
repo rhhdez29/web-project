@@ -1,8 +1,41 @@
-<?php 
-//verificamos si el usuario ha iniciado sesión
+<?php
+// Incluir el archivo de verificación de sesión al inicio
 include_once '../includes/verificar_sesion.php';
-?>
 
+// Conectar a la base de datos para obtener los datos del usuario
+require_once '../includes/conexion.php';
+
+// Obtener información adicional del usuario desde la base de datos
+if (isset($_SESSION['userName'])) {
+    $userName = $_SESSION['userName'];
+    
+    try {
+        $stmt = $pdo->prepare("SELECT c.correo, u.nombre, u.apellidoP, u.apellidoM, u.rol 
+                              FROM Cuenta c 
+                              JOIN Usuario u ON c.usuario_idUsuario = u.idUsuario 
+                              WHERE c.userName = :userName");
+        $stmt->bindParam(':userName', $userName);
+        $stmt->execute();
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($userData) {
+            $correo = $userData['correo'];
+            $nombreCompleto = $userData['nombre'] . ' ' . $userData['apellidoP'] . ' ' . $userData['apellidoM'];
+            $rol = $userData['rol'];
+            
+            // Verificar si el usuario tiene una foto de perfil personalizada
+            $fotoPerfil = '../assets/imagenes/perfil.png'; // Por defecto
+            $fotoPersonalizada = '../assets/imagenes/usuarios/' . $userName . '.jpg';
+            
+            if (file_exists($fotoPersonalizada)) {
+                $fotoPerfil = $fotoPersonalizada;
+            }
+        }
+    } catch (PDOException $e) {
+        error_log("Error al obtener datos del usuario: " . $e->getMessage());
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,33 +50,34 @@ include_once '../includes/verificar_sesion.php';
         <h1><i class='bx bx-cog'></i> Configuración</h1>
         
         <!-- Sección de Perfil -->
-        <div class="config-section">
-            <h2><i class='bx bx-user'></i> Perfil</h2>
-            <div class="profile-info">
-                <div class="profile-picture-container">
-                    <img id="profile-picture" src="../assets/imagenes/perfil.png" alt="Foto de perfil">
-                    <label for="profile-upload" class="upload-btn">
-                        <i class='bx bx-camera'></i> Cambiar foto
-                        <input type="file" id="profile-upload" accept="image/*" style="display: none;">
-                    </label>
-                </div>
-                <div class="profile-details">
-                    <div class="detail">
-                        <label>Nombre:</label>
-                        <span id="user-name"><?php echo isset($_SESSION['nombreCompleto']) ? htmlspecialchars($_SESSION['nombreCompleto']) : 'Invitado'; ?></span>
-                    </div>
-                    <div class="detail">
-                        <label>Correo:</label>
-                        <span id="user-email"><?php echo isset($_SESSION['correo']) ? htmlspecialchars($_SESSION['correo']) : 'No disponible'; ?></span>
-                    </div>
-                    <div class="detail">
-                        <label>Rol:</label>
-                        <span id="user-rol"><?php echo isset($_SESSION['rol']) ? htmlspecialchars($_SESSION['rol']) : 'Uknown'; ?></span>
-                    </div>
-                </div>
+<div class="config-section">
+    <h2><i class='bx bx-user'></i> Perfil</h2>
+    <form id="profile-form" action="../pages/actualizar_perfil.php" method="post" enctype="multipart/form-data">
+        <div class="profile-info">
+            <div class="imagen-wrapper redonda">
+                <img id="profile-picture" class="profile-photo" src="<?php echo $fotoPerfil; ?>" alt="Foto de perfil">
+                <div class="imagen-texto">Cambiar foto</div>
+                <input type="file" id="profile-upload" name="profile-upload" accept="image/*" style="display: none;">
             </div>
+            <div class="profile-details">
+                        <div class="detail">
+                            <label>Nombre:</label>
+                            <span id="user-name"><?php echo htmlspecialchars($nombreCompleto); ?></span>
+                        </div>
+                        <div class="detail">
+                            <label>Correo:</label>
+                            <span id="user-email"><?php echo htmlspecialchars($correo); ?></span>
+                        </div>
+                        <div class="detail">
+                            <label>Rol:</label>
+                            <span id="user-rol"><?php echo htmlspecialchars($rol); ?></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
 
+        <!-- Resto de las secciones (igual que en tu archivo original) -->
         <!-- Sección de Apariencia -->
         <div class="config-section">
             <h2><i class='bx bx-palette'></i> Apariencia</h2>
@@ -100,7 +134,88 @@ include_once '../includes/verificar_sesion.php';
             </div>
         </div>
     </div>
-
+    
+    <script src="../scripts/dark-mode.js"></script>
     <script src="../assets/scripts/configuracion.js"></script>
+
+    <script>
+        // Verificación de carga
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!window.DarkMode) {
+                console.error('DarkMode no se cargó correctamente');
+            } else {
+                console.log('DarkMode está funcionando');
+                console.log('Estado actual:', window.DarkMode.getCurrentState() ? 'Oscuro' : 'Claro');
+                
+                // Sincronizar el selector de tema con el estado actual
+                const temaSelect = document.getElementById('tema');
+                if (temaSelect) {
+                    temaSelect.value = window.DarkMode.getCurrentState() ? 'oscuro' : 'claro';
+                }
+            }
+
+            // Manejar el cambio de foto de perfil
+            const profileUpload = document.getElementById('profile-upload');
+            const profilePicture = document.getElementById('profile-picture');
+            const profileForm = document.getElementById('profile-form');
+
+            profileUpload.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        profilePicture.src = e.target.result;
+                        
+                        // Enviar el formulario automáticamente cuando se selecciona una imagen
+                        profileForm.submit();
+                    }
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+    </script>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const profileWrapper = document.querySelector('.imagen-wrapper.redonda');
+    const profilePicture = document.getElementById('profile-picture');
+    const profileUpload = document.getElementById('profile-upload');
+    
+    if (profileWrapper && profilePicture && profileUpload) {
+        profileWrapper.addEventListener('click', function() {
+            profileUpload.click();
+        });
+        
+        profileUpload.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Actualizar imagen localmente
+                    profilePicture.src = e.target.result;
+                    
+                    // Enviar evento a otras pestañas/ventanas
+                    if (typeof(Storage) !== "undefined") {
+                        localStorage.setItem('profilePictureUpdated', e.target.result);
+                    }
+                    
+                    // Enviar el formulario
+                    document.getElementById('profile-form').submit();
+                }
+                
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    }
+    
+    // Escuchar cambios en otras pestañas
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'profilePictureUpdated' && e.newValue) {
+            document.getElementById('profile-picture').src = e.newValue;
+        }
+    });
+});
+</script>
 </body>
 </html>
