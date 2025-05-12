@@ -781,8 +781,7 @@ body.modo-oscuro {
     /* Sidebar */
     .sidebar {
         background-color: #1a1a1a;
-        border-right: 1px solid var(--color-primary);
-        box-shadow: var(--glow-effect);
+
     }
     
     /* Menu de objetos */
