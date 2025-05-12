@@ -23,13 +23,8 @@ if (isset($_SESSION['userName'])) {
             $nombreCompleto = $userData['nombre'] . ' ' . $userData['apellidoP'] . ' ' . $userData['apellidoM'];
             $rol = $userData['rol'];
             
-            // Verificar si el usuario tiene una foto de perfil personalizada
-            $fotoPerfil = '../assets/imagenes/perfil.png'; // Por defecto
-            $fotoPersonalizada = '../assets/imagenes/usuarios/' . $userName . '.jpg';
-            
-            if (file_exists($fotoPersonalizada)) {
-                $fotoPerfil = $fotoPersonalizada;
-            }
+            // Solo usar la imagen por defecto
+            $fotoPerfil = '../assets/imagenes/perfil.png';
         }
     } catch (PDOException $e) {
         error_log("Error al obtener datos del usuario: " . $e->getMessage());
@@ -50,34 +45,31 @@ if (isset($_SESSION['userName'])) {
         <h1><i class='bx bx-cog'></i> Configuración</h1>
         
         <!-- Sección de Perfil -->
-<div class="config-section">
-    <h2><i class='bx bx-user'></i> Perfil</h2>
-    <form id="profile-form" action="../pages/actualizar_perfil.php" method="post" enctype="multipart/form-data">
-        <div class="profile-info">
-            <div class="imagen-wrapper redonda">
-                <img id="profile-picture" class="profile-photo" src="<?php echo $fotoPerfil; ?>" alt="Foto de perfil">
-                <div class="imagen-texto">Cambiar foto</div>
-                <input type="file" id="profile-upload" name="profile-upload" accept="image/*" style="display: none;">
-            </div>
-            <div class="profile-details">
-                        <div class="detail">
-                            <label>Nombre:</label>
-                            <span id="user-name"><?php echo htmlspecialchars($nombreCompleto); ?></span>
-                        </div>
-                        <div class="detail">
-                            <label>Correo:</label>
-                            <span id="user-email"><?php echo htmlspecialchars($correo); ?></span>
-                        </div>
-                        <div class="detail">
-                            <label>Rol:</label>
-                            <span id="user-rol"><?php echo htmlspecialchars($rol); ?></span>
-                        </div>
+        <div class="config-section">
+            <h2><i class='bx bx-user'></i> Perfil</h2>
+            <div class="profile-info">
+                <div class="imagen-wrapper redonda">
+                    <img id="profile-picture" class="profile-photo" src="<?php echo $fotoPerfil; ?>" alt="Foto de perfil">
+                    <div class="imagen-texto">Cambiar foto</div>
+                    <input type="file" id="profile-upload" name="profile-upload" accept="image/*" style="display: none;">
+                </div>
+                <div class="profile-details">
+                    <div class="detail">
+                        <label>Nombre:</label>
+                        <span id="user-name"><?php echo htmlspecialchars($nombreCompleto); ?></span>
+                    </div>
+                    <div class="detail">
+                        <label>Correo:</label>
+                        <span id="user-email"><?php echo htmlspecialchars($correo); ?></span>
+                    </div>
+                    <div class="detail">
+                        <label>Rol:</label>
+                        <span id="user-rol"><?php echo htmlspecialchars($rol); ?></span>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
 
-        <!-- Resto de las secciones (igual que en tu archivo original) -->
         <!-- Sección de Apariencia -->
         <div class="config-section">
             <h2><i class='bx bx-palette'></i> Apariencia</h2>
@@ -177,45 +169,37 @@ if (isset($_SESSION['userName'])) {
     </script>
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const profileWrapper = document.querySelector('.imagen-wrapper.redonda');
-    const profilePicture = document.getElementById('profile-picture');
-    const profileUpload = document.getElementById('profile-upload');
-    
-    if (profileWrapper && profilePicture && profileUpload) {
-        profileWrapper.addEventListener('click', function() {
-            profileUpload.click();
-        });
-        
-        profileUpload.addEventListener('change', function(e) {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    // Actualizar imagen localmente
-                    profilePicture.src = e.target.result;
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileWrapper = document.querySelector('.imagen-wrapper.redonda');
+            const profilePicture = document.getElementById('profile-picture');
+            const profileUpload = document.getElementById('profile-upload');
+            
+            // Cargar imagen guardada en localStorage si existe
+            const savedImage = localStorage.getItem('userProfileImage');
+            if (savedImage) {
+                profilePicture.src = savedImage;
+            }
+            
+            profileWrapper.addEventListener('click', function() {
+                profileUpload.click();
+            });
+            
+            profileUpload.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
                     
-                    // Enviar evento a otras pestañas/ventanas
-                    if (typeof(Storage) !== "undefined") {
-                        localStorage.setItem('profilePictureUpdated', e.target.result);
+                    reader.onload = function(e) {
+                        // Mostrar vista previa
+                        profilePicture.src = e.target.result;
+                        
+                        // Guardar en localStorage para persistencia
+                        localStorage.setItem('userProfileImage', e.target.result);
                     }
                     
-                    // Enviar el formulario
-                    document.getElementById('profile-form').submit();
+                    reader.readAsDataURL(this.files[0]);
                 }
-                
-                reader.readAsDataURL(this.files[0]);
-            }
+            });
         });
-    }
-    
-    // Escuchar cambios en otras pestañas
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'profilePictureUpdated' && e.newValue) {
-            document.getElementById('profile-picture').src = e.newValue;
-        }
-    });
-});
-</script>
+    </script>
 </body>
 </html>
