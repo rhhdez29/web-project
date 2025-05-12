@@ -23,13 +23,7 @@ include_once '../includes/verificar_sesion.php';
     <nav>
       <div class="D">
         <button id="Guardar-apuntes">Guardar</button>
-        <label class="switch">
-          <input type="checkbox" id="toggle-mode">
-          <span class="slider">
-            <span class="icon">☀️</span>
-            <span class="icon">🌙</span>
-          </span>
-        </label>
+          
       </div>
     </nav>
     <!-- Barra lateral -->
@@ -961,18 +955,18 @@ include_once '../includes/verificar_sesion.php';
       </button>
     </div>
 
-    <!-- Contenido principal -->
+    
+
     <div id="Contenido">
+    <!-- Contenido principal 
       <div class="imagen-wrapper portada-wrapper">
         <img class="portada" src="../assets/imagenes/fondo2.jpg" alt="Fondo">
         <div class="imagen-texto">Cambiar imagen</div>
       </div>
 
-      <div class="contenedor-centrado">
-        <div class="imagen-wrapper redonda">
-          <img class="icono" src="../assets/imagenes/perfil.png" alt="Perfil">
-          <div class="imagen-texto">Cambiar foto</div>
-        </div>
+    <div id="Contenido">
+    <img id="apuntes-profile-picture" class="profile-photo icono" src="../assets/imagenes/perfil.png" alt="Perfil">
+</div>-->
         <h1 id="editable-title" contenteditable="true" class="editable-h1"></h1>
 
         <!-- Área de trabajo -->
@@ -1047,6 +1041,24 @@ box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; width: 400px;">
 
 
   <script src="../scripts/apuntes.js"></script>
+
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Cargar foto de perfil desde localStorage si existe
+    const savedPhoto = localStorage.getItem('profilePictureUpdated');
+    if (savedPhoto) {
+        document.getElementById('apuntes-profile-picture').src = savedPhoto;
+    }
+    
+    // Escuchar cambios
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'profilePictureUpdated' && e.newValue) {
+            document.getElementById('apuntes-profile-picture').src = e.newValue;
+        }
+    });
+});
+</script>
+
   <script>
     async function exportarContenido() {
       const { jsPDF } = window.jspdf;
@@ -1106,6 +1118,63 @@ box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; width: 400px;">
       }
     }
   </script>
+  <button id="cambiarColorBtn" style="position: fixed; bottom: 20px; right: 20px; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+    Cambiar Color
+</button>
+
+<script>
+document.getElementById('cambiarColorBtn').addEventListener('click', function() {
+    // Obtener el color actual del body
+    var currentColor = document.body.style.backgroundColor;
+    
+    // Cambiar entre colores
+    if (currentColor === 'rgb(255, 255, 255)' || currentColor === '' || currentColor === 'white') {
+        document.body.style.backgroundColor = '#121212';
+        document.body.style.color = '#ffffff';
+    } else {
+        document.body.style.backgroundColor = 'white';
+        document.body.style.color = '#000000';
+    }
+    
+    // Guardar la preferencia en localStorage
+    localStorage.setItem('modoOscuro', document.body.style.backgroundColor === '#121212');
+});
+
+// Verificar el modo al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('modoOscuro') === 'true') {
+        document.body.style.backgroundColor = '#121212';
+        document.body.style.color = '#ffffff';
+    }
+});
+</script>
+
+<script>
+        // Función para sincronizar el modo oscuro
+        function syncDarkMode() {
+            const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                            document.cookie.includes('darkMode=true');
+            
+            if (darkMode) {
+                document.body.classList.add('modo-oscuro');
+            } else {
+                document.body.classList.remove('modo-oscuro');
+            }
+        }
+
+        // Escuchar cambios en el modo oscuro
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'darkMode') {
+                syncDarkMode();
+            }
+        });
+
+        // Sincronizar al cargar
+        document.addEventListener('DOMContentLoaded', syncDarkMode);
+    </script>
+    
+    <script src="../scripts/menu.js"></script>
+    
 </body>
 
 </html>
