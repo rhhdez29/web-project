@@ -732,7 +732,7 @@ body.modo-oscuro .sub-menu-link:hover {
     color: #ffffff;
 }
 
-/* Dark Mode - Glamorous Purple Edition */
+/* Dark Mode - Glamorous Purple Edition (Soft Gradient Version) */
 body.modo-oscuro {
     /* Base colors */
     --color-bg: #0d0d0d;
@@ -746,9 +746,9 @@ body.modo-oscuro {
     /* Updated primary colors */
     --color-primary: #8c52ff;
     --color-primary-light: #a47dff;
-    --color-primary-dark: #462c9a;
+    --color-primary-dark: #5d3dbb; /* Hice este color un poco más claro */
     --color-accent: #8c52ff;
-    --color-accent-light: #2a1a4a;
+    --color-accent-light: #3a2960; /* Aclaré este color también */
     
     /* Special effects */
     --glow-effect: 0 0 15px rgba(140, 82, 255, 0.4);
@@ -785,7 +785,7 @@ body.modo-oscuro {
     }
     
     .tarjeta {
-        background: linear-gradient(135deg, var(--color-primary-dark) 0%, #2a1a4a 100%);
+        background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-accent-light) 100%);
         box-shadow: var(--glow-effect);
         border: 1px solid var(--color-primary);
     }
@@ -841,7 +841,7 @@ body.modo-oscuro {
     
     /* Tutorials section */
     .tutorial {
-        background: linear-gradient(135deg, var(--color-primary-dark) 0%, #2a1a4a 100%);
+        background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-accent-light) 100%);
         border: 1px solid var(--color-primary);
         box-shadow: var(--glow-effect);
     }
