@@ -228,7 +228,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-    });
+        // Botón de añadir clase desde el sidebar (solo para maestros)
+        const addClassBtnSidebar = document.getElementById('add-class-btn-sidebar');
+        if (addClassBtnSidebar) {
+            addClassBtnSidebar.addEventListener('click', function(e) {
+                e.preventDefault();
+                loadContent('mis_cursos');
+                setTimeout(() => {
+                    const iframe = document.querySelector('#main-content iframe');
+                    if (iframe && iframe.contentWindow) {
+                        iframe.contentWindow.postMessage({ type: 'showAddForm' }, '*');
+                    }
+                }, 500);
+            });
+        }
+});
     
 const verTodosBtn = document.getElementById('ver-todos-mis-cursos');
     if (verTodosBtn) {

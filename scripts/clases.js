@@ -490,6 +490,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    function openAddForm () {
+        if (currentUserRole !== 'Maestro') return;
+            resetForm();
+            showView(addFormView);
+    };
     // --- MANEJO DE EVENTOS ---
     if (currentUserRole === 'Maestro') {
         if (imagePreview && classImageInput && classImageBase64Input) {
@@ -515,10 +520,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        const openAddForm = () => {
-            resetForm();
-            showView(addFormView);
-        };
         const closeAndResetForm = () => {
             resetForm();
             showView(coursesView);
@@ -581,6 +582,12 @@ window.addEventListener('message', function(event) {
             } else {
                 // Si aún no se han cargado los cursos, esperar y volver a intentar
                 setTimeout(showDetail, 200);
+            }
+            if (event.data && event.data.type === 'showAddForm') {
+            // Suponiendo que tienes una función para mostrar el formulario:
+            if (typeof openAddForm === 'function') openAddForm();
+            // O directamente:
+            // showView(addFormView);
             }
         };
         showDetail();

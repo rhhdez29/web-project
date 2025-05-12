@@ -76,7 +76,7 @@ include_once '../includes/verificar_sesion.php';
                         <li>
                             <div class="courses-header">
                                 <span>Mis cursos</span>
-                                <div class="add-class-btn pulse" onclick="loadContent('mis_cursos', 'showForm')">
+                                <div class="add-class-btn pulse" id="add-class-btn-sidebar">
                                     <i class='bx bx-plus'></i>
                                 </div>
                             </div>
