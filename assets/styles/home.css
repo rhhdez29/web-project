@@ -710,3 +710,24 @@ body.modo-oscuro .add-class-btn {
 body.modo-oscuro .add-class-btn:hover {
     background-color: var(--dark-color-accent-light);
 }
+
+body.modo-oscuro {
+    background-color: #0d0d0d;
+    color: #f2f2f2;
+}
+
+body.modo-oscuro .sidebar {
+    background-color: #1a1a1a;
+    color: #f2f2f2;
+}
+
+body.modo-oscuro .menu-link,
+body.modo-oscuro .sub-menu-link {
+    color: #f2f2f2;
+}
+
+body.modo-oscuro .menu-link:hover,
+body.modo-oscuro .sub-menu-link:hover {
+    background-color: #462c9a;
+    color: #ffffff;
+}
