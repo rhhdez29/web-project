@@ -8,28 +8,28 @@
 }
 
 :root {
-    /* Main colors */
+    /* Colores principales */
     --color-primary: #f4b5c5; /* Rosa principal */
     --color-primary-light: #f8d5e0; /* Rosa claro */
     --color-primary-dark: #e47a9a; /* Rosa oscuro */
     --color-accent: #8b5bfa;
     --color-accent-light: #EDE9FE;
     
-    /* Background colors */
+    /* Fondo de colores */
     --color-bg: #F8FAFC;
     --color-surface: #FFFFFF;
     --color-surface-hover: #F7F9FC;
     
-    /* Text colors */
+    /* Color texto */
     --color-text-primary: #334155;
     --color-text-secondary: #64748B;
     
-    /* Border and shadow */
+    /* Borde y sombras */
     --color-border: #D1D9E6;
     --shadow-border: rgba(148, 163, 184, 0.15);
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
     
-    /* Functional colors */
+    /* Funcion de color  */
     --color-success: #10B981;
     --color-danger: #EF4444;
     --color-warning: #F59E0B;
@@ -842,7 +842,6 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--color-accent); /* Un color diferente para el ID */
 }
 
-/* Agregar al final de clases.css */
 
 /* Modo oscuro */
 body.modo-oscuro {
@@ -941,7 +940,7 @@ body.modo-oscuro .course-detail i {
     color: var(--color-primary-dark);
 }
 
-/* Dark Mode - Glamorous Purple Edition */
+/* Modo negro morado */
 body.modo-oscuro {
     /* Base colors */
     --color-bg: #0d0d0d;
@@ -952,21 +951,21 @@ body.modo-oscuro {
     --color-border: #333333;
     --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.6);
     
-    /* Updated primary colors */
+    /*Actualizacion de colores */
     --color-primary: #8c52ff;
     --color-primary-light: #a47dff;
     --color-primary-dark: #462c9a;
     --color-accent: #8c52ff;
     --color-accent-light: #2a1a4a;
     
-    /* Special effects */
+    /*Efectos */
     --glow-effect: 0 0 15px rgba(140, 82, 255, 0.4);
     --hover-glow: 0 0 20px rgba(140, 82, 255, 0.6);
     
     background-color: var(--color-bg);
     color: var(--color-text-primary);
     
-    /* Header and titles */
+    /* Titulos */
     .page-title {
         color: var(--color-primary-light);
         text-shadow: 0 0 8px rgba(140, 82, 255, 0.3);
@@ -980,7 +979,7 @@ body.modo-oscuro {
         color: var(--color-text-secondary);
     }
     
-    /* Cards */
+
     .course-card {
         background-color: #222;
         border: 1px solid #333;
@@ -1001,7 +1000,7 @@ body.modo-oscuro {
         color: var(--color-text-secondary);
     }
     
-    /* Forms */
+
     .form {
         background-color: #222;
         border: 1px solid #333;
@@ -1021,7 +1020,7 @@ body.modo-oscuro {
         box-shadow: 0 0 0 2px var(--color-primary-dark);
     }
     
-    /* Image upload */
+    /* Imagenes */
     .image-preview {
         background-color: #252525;
         border-color: #444;
@@ -1031,7 +1030,7 @@ body.modo-oscuro {
         border-color: var(--color-primary);
     }
     
-    /* Detail view */
+    /* Detalles */
     .detail-content {
         background-color: #222;
         border: 1px solid #333;
@@ -1054,7 +1053,7 @@ body.modo-oscuro {
         background-color: #2a1a4a;
     }
     
-    /* Buttons */
+    /* Botones */
     .btn-primary {
         background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
         box-shadow: 0 2px 8px rgba(140, 82, 255, 0.3);
@@ -1079,20 +1078,20 @@ body.modo-oscuro {
         border-color: #444;
     }
     
-    /* Modal */
+
     .modal-content {
         background-color: #222;
         border: 1px solid #333;
         box-shadow: var(--hover-glow);
     }
     
-    /* Course code */
+    
     .course-code {
         background-color: var(--color-primary-dark);
         color: white;
     }
     
-    /* Enroll section */
+   
     .enroll-by-code-container {
         background-color: #252525;
         border: 1px solid #444;
@@ -1104,7 +1103,7 @@ body.modo-oscuro {
         color: var(--color-text-primary);
     }
     
-    /* Scrollbar styling */
+
     ::-webkit-scrollbar {
         width: 10px;
     }
@@ -1122,7 +1121,7 @@ body.modo-oscuro {
         background: var(--color-primary);
     }
     
-    /* Animations */
+    /* Animacion */
     @keyframes pulse {
         0% { box-shadow: var(--glow-effect); }
         50% { box-shadow: var(--hover-glow); }
@@ -1141,7 +1140,6 @@ body.modo-oscuro {
     }
 }
 
-/* Smooth transitions for all elements */
 body.modo-oscuro * {
     transition: background-color 0.3s ease, 
                 color 0.3s ease, 
