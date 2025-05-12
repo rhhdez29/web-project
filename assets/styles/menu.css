@@ -8,34 +8,34 @@
 }
 
 :root {
-    /* Main colors */
+    /* Colores principales */
     --color-primary: #f4b5c5;
     --color-primary-light: #f8d5e0;
     --color-primary-dark: #e47a9a;
     --color-accent: #8B5CF6;
     --color-accent-light: #EDE9FE;
     
-    /* Background colors */
+    /* Colores de fondo */
     --color-bg: #F8FAFC;
     --color-surface: #FFFFFF;
     --color-surface-hover: #F7F9FC;
     
-    /* Text colors */
+    /* Colores de texto */
     --color-text-primary: #334155;
     --color-text-secondary: #64748B;
     
-    /* Border and shadow */
+    /* Bordes y sombras */
     --color-border: #D1D9E6;
     --shadow-border: rgba(148, 163, 184, 0.15);
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
     
-    /* Functional colors */
+    /* Funciones adicionales */
     --color-tooltip-bg: #475569;
     --color-tooltip-text: #FFFFFF;
     --menu-active-bg: var(--color-primary-light);
     --menu-active-text: var(--color-primary-dark);
     
-    /* Dark mode colors - defined here but only applied in dark mode */
+    /* Modo oscuro para la pagina */
     --dark-color-bg: #0d0d0d;
     --dark-color-surface: #1e1e1e;
     --dark-color-surface-hover: #2a2a2a;
@@ -48,11 +48,11 @@
     --dark-color-accent: #8c52ff;
     --dark-color-accent-light: #462c9a;
     
-    /* Transition */
+    /* Transmision */
     --transition-speed: 0.3s;
 }
 
-/* Body */
+/* Cuerpo */
 body {
     width: 100%;
     height: 100vh;
@@ -80,7 +80,7 @@ body {
     width: 70px;
 }
 
-/* Main content */
+/* Contenido principal */
 #main-content {
     margin-left: 250px;
     width: calc(100% - 250px);
@@ -102,7 +102,7 @@ body {
     margin-bottom: 1rem;
 }
 
-/* Menu button */
+/* Boton de menu */
 .menu-btn {
     position: absolute;
     top: 20px;
@@ -126,7 +126,7 @@ body {
     transition: all var(--transition-speed) ease;
 }
 
-/* User section */
+/* Seccion de usuario */
 .user {
     display: flex;
     flex-direction: column;
@@ -194,7 +194,7 @@ body {
     overflow-y: auto;
 }
 
-/* Custom scrollbar for menu container */
+/* Container de menu */
 .menu-container::-webkit-scrollbar {
     width: 6px;
 }
@@ -212,7 +212,7 @@ body {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Menu items */
+/* Menu objetos */
 .menu {
     list-style: none;
     padding: 0;
@@ -253,7 +253,7 @@ body {
     transition: color var(--transition-speed) ease;
 }
 
-/* Dropdown specific styles */
+/* Estilos especificos */
 .menu-item-dropdown .menu-link {
     justify-content: space-between;
 }
@@ -281,7 +281,7 @@ body {
     overflow-y: auto;
 }
 
-/* Custom scrollbar for sub-menus */
+/* Sub-menus */
 .sub-menu::-webkit-scrollbar {
     width: 4px;
 }
@@ -314,7 +314,7 @@ body {
     background-color: var(--menu-active-bg);
 }
 
-/* Minimized sidebar styles */
+/* Estilos minimizados */
 .sidebar.minimize .menu-link span,
 .sidebar.minimize .user-tooltip.user-date,
 .sidebar.minimize .brand span {
@@ -360,7 +360,7 @@ body {
     transition: color var(--transition-speed) ease;
 }
 
-/* Add class button */
+/* Agregar clase */
 .add-class-btn {
     display: flex;
     align-items: center;
@@ -384,7 +384,7 @@ body {
     font-size: 16px;
 }
 
-/* Courses header */
+/* Cursor de header */
 .courses-header {
     display: flex;
     align-items: center;
@@ -398,7 +398,7 @@ body {
     transition: color var(--transition-speed) ease;
 }
 
-/* Pulse animation */
+/* Animation */
 @keyframes pulse {
     0% { box-shadow: 0 0 0 0 rgba(228, 122, 154, 0.4); }
     70% { box-shadow: 0 0 0 10px rgba(228, 122, 154, 0); }
@@ -409,7 +409,7 @@ body {
     animation: pulse 1.5s infinite;
 }
 
-/* Class item indicator */
+/* Indicador de item */
 .class-item::before {
     content: '';
     display: inline-block;
@@ -753,7 +753,7 @@ body.modo-oscuro .brand {
     transform: translateY(0);
 }
 
-/* Dark Mode - Glamorous Purple Edition */
+/* Dark Mode  */
 body.modo-oscuro {
     /* Base colors */
     --color-bg: #0d0d0d;
@@ -764,14 +764,14 @@ body.modo-oscuro {
     --color-border: #333333;
     --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.6);
     
-    /* Updated primary colors */
+    /* Colores primarios */
     --color-primary: #8c52ff;
     --color-primary-light: #a47dff;
     --color-primary-dark: #462c9a;
     --color-accent: #8c52ff;
     --color-accent-light: #2a1a4a;
     
-    /* Special effects */
+    /* Efectos especiales */
     --glow-effect: 0 0 15px rgba(140, 82, 255, 0.4);
     --hover-glow: 0 0 20px rgba(140, 82, 255, 0.6);
     
@@ -785,7 +785,7 @@ body.modo-oscuro {
         box-shadow: var(--glow-effect);
     }
     
-    /* Menu items */
+    /* Menu de objetos */
     .menu-link {
         color: var(--color-text-secondary);
     }
@@ -815,7 +815,7 @@ body.modo-oscuro {
         color: white;
     }
     
-    /* User section */
+    /* Seccion de usuarios */
     .user-img img {
         border: 2px solid var(--color-primary);
         box-shadow: 0 0 10px rgba(140, 82, 255, 0.3);
@@ -837,7 +837,7 @@ body.modo-oscuro {
         transform: rotate(180deg);
     }
     
-    /* Add class button */
+    /* Agregar boton de clase */
     .add-class-btn {
         background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
         box-shadow: 0 2px 8px rgba(140, 82, 255, 0.3);
@@ -849,7 +849,7 @@ body.modo-oscuro {
         transform: scale(1.1);
     }
     
-    /* Scrollbar styling */
+    
     ::-webkit-scrollbar {
         width: 8px;
     }
@@ -867,7 +867,7 @@ body.modo-oscuro {
         background: var(--color-primary);
     }
     
-    /* Profile image hover effect */
+    /* Efecto de imagen de perfil */
     .imagen-wrapper {
         border-color: var(--color-primary);
     }
@@ -880,7 +880,7 @@ body.modo-oscuro {
         background: rgba(70, 44, 154, 0.9);
     }
     
-    /* Animations */
+    /* Animacion */
     @keyframes pulse {
         0% { box-shadow: var(--glow-effect); }
         50% { box-shadow: var(--hover-glow); }
@@ -892,7 +892,7 @@ body.modo-oscuro {
     }
 }
 
-/* Smooth transitions for all elements */
+/* Transicion para todos los elementos */
 body.modo-oscuro * {
     transition: background-color 0.3s ease, 
                 color 0.3s ease, 
