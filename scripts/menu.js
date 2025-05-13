@@ -162,6 +162,68 @@ function closeOtherSubmenus(exceptItem) {
     });
 }
 
+async function cargarApuntesSidebar() {
+    const subMenu = document.getElementById("sub-menu-apuntes");
+    if (!subMenu) return;
+
+    // Elimina los apuntes previos (excepto el header)
+    Array.from(subMenu.querySelectorAll('li')).forEach((li, idx) => {
+        if (idx > 0) li.remove();
+    });
+
+    try {
+        const response = await fetch('../includes/apuntes.php', { method: 'GET' });
+        const data = await response.json();
+        if (data.success && Array.isArray(data.apuntes)) {
+            data.apuntes.forEach(apunte => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = "#";
+                a.className = "sub-menu-link";
+                a.textContent = apunte.titulo || "Sin título";
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    // Envía el apunte al iframe del editor
+                    console.log("Apunte seleccionado:", apunte);
+                    cargarApunteEnEditor(apunte);
+                };
+                li.appendChild(a);
+                subMenu.appendChild(li);
+            });
+        }
+    } catch (err) {
+        console.error("Error al cargar apuntes:", err);
+    }
+}
+
+function cargarApunteEnEditor(apunte) {
+    const content = document.getElementById('main-content');
+    let iframe = content.querySelector('iframe');
+
+    // Si el iframe no existe o no está en apuntes.php, recargarlo
+    if (!iframe || !iframe.src.includes('apuntes.php')) {
+        content.innerHTML = `<iframe src="apuntes.php" width="100%" height="100%" style="border: none;"></iframe>`;
+        iframe = content.querySelector('iframe');
+        // Esperar a que el iframe cargue antes de enviar el mensaje
+        iframe.onload = function() {
+            iframe.contentWindow.postMessage({
+                type: 'cargarApunte',
+                idApuntes: apunte.idApuntes,
+                titulo: apunte.titulo,
+                contenido_html: apunte.contenido_html
+            }, '*');
+        };
+    } else {
+        // Si ya está en apuntes.php, enviar el mensaje directamente
+        iframe.contentWindow.postMessage({
+            type: 'cargarApunte',
+            idApuntes: apunte.idApuntes,
+            titulo: apunte.titulo,
+            contenido_html: apunte.contenido_html
+        }, '*');
+    }
+}
+
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
     loadContent('home'); // Carga la página de inicio por defecto
@@ -169,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const menuBtn = document.getElementById('menu-btn');
     const sidebar = document.getElementById('sidebar');
-    
+    cargarApuntesSidebar();
     if (menuBtn && sidebar) {
         menuBtn.addEventListener('click', function() {
             sidebar.classList.toggle('minimize');

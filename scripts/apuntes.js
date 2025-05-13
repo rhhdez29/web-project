@@ -908,3 +908,201 @@ function init() {
 
 // Iniciar cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", init);
+
+// Sincronizar foto de perfil desde localStorage
+document.addEventListener('DOMContentLoaded', function() {
+    // Cargar foto de perfil desde localStorage si existe
+    const savedPhoto = localStorage.getItem('profilePictureUpdated');
+    if (savedPhoto) {
+        const profilePic = document.getElementById('apuntes-profile-picture');
+        if (profilePic) profilePic.src = savedPhoto;
+    }
+    
+    // Escuchar cambios
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'profilePictureUpdated' && e.newValue) {
+            const profilePic = document.getElementById('apuntes-profile-picture');
+            if (profilePic) profilePic.src = e.newValue;
+        }
+    });
+});
+
+// Exportar contenido a PDF
+async function exportarContenido() {
+    const { jsPDF } = window.jspdf;
+    const contenido = document.getElementById("Contenido");
+    const rawTitle = document.getElementById("editable-title").innerText.trim() || "Archivo";
+    const titulo = rawTitle.replace(/[^a-z0-9áéíóúñü \-_]/gi, '').substring(0, 50);
+
+    try {
+        // 1. Aplicar estilos de impresión antes de capturar
+        document.getElementById('Contenido').classList.add('printing-pdf');
+
+        // 2. Forzar cálculo de estilos (reflow)
+        void document.getElementById('Contenido').offsetHeight;
+
+        // 3. Configurar html2canvas con las dimensiones reales del contenido
+        const canvas = await html2canvas(contenido, {
+            scale: 2,
+            logging: true,
+            useCORS: true,
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: contenido.scrollWidth,
+            windowHeight: contenido.scrollHeight,
+            backgroundColor: '#FFFFFF'
+        });
+
+        // 4. Remover estilos de impresión después de capturar
+        document.getElementById('Contenido').classList.remove('printing-pdf');
+
+        const imgData = canvas.toDataURL("image/png", 1.0);
+
+        // 5. Crear PDF con tamaño adecuado (A4 en mm)
+        const pdf = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        // 6. Calcular dimensiones para ajustar al PDF manteniendo relación de aspecto
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth() - 20; // Margen 10mm cada lado
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        // 7. Centrar la imagen en el PDF con márgenes
+        const xPos = 10; // Margen izquierdo 10mm
+        const yPos = 10; // Margen superior 10mm
+
+        pdf.addImage(imgData, 'PNG', xPos, yPos, pdfWidth, pdfHeight);
+
+        // 8. Guardar el PDF
+        pdf.save(titulo + ".pdf");
+
+    } catch (err) {
+        document.getElementById('Contenido').classList.remove('printing-pdf')
+        console.error("Error al generar el PDF:", err);
+        alert("Ocurrió un error al generar el PDF. Revisa la consola.");
+    }
+}
+
+// Botón para cambiar color de fondo (modo oscuro/claro)
+document.addEventListener('DOMContentLoaded', function() {
+    const cambiarColorBtn = document.getElementById('cambiarColorBtn');
+    if (cambiarColorBtn) {
+        cambiarColorBtn.addEventListener('click', function() {
+            // Obtener el color actual del body
+            var currentColor = document.body.style.backgroundColor;
+            
+            // Cambiar entre colores
+            if (currentColor === 'rgb(255, 255, 255)' || currentColor === '' || currentColor === 'white') {
+                document.body.style.backgroundColor = '#121212';
+                document.body.style.color = '#ffffff';
+            } else {
+                document.body.style.backgroundColor = 'white';
+                document.body.style.color = '#000000';
+            }
+            
+            // Guardar la preferencia en localStorage
+            localStorage.setItem('modoOscuro', document.body.style.backgroundColor === '#121212');
+        });
+
+        // Verificar el modo al cargar la página
+        if (localStorage.getItem('modoOscuro') === 'true') {
+            document.body.style.backgroundColor = '#121212';
+            document.body.style.color = '#ffffff';
+        }
+    }
+});
+
+// Sincronizar modo oscuro con localStorage/cookie
+function syncDarkMode() {
+    const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                    document.cookie.includes('darkMode=true');
+    
+    if (darkMode) {
+        document.body.classList.add('modo-oscuro');
+    } else {
+        document.body.classList.remove('modo-oscuro');
+    }
+}
+
+// Escuchar cambios en el modo oscuro
+window.addEventListener('storage', function(event) {
+    if (event.key === 'darkMode') {
+        syncDarkMode();
+    }
+});
+
+window.addEventListener('message', function(event) {
+    console.log("Mensaje recibido en editor:", event.data);
+    if (event.data && event.data.type === 'cargarApunte') {
+        document.getElementById('editable-title').innerText = event.data.titulo || '';
+        document.getElementById('workspace').innerHTML = event.data.contenido_html || '';
+        document.getElementById('workspace').dataset.id = event.data.idApuntes || '';
+        // Si necesitas re-inicializar eventos en los bloques cargados, llama a tus funciones de inicialización aquí
+        initImageClick('.portada', openImagePicker);
+        initImageClick('.icono', openImagePicker);
+        // ...otros inits si es necesario
+    }
+});
+
+// Sincronizar al cargar
+document.addEventListener('DOMContentLoaded', syncDarkMode);
+
+document.getElementById('Guardar-apuntes').addEventListener('click', function() {
+    const titulo = document.getElementById('editable-title').innerText.trim() || 'Sin título';
+    const contenido_html = document.getElementById('workspace').innerHTML;
+    const apunteId = document.getElementById('workspace').dataset.id;
+
+    if (apunteId) {
+        // ACTUALIZAR (PUT)
+        fetch('../includes/apuntes.php', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                idApuntes: apunteId,
+                titulo: titulo,
+                contenido_html: contenido_html
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                alert('Apunte actualizado correctamente');
+            } else {
+                alert('Error al actualizar: ' + (data.error || ''));
+            }
+        })
+        .catch(err => {
+            alert('Error de red al actualizar');
+        });
+    } else {
+        // CREAR NUEVO (POST)
+        fetch('../includes/apuntes.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                titulo: titulo,
+                contenido_html: contenido_html
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                alert('Apunte guardado correctamente');
+                // Opcional: guardar el nuevo id en el DOM
+                // document.getElementById('workspace').dataset.id = data.idApuntes;
+            } else {
+                alert('Error al guardar: ' + (data.error || ''));
+            }
+        })
+        .catch(err => {
+            alert('Error de red al guardar');
+        });
+    }
+});

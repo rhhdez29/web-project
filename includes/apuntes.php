@@ -1,4 +1,5 @@
 <?php
+
 include_once 'conexion.php';
 session_start();
 
@@ -44,6 +45,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['titulo'], $_POST['con
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(['error' => 'Error al cargar los apuntes', 'details' => $e->getMessage()]);
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    // EDITAR APUNTE
+    parse_str(file_get_contents("php://input"), $put_vars);
+    if (isset($put_vars['idApuntes'], $put_vars['titulo'], $put_vars['contenido_html'])) {
+        $idApuntes = $put_vars['idApuntes'];
+        $titulo = trim($put_vars['titulo']);
+        $contenido_html = $put_vars['contenido_html'];
+        try {
+            $sql = "UPDATE Apuntes SET titulo = :titulo, contenido_html = :contenido_html WHERE idApuntes = :idApuntes AND Usuario_idUsuario = :usuario_id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':titulo' => $titulo,
+                ':contenido_html' => $contenido_html,
+                ':idApuntes' => $idApuntes,
+                ':usuario_id' => $usuario_id
+            ]);
+            echo json_encode(['success' => true, 'message' => 'Apunte actualizado correctamente']);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Error al actualizar el apunte', 'details' => $e->getMessage()]);
+        }
+    } else {
+        http_response_code(400);
+        echo json_encode(['error' => 'Datos incompletos para editar']);
     }
 } else {
     http_response_code(400);
