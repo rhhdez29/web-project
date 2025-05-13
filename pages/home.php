@@ -301,27 +301,46 @@ include_once '../includes/verificar_sesion.php';
 </div>
     </section>
 
-    <!-- Sección de tutoriales -->
-    <section class="tutoriales">
-        <h2>¿Aún te parece muy difícil? Sigue nuestros tutoriales</h2>
-        <div class="contenedor-tutoriales">
-            <div class="tutorial">
-                <div class="icono"></div>
-                <p>Aprender más...</p>
-                <span>1st</span>
+<!-- Sección de tutoriales -->
+<section class="tutoriales">
+    <h2>¿Aún te parece muy difícil? Sigue nuestros tutoriales</h2>
+    <div class="contenedor-tutoriales">
+        <!-- Tutorial 1: Crear apunte -->
+        <div class="tutorial">
+            <div class="video-icon-container">
+                <i class='bx bx-book-alt'></i>
+                <video controls>
+                    <source src="../assets/videos/ApuntesTutorial.mp4" type="video/mp4">
+                </video>
             </div>
-            <div class="tutorial">
-                <div class="icono"></div>
-                <p>Aprender más...</p>
-                <span>2nd</span>
-            </div>
-            <div class="tutorial">
-                <div class="icono"></div>
-                <p>Aprender más...</p>
-                <span>3rd</span>
-            </div>
+            <p> Crear apunte </p>
         </div>
-    </section>
+        
+        <!-- Tutorial 2: Planificador -->
+        <div class="tutorial">
+            <div class="video-icon-container">
+                <i class='bx bx-calendar'></i>
+                <video controls>
+                    <source src="../assets/videos/PlanificadorTutorial.mp4" type="video/mp4">
+                </video>
+            </div>
+            <p> Planificador </p>
+        </div>
+        
+        <!-- Tutorial 3: Agregar clase -->
+        <div class="tutorial">
+            <div class="video-icon-container">
+                <i class='bx bx-chalkboard'></i>
+                <video controls>
+                    <source src="../assets/videos/ClasesTutorial.mp4" type="video/mp4">
+                </video>
+            </div>
+            <p> Agregar clase </p>
+        </div>
+    </div>
+</section>
+
+</section>
 
 <script>
 // Dark Mode Toggle
