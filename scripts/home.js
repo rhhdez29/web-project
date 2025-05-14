@@ -64,6 +64,69 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // --- MODIFICACIÓN: Cargar tarjetas de apuntes reales ---
+    async function cargarTarjetasApuntes() {
+    const tarjetas = document.querySelector('.tarjetas');
+    if (!tarjetas) return;
+
+    // Tarjeta para crear nuevo apunte
+    tarjetas.innerHTML = `
+        <div class="tarjeta nueva">
+            <p>¿Creamos algo nuevo?</p>
+            <a href="apuntes.php">
+                <svg id="Editar" width="60" height="70">
+                    <use href="#icon-papel"></use>
+                </svg>
+            </a>
+        </div>
+    `;
+
+    try {
+        const response = await fetch('../includes/apuntes.php', { method: 'GET' });
+        const data = await response.json();
+        if (data.success && Array.isArray(data.apuntes)) {
+            data.apuntes.slice(0, 5).forEach(apunte => {
+                const div = document.createElement('div');
+                div.className = 'tarjeta apunte';
+                div.innerHTML = `
+                    <div class="apunte-link" style="cursor:pointer;">
+                        <h3>${apunte.titulo || "Sin título"}</h3>
+                        <p>Actualizado: ${new Date(apunte.fecha_actualizacion).toLocaleDateString()}</p>
+                    </div>
+                `;
+                div.querySelector('.apunte-link').onclick = (e) => {
+                    e.preventDefault();
+                    // Cargar el apunte en el iframe del editor central
+                    const content = window.parent.document.getElementById('main-content');
+                    let iframe = content.querySelector('iframe');
+                    if (!iframe || !iframe.src.includes('apuntes.php')) {
+                        content.innerHTML = `<iframe src="apuntes.php" width="100%" height="100%" style="border: none;"></iframe>`;
+                        iframe = content.querySelector('iframe');
+                        iframe.onload = function() {
+                            iframe.contentWindow.postMessage({
+                                type: 'cargarApunte',
+                                idApuntes: apunte.idApuntes,
+                                titulo: apunte.titulo,
+                                contenido_html: apunte.contenido_html
+                            }, '*');
+                        };
+                    } else {
+                        iframe.contentWindow.postMessage({
+                            type: 'cargarApunte',
+                            idApuntes: apunte.idApuntes,
+                            titulo: apunte.titulo,
+                            contenido_html: apunte.contenido_html
+                        }, '*');
+                    }
+                };
+                tarjetas.appendChild(div);
+            });
+        }
+    } catch (err) {
+        console.error("Error al cargar apuntes:", err);
+    }
+}
+
     // Verificar si un día tiene tareas
     function doesDateHaveItems(date) {
         return plannerItems.some(item => 
@@ -71,58 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
             item.date.getMonth() === date.getMonth() &&
             item.date.getFullYear() === date.getFullYear()
         );
-    }
-
-    function initTrabajosRecientes() {
-        const trabajos = [
-            { titulo: "Apunte de Álgebra", icono: "#icon-papel" },
-            { titulo: "Resumen de Historia", icono: "#icon-papel" },
-            { titulo: "Práctica de Física", icono: "#icon-papel" },
-            { titulo: "Apunte de Álgebra", icono: "#icon-papel" },
-            { titulo: "Resumen de Historia", icono: "#icon-papel" },
-            { titulo: "Práctica de Física", icono: "#icon-papel" },
-            { titulo: "Apunte de Álgebra", icono: "#icon-papel" },
-            { titulo: "Resumen de Historia", icono: "#icon-papel" },
-            { titulo: "Práctica de Física", icono: "#icon-papel" },
-            { titulo: "Apunte de Álgebra", icono: "#icon-papel" },
-            { titulo: "Resumen de Historia", icono: "#icon-papel" },
-            { titulo: "Práctica de Física", icono: "#icon-papel" }
-        ];
-
-        cargarTarjetas(trabajos);
-    }
-
-    function cargarTarjetas(trabajos) {
-        const contenedor = document.querySelector(".tarjetas");
-
-        if (!contenedor) {
-            console.error("Contenedor .tarjetas no encontrado");
-            return;
-        }
-
-        const primeraTarjeta = contenedor.querySelector(".tarjeta");
-        contenedor.innerHTML = '';
-        contenedor.appendChild(primeraTarjeta);
-
-        trabajos.forEach(trabajo => {
-            const tarjeta = document.createElement("div");
-            tarjeta.className = "tarjeta";
-
-            const p = document.createElement("p");
-            p.textContent = trabajo.titulo;
-
-            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            svg.setAttribute("width", "60");
-            svg.setAttribute("height", "70");
-
-            const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-            use.setAttributeNS("http://www.w3.org/1999/xlink", "href", trabajo.icono);
-
-            svg.appendChild(use);
-            tarjeta.appendChild(p);
-            tarjeta.appendChild(svg);
-            contenedor.appendChild(tarjeta);
-        });
     }
 
     function renderCalendar() {
@@ -269,5 +280,5 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCalendar();
     mostrarTareasDelDia(selectedDate);
     loadPlannerItems();
-    initTrabajosRecientes();
+    cargarTarjetasApuntes();
 });
